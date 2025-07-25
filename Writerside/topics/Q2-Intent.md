@@ -42,6 +42,47 @@ startActivity(intent)
 
 가장 대표적인 예시는 다른 앱의 `공유하기` 메뉴에 자신의 앱을 노출시키는 것.
 
+#### 1. AndroidManifest.xml 설정
+처리하고자 하는 액티비티의 `<activity>` 태그 내부에 `<intent-filter>`를 선언.
+
+```xml
+<activity android:name=".ShareActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        
+        <category android:name="android.intent.category.DEFAULT" />
+        
+        <data android:mimeType="text/plain" />
+    </intent-filter>
+</activity>
+```
+위 설정은 "우리 앱의 `ShareActivity`는 `text/plain` 타입의 데이터를 `SEND`하는 액션을 처리할 수 있다"고 안드로이드 시스템에 등록하는 역할을 한다.
+
+#### 2. Activity에서 데이터 받기
+이제 `ShareActivity`의 `onCreate`메서드에서 인텐트로 전달된 텍스트를 받아서 처리한다.
+
+```Kotlin
+class ShareActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_share)
+
+        // 인텐트의 액션과 타입이 일치하는지 확인
+        if (intent?.action == Intent.ACTION_SEND && "text/plain" == intent.type) {
+            
+            // Intent.EXTRA_TEXT 키로 공유된 텍스트를 꺼냅니다.
+            val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+
+            // 받아온 텍스트를 토스트 메시지 등으로 활용
+            Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+```
+이제 다른 앱(브라우저, 메모장 등)에서 텍스트를 선택하고 공유 버튼을 누르면, 공유 대상 목록에 우리 앱이 나타나게 된다.
+
+
+
 #### 사용 예시
 다른 앱에서 텍스트를 공유할 때, 내 앱의 ShareActivity가 선택지에 나타나도록 만드는 간단한 예제이다.
 

@@ -1,10 +1,11 @@
 import xml.etree.ElementTree as ET
-import re
 import os
 
 BASE_URL = "https://ckgod.github.io/ManifestAndroid/"
 TREE_FILE_PATH = "Writerside/mi.tree"
 README_PATH = "README.md"
+TOC_START_COMMENT = "TOC"
+TOC_END_COMMENT = "TOC_END"
 
 def generate_title_from_filename(filename):
     base_name = os.path.splitext(filename)[0]
@@ -24,7 +25,6 @@ def parse_toc_elements(element, depth):
             url = f"{BASE_URL}{html_file}"
             markdown_lines.append(f"{indent}* [{display_title}]({url})")
 
-        # Recursive call for nested elements
         markdown_lines.extend(parse_toc_elements(toc_element, depth + 1))
 
     return markdown_lines
@@ -38,20 +38,28 @@ def main():
         toc_markdown = "\n".join(toc_lines)
 
         with open(README_PATH, 'r', encoding='utf-8') as f:
-            content = f.read()
+            readme_lines = f.readlines()
 
-        if '' not in content or '' not in content:
-            print("오류: README.md 파일에서 TOC 주석을 찾을 수 없습니다.")
+        start_index = -1
+        end_index = -1
+
+        for i, line in enumerate(readme_lines):
+            if TOC_START_COMMENT in line:
+                start_index = i
+            if TOC_END_COMMENT in line:
+                end_index = i
+                break
+
+        if start_index == -1 or end_index == -1:
+            print(f"오류: README.md 파일에서 TOC 주석을 찾을 수 없습니다.")
             return
 
-        new_content = re.sub(
-            r'(?s)(.*?)',
-            f'\n{toc_markdown}\n',
-            content
-        )
+        new_readme_content = "".join(readme_lines[:start_index+1])
+        new_readme_content += toc_markdown + "\n"
+        new_readme_content += "".join(readme_lines[end_index:])
 
         with open(README_PATH, 'w', encoding='utf-8') as f:
-            f.write(new_content)
+            f.write(new_readme_content)
 
         print("README.md 목차가 성공적으로 업데이트되었습니다.")
 

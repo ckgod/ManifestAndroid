@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="3398b6d2">
+        <description>
+            <![CDATA[Created after removal of "<Q4-Serializable-Parcelable.md>" from Main Instance]]></description>
+        <accepts>Q4-Serializable-Parcelable.html</accepts>
+    </rule>
+    <rule id="3645af18">
+        <description>Created after removal of "Parcel and Parcelable" from Main Instance</description>
+        <accepts>Parcel-and-Parcelable.html</accepts>
+    </rule>
+</rules>

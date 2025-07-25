@@ -1,8 +1,7 @@
 # Android Manifest
 
-## TOC
-
-TOC_END* [1 Android](https://ckgod.github.io/ManifestAndroid/1-Android.html)
+## 목차
+[1 Android](https://ckgod.github.io/ManifestAndroid/1-Android.html)
   * [1 1 Android Framework](https://ckgod.github.io/ManifestAndroid/1-1-android-framework.html)
     * [Q1 Android](https://ckgod.github.io/ManifestAndroid/Q1-Android.html)
     * [Q2 Intent](https://ckgod.github.io/ManifestAndroid/Q2-Intent.html)
@@ -10,4 +9,3 @@ TOC_END* [1 Android](https://ckgod.github.io/ManifestAndroid/1-Android.html)
     * [Q4 Serializable Parcelable](https://ckgod.github.io/ManifestAndroid/Q4-Serializable-Parcelable.html)
       * [Ptm Parcel And Parcelable](https://ckgod.github.io/ManifestAndroid/PTM-Parcel-and-Parcelable.html)
     * [Q5 Context](https://ckgod.github.io/ManifestAndroid/Q5-Context.html)
-TOC_END

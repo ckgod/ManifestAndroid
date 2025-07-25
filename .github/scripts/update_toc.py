@@ -4,8 +4,8 @@ import os
 BASE_URL = "https://ckgod.github.io/ManifestAndroid/"
 TREE_FILE_PATH = "Writerside/mi.tree"
 README_PATH = "README.md"
-TOC_START_COMMENT = "TOC"
-TOC_END_COMMENT = "TOC_END"
+TOC_START_COMMENT = "목차"
+TOC_END_COMMENT = ""
 
 def generate_title_from_filename(filename):
     base_name = os.path.splitext(filename)[0]

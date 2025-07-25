@@ -21,7 +21,7 @@ def parse_toc_elements(element, depth):
 
         if topic:
             display_title = title if title else generate_title_from_filename(topic)
-            html_file = topic.replace('.md', '.html')
+            html_file = topic.replace('.md', '.html').lower()
             url = f"{BASE_URL}{html_file}"
             markdown_lines.append(f"{indent}* [{display_title}]({url})")
 

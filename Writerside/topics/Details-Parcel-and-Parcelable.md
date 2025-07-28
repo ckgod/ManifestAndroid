@@ -1,4 +1,4 @@
-# PTM: Parcel and Parcelable
+# Details: Parcel and Parcelable
 
 ## Pacel 과 Parcelable
 

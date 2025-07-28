@@ -17,6 +17,7 @@
             <toc-element topic="Q5-Context.md">
                 <toc-element topic="Details-올바른-Context-사용법.md"/>
                 <toc-element topic="Details-ContextWrapper.md"/>
+                <toc-element topic="Details-This-vs-BaseContext.md"/>
             </toc-element>
             <toc-element topic="Q6-Application-Class.md"/>
         </toc-element>

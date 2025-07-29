@@ -1,4 +1,16 @@
-# Android Manifest
+# Android Manifest Study Notes
+
+이 문서는 [skydoves/manifest-android-interview](https://github.com/skydoves/manifest-android-interview) 내용을 기반으로 안드로이드 핵심 CS 지식을 학습하고 [IntelliJ Writerside](https://www.jetbrains.com/writerside/)로 정리한 프로젝트입니다.
+
+## 주요 내용
+
+-   Android Components (Activity, Service, Broadcast Receiver, Content Provider)
+-   App Lifecycle (Process & Task, Activity Lifecycle)
+-   UI Layer (View & Jetpack Compose)
+-   Networking & Concurrency (Coroutines, OkHttp, Retrofit)
+-   기타 안드로이드 핵심 CS 지식
+
+> 이 프로젝트의 모든 학습 내용은 원본 저자인 [**skydoves**](https://github.com/skydoves)님께 저작권이 있습니다.
 
 ## 목차
 * [1 Android](https://ckgod.github.io/ManifestAndroid/1-android.html)
@@ -14,3 +26,5 @@
       * [Details This Vs Basecontext](https://ckgod.github.io/ManifestAndroid/details-this-vs-basecontext.html)
     * [Q6 Application Class](https://ckgod.github.io/ManifestAndroid/q6-application-class.html)
 ## 참고
+- [skydoves/manifest-android-interview](https://github.com/skydoves/manifest-android-interview)
+- [martup-reference](https://www.jetbrains.com/help/writerside/markup-reference.html) 

@@ -7,20 +7,21 @@
                  start-page="1-Android.md">
 
     <toc-element topic="1-Android.md">
-        <toc-element topic="1-1-android-framework.md">
-            <toc-element topic="Q1-Android.md"/>
-            <toc-element topic="Q2-Intent.md"/>
-            <toc-element topic="Q3-Pending-Intent.md"/>
-            <toc-element topic="Q4-Serializable-Parcelable.md">
-                <toc-element topic="Details-Parcel-and-Parcelable.md"/>
-            </toc-element>
-            <toc-element topic="Q5-Context.md">
-                <toc-element topic="Details-올바른-Context-사용법.md"/>
-                <toc-element topic="Details-ContextWrapper.md"/>
-                <toc-element topic="Details-This-vs-BaseContext.md"/>
-            </toc-element>
-            <toc-element topic="Q6-Application-Class.md"/>
-            <toc-element topic="Q7-AndroidManifest.md"/>
+    </toc-element>
+    <toc-element topic="1-1-android-framework.md">
+        <toc-element topic="Q1-Android.md"/>
+        <toc-element topic="Q2-Intent.md"/>
+        <toc-element topic="Q3-Pending-Intent.md"/>
+        <toc-element topic="Q4-Serializable-Parcelable.md">
+            <toc-element topic="Details-Parcel-and-Parcelable.md"/>
         </toc-element>
+        <toc-element topic="Q5-Context.md">
+            <toc-element topic="Details-올바른-Context-사용법.md"/>
+            <toc-element topic="Details-ContextWrapper.md"/>
+            <toc-element topic="Details-This-vs-BaseContext.md"/>
+        </toc-element>
+        <toc-element topic="Q6-Application-Class.md"/>
+        <toc-element topic="Q7-AndroidManifest.md"/>
+        <toc-element topic="Q8-Activity-LifeCycle.md"/>
     </toc-element>
 </instance-profile>

@@ -27,6 +27,8 @@
     * [Q6 Application Class](https://ckgod.github.io/ManifestAndroid/q6-application-class.html)
     * [Q7 Androidmanifest](https://ckgod.github.io/ManifestAndroid/q7-androidmanifest.html)
     * [Q8 Activity Lifecycle](https://ckgod.github.io/ManifestAndroid/q8-activity-lifecycle.html)
+      * [Details Lifecycle 인스턴스란](https://ckgod.github.io/ManifestAndroid/details-lifecycle-인스턴스란.html)
+      * [Details 여러 Activity 간 수명 주기 변화](https://ckgod.github.io/ManifestAndroid/details-여러-activity-간-수명-주기-변화.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
 ## 참고

@@ -4,7 +4,8 @@
 
 ## 학습 목차
 
-### [1.1 Android Framework](1-1-android-framework.md)
+### 1.1 Android Framework
+
 Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 
 - [Q1. Android란?](Q1-Android.md) - Android 운영체제의 기본 개념과 아키텍처
@@ -22,7 +23,8 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
   - [Details: Lifecycle 인스턴스란](Details-Lifecycle-인스턴스란.md)
   - [Details: 여러 Activity 간 수명 주기 변화](Details-여러-Activity-간-수명-주기-변화.md)
 
-### [1.2 ETC](1-2-ETC.md) 
+### 1.2 ETC
+
 이 외로 추가적인 내용을 다룹니다.
 
 - [E1. RecyclerView 렌더링 과정](E1-RecyclerView-렌더링-과정.md) - 효율적인 리스트 구현을 위한 RecyclerView

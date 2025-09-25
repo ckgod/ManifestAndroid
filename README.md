@@ -29,6 +29,9 @@
     * [Q8 Activity Lifecycle](https://ckgod.github.io/ManifestAndroid/q8-activity-lifecycle.html)
       * [Details Lifecycle 인스턴스란](https://ckgod.github.io/ManifestAndroid/details-lifecycle-인스턴스란.html)
       * [Details 여러 Activity 간 수명 주기 변화](https://ckgod.github.io/ManifestAndroid/details-여러-activity-간-수명-주기-변화.html)
+    * [Q9 Fragment 생명주기](https://ckgod.github.io/ManifestAndroid/q9-fragment-생명주기.html)
+      * [Details Fragment의 Viewlifecycleowner 인스턴스](https://ckgod.github.io/ManifestAndroid/details-fragment의-viewlifecycleowner-인스턴스.html)
+      * [Details Fragmentmanager와 Childfragmentmanager의 차이점](https://ckgod.github.io/ManifestAndroid/details-fragmentmanager와-childfragmentmanager의-차이점.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
 ## 참고

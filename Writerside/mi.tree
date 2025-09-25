@@ -25,7 +25,9 @@
                 <toc-element topic="Details-Lifecycle-인스턴스란.md"/>
                 <toc-element topic="Details-여러-Activity-간-수명-주기-변화.md"/>
             </toc-element>
-            <toc-element topic="Q9-Fragment-생명주기.md"/>
+            <toc-element topic="Q9-Fragment-생명주기.md">
+                <toc-element topic="Details-fragmentManager와-childFragmentManager의-차이점.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

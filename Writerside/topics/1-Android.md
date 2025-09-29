@@ -22,6 +22,9 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 - [Q8. Activity Lifecycle](Q8-Activity-LifeCycle.md) - 액티비티 생명주기 관리
   - [Details: Lifecycle 인스턴스란](Details-Lifecycle-인스턴스란.md)
   - [Details: 여러 Activity 간 수명 주기 변화](Details-여러-Activity-간-수명-주기-변화.md)
+- [Q9. Fragment 생명주기](Q9-Fragment-생명주기.md) - 프래그먼트 생명주기와 관리
+  - [Details: Fragment의 viewLifecycleOwner 인스턴스](Details-Fragment의-viewLifecycleOwner-인스턴스.md)
+  - [Details: fragmentManager와 childFragmentManager의 차이점](Details-fragmentManager와-childFragmentManager의-차이점.md)
 
 ### 1.2 ETC
 

@@ -3,7 +3,7 @@
         SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
 
 <instance-profile id="mi"
-                 name="Main Instance"
+                 name="ckgod.github"
                  start-page="1-Android.md">
 
     <toc-element topic="1-Android.md">

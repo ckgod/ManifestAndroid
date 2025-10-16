@@ -33,6 +33,12 @@
       * [Details Fragment의 Viewlifecycleowner 인스턴스](https://ckgod.github.io/ManifestAndroid/details-fragment의-viewlifecycleowner-인스턴스.html)
       * [Details Fragmentmanager와 Childfragmentmanager의 차이점](https://ckgod.github.io/ManifestAndroid/details-fragmentmanager와-childfragmentmanager의-차이점.html)
     * [Q10 Service](https://ckgod.github.io/ManifestAndroid/q10-service.html)
+      * [Details Service의 생명주기](https://ckgod.github.io/ManifestAndroid/details-service의-생명주기.html)
+      * [Details Forground Service](https://ckgod.github.io/ManifestAndroid/details-forground-service.html)
+    * [Q11 Broadcastreceiver](https://ckgod.github.io/ManifestAndroid/q11-broadcastreceiver.html)
+    * [Q12 Contentprovider](https://ckgod.github.io/ManifestAndroid/q12-contentprovider.html)
+      * [Details 앱 시작 시 Contentprovider 사용하여 구성을 초기화하기](https://ckgod.github.io/ManifestAndroid/details-앱-시작-시-contentprovider-사용하여-구성을-초기화하기.html)
+    * [Q13 Configuration Change](https://ckgod.github.io/ManifestAndroid/q13-configuration-change.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
 ## 참고

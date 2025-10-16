@@ -25,6 +25,13 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 - [Q9. Fragment 생명주기](Q9-Fragment-생명주기.md) - 프래그먼트 생명주기와 관리
   - [Details: Fragment의 viewLifecycleOwner 인스턴스](Details-Fragment의-viewLifecycleOwner-인스턴스.md)
   - [Details: fragmentManager와 childFragmentManager의 차이점](Details-fragmentManager와-childFragmentManager의-차이점.md)
+- [Q10. Service](Q10-Service.md) - 백그라운드 작업을 위한 Service 컴포넌트
+  - [Details: Service의 생명주기](Details-Service의-생명주기.md)
+  - [Details: Forground Service](Details-Forground-Service.md)
+- [Q11. BroadcastReceiver](Q11-BroadcastReceiver.md) - 시스템 및 앱 이벤트 수신
+- [Q12. ContentProvider](Q12-ContentProvider.md) - 앱 간 데이터 공유를 위한 ContentProvider
+  - [Details: 앱 시작 시 ContentProvider 사용하여 구성을 초기화하기](Details-앱-시작-시-ContentProvider-사용하여-구성을-초기화하기.md)
+- [Q13. Configuration Change](Q13-Configuration-Change.md) - 구성 변경 처리 전략
 
 ### 1.2 ETC
 

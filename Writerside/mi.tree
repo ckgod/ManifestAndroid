@@ -8,6 +8,7 @@
 
     <toc-element topic="1-Android.md">
         <toc-element topic="1-1-android-framework.md">
+            <toc-element topic="Q14-Memory-Management.md"/>
             <toc-element topic="Q1-Android.md"/>
             <toc-element topic="Q2-Intent.md"/>
             <toc-element topic="Q3-Pending-Intent.md"/>

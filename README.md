@@ -39,6 +39,10 @@
     * [Q12 Contentprovider](https://ckgod.github.io/ManifestAndroid/q12-contentprovider.html)
       * [Details 앱 시작 시 Contentprovider 사용하여 구성을 초기화하기](https://ckgod.github.io/ManifestAndroid/details-앱-시작-시-contentprovider-사용하여-구성을-초기화하기.html)
     * [Q13 Configuration Change](https://ckgod.github.io/ManifestAndroid/q13-configuration-change.html)
+    * [Q14 Memory Management](https://ckgod.github.io/ManifestAndroid/q14-memory-management.html)
+    * [Q15 Anr](https://ckgod.github.io/ManifestAndroid/q15-anr.html)
+    * [Q16 Deep Link](https://ckgod.github.io/ManifestAndroid/q16-deep-link.html)
+    * [Q17 Task와 Back Stack](https://ckgod.github.io/ManifestAndroid/q17-task와-back-stack.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
 ## 참고

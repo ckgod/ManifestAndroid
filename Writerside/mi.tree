@@ -41,6 +41,7 @@
             <toc-element topic="Q14-Memory-Management.md"/>
             <toc-element topic="Q15-ANR.md" />
             <toc-element topic="Q16-Deep-Link.md"/>
+            <toc-element topic="Q17-Task와-back-stack.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

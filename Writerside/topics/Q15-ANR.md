@@ -1,6 +1,6 @@
 # Q15) ANR
 
-## Q) 15. ANR 오류의 주요 원인은 무엇이며, 이를 방지하는 방법은 무엇인가요?
+## ANR 오류의 주요 원인은 무엇이며, 이를 방지하는 방법은 무엇인가요? {#A1344}
 
 ANR(Application Not Responding)은 앱의 main thread (UI thread)가 일반적으로 5초 이상 너무 오랫동안 차단될 때 Android에서 발생하는 오류입니다.
 ANR이 발생하면 Android는 사용자에게 앱을 종료하거나 응답을 기다리도록 알림을 표시합니다.

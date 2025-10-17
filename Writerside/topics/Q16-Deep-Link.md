@@ -1,6 +1,6 @@
 # Q16) Deep Link
 
-## Q) 16. 딥 링크는 어떻게 처리하나요?
+## 딥 링크는 어떻게 처리하나요?
 [딥 링크](https://developer.android.com/training/app-links/deep-linking)를 통해 사용자는 URL 또는 알림과 같은 외부 소스에서 앱 내의 특정 화면이나 기능으로 직접 이동할 수 있습니다. 
 딥 링크를 처리하려면 AndroidManifest.xml에 딥 링크를 정의하고 해당 activities 또는 fragments에서 수신되는 intents를 처리해야 합니다.
 

@@ -1,6 +1,6 @@
 # Q17) Task와 back stack
 
-## Q)17. Task와 back stack이란 무엇인가요?
+## Task와 back stack이란 무엇인가요?
 
 [Task](https://developer.android.com/guide/components/activities/tasks-and-back-stack)는 사용자가 특정 목표를 달성하기 위해 상호작용하는 `Activity`들의 모음입니다.
 `Task`는 `back stack`으로 구성되는데, 이는 `Activity`가 시작될 때 추가되고 사용자가 뒤로 이동하거나 시스템이 리소스를 회수할 때 제거되는 `last-in, first-out` (`LIFO`) 구조입니다.

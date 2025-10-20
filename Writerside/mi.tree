@@ -37,7 +37,9 @@
             <toc-element topic="Q12-ContentProvider.md">
                 <toc-element topic="Details-앱-시작-시-ContentProvider-사용하여-구성을-초기화하기.md"/>
             </toc-element>
-            <toc-element topic="Q13-Configuration-Change.md"/>
+            <toc-element topic="Q13-Configuration-Change.md">
+                <toc-element topic="Details-구성-변경-시-Activity는-어떻게-될까.md"/>
+            </toc-element>
             <toc-element topic="Q14-Memory-Management.md"/>
             <toc-element topic="Q15-ANR.md" />
             <toc-element topic="Q16-Deep-Link.md"/>

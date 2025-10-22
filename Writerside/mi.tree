@@ -52,6 +52,7 @@
             <toc-element topic="Q21-SparseArray.md"/>
             <toc-element topic="Q22-Runtime-Permission.md"/>
             <toc-element topic="Q23-Looper-Handler-HandlerThread.md"/>
+            <toc-element topic="Q24-Exception-Tracing.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

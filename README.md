@@ -48,6 +48,12 @@
     * [Q19 Activity Fragment 데이터 전달](https://ckgod.github.io/ManifestAndroid/q19-activity-fragment-데이터-전달.html)
       * [Details Fragment Result Api](https://ckgod.github.io/ManifestAndroid/details-fragment-result-api.html)
     * [Q20 Activitymanager](https://ckgod.github.io/ManifestAndroid/q20-activitymanager.html)
+    * [Q21 Sparsearray](https://ckgod.github.io/ManifestAndroid/q21-sparsearray.html)
+    * [Q22 Runtime Permission](https://ckgod.github.io/ManifestAndroid/q22-runtime-permission.html)
+    * [Q23 Looper Handler Handlerthread](https://ckgod.github.io/ManifestAndroid/q23-looper-handler-handlerthread.html)
+    * [Q24 Exception Tracing](https://ckgod.github.io/ManifestAndroid/q24-exception-tracing.html)
+    * [Q25 Build Variants Flavors](https://ckgod.github.io/ManifestAndroid/q25-build-variants-flavors.html)
+    * [Q26 Accessibility](https://ckgod.github.io/ManifestAndroid/q26-accessibility.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
 ## 참고

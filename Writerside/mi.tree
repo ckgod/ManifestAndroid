@@ -56,6 +56,7 @@
             <toc-element topic="Q25-Build-Variants-Flavors.md"/>
             <toc-element topic="Q26-Accessibility.md"/>
             <toc-element topic="Q27-File-System.md"/>
+            <toc-element topic="Q28-ART-Dalvik-Dex-Compiler.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

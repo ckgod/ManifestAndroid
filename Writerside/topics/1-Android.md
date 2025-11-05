@@ -10,7 +10,7 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 
 - [Q1. Android란?](Q1-Android.md) - Android 운영체제의 기본 개념과 아키텍처
 - [Q2. Intent](Q2-Intent.md) - 컴포넌트 간 통신을 위한 Intent 시스템
-- [Q3. PendingIntent](Q3-Pending-Intent.md) - 지연 실행을 위한 PendingIntent  
+- [Q3. PendingIntent](Q3-Pending-Intent.md) - 지연 실행을 위한 PendingIntent
 - [Q4. Serializable & Parcelable](Q4-Serializable-Parcelable.md) - 객체 직렬화 방법들
   - [Details: Parcel and Parcelable](Details-Parcel-and-Parcelable.md)
 - [Q5. Context](Q5-Context.md) - Android의 Context 개념과 올바른 사용법
@@ -47,6 +47,38 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 - [Q24. Exception Tracing](Q24-Exception-Tracing.md) - 예외 추적 및 디버깅 방법
 - [Q25. Build Variants, Flavors](Q25-Build-Variants-Flavors.md) - 빌드 변형 및 Flavor 관리
 - [Q26. 접근성](Q26-Accessibility.md) - 접근성 구현 및 보장
+- [Q27. File System](Q27-File-System.md) - Android 파일 시스템과 저장소 관리
+- [Q28. ART, Dalvik, Dex, Compiler](Q28-ART-Dalvik-Dex-Compiler.md) - Android 런타임과 컴파일 시스템
+
+### 1.2 Android UI & Views
+
+Android의 UI 시스템과 View 구성 요소를 다룹니다.
+
+### 1.3 Jetpack Library
+
+Android Jetpack 라이브러리와 Architecture Components를 다룹니다.
+
+- [Q54. Jetpack ViewModel](Q54-JetPack-ViewModel.md) - ViewModel을 통한 UI 상태 관리
+
+### 1.4 Business Logic
+
+비즈니스 로직과 데이터 처리 패턴을 다룹니다.
+
+- [Q66. 초기 데이터 로드 위치: LaunchedEffect vs. ViewModel.init()](Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md) - 초기 데이터 로드 전략
+
+### 2.1 Jetpack Compose
+
+선언형 UI 프레임워크인 Jetpack Compose의 기초를 다룹니다.
+
+### 2.2 Compose Runtime
+
+Compose의 런타임 동작과 상태 관리를 다룹니다.
+
+- [Q11. State](Q11-State.md) - Compose의 상태 관리 시스템
+
+### 2.3 Compose UI
+
+Compose UI 구성 요소와 레이아웃 시스템을 다룹니다.
 
 ### 1.2 ETC
 

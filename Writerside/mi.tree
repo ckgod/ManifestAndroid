@@ -57,13 +57,14 @@
             <toc-element topic="Q26-Accessibility.md"/>
             <toc-element topic="Q27-File-System.md"/>
             <toc-element topic="Q28-ART-Dalvik-Dex-Compiler.md"/>
-            <toc-element topic="Q54-JetPack-ViewModel.md">
-            </toc-element>
-            <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>
         </toc-element>
         <toc-element topic="1-2-Android-UI-Views.md"/>
-        <toc-element topic="1-3-Jetpack-Library.md"/>
-        <toc-element topic="1-4-Business-Logic.md"/>
+        <toc-element topic="1-3-Jetpack-Library.md">
+            <toc-element topic="Q54-JetPack-ViewModel.md"/>
+        </toc-element>
+        <toc-element topic="1-4-Business-Logic.md">
+            <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>
+        </toc-element>
         <toc-element topic="2-1-Jetpack-Compose.md"/>
         <toc-element topic="2-2-Compose-Runtime.md">
             <toc-element topic="Q11-State.md"/>

@@ -68,6 +68,7 @@
         <toc-element topic="2-1-Jetpack-Compose.md"/>
         <toc-element topic="2-2-Compose-Runtime.md">
             <toc-element topic="Q11-State.md"/>
+            <toc-element topic="Q12-State-hoisting.md"/>
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md"/>
         <toc-element topic="1-2-ETC.md">

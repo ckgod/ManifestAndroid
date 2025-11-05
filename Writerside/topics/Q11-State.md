@@ -90,7 +90,7 @@ Compose 컴파일러가 Stable을 판단하는 방법
 - data class
   - 모든 public 속성이 val이고, 그 val들의 타입 또한 모두 Stable 이라면 해당 data class는 Stable로 추론
 - 컬렉션
-  - List<T>, Set<T>, Map<K, V> 등
+  - `List<T>`, `Set<T>`, `Map<K, V>` 등
   - 제네릭 타입이 모두 Stable 해야만 해당 컬렉션이 Stable로 간주
 
 3. 명시적 어노테이션
@@ -99,8 +99,8 @@ Compose 컴파일러가 Stable을 판단하는 방법
   - `data class`의 모든 속성이 val이고 타입이 Stable할 때 컴파일러가 추론하는 것과 동일한 효과
   - 컴파일러가 추론하지 못하는 불변 클래스(예: `interface`를 구현)에 사용합니다.
 - `@Stable`: "이 클래스는 변경될 수 있지만, 변경되면 Compose 런타임에 반드시 알립니다."
-  - 대표적인 예시가 MutableState<T>
-  - MutableState의 .value는 변경 가능하지만, 변경될 때 런타임에 "나 변경됐어!"라고 알리기 때문에 Compose는 이 타입을 Stable로 신뢰한다.
+  - 대표적인 예시가 `MutableState<T>`
+  - `MutableState`의 `.value`는 변경 가능하지만, 변경될 때 런타임에 "나 변경됐어!"라고 알리기 때문에 Compose는 이 타입을 Stable로 신뢰한다.
   - 변경됐으면 알려준다 -> 변경됐으면 recomposition 무조건 실행, equals 비교도 신뢰 가능
 
 

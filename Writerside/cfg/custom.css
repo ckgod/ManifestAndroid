@@ -1,0 +1,36 @@
+html {
+    height: -webkit-fill-available;
+}
+
+body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.app-container,
+.main-content,
+.article-content {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    .app-container {
+        height: auto;
+        min-height: 100vh;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    body {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+}

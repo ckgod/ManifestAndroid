@@ -107,10 +107,6 @@ jobs:
       - name: Unzip artifact
         run: unzip -O UTF-8 -qq "artifacts/${{ needs.build.outputs.artifact }}" -d dir
 
-      - name: Add mobile optimization meta tags
-        run: |
-          find dir -name "*.html" -type f -exec sed -i 's/<head>/<head>\n  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">\n  <meta name="mobile-web-app-capable" content="yes">\n  <meta name="apple-mobile-web-app-capable" content="yes">\n  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">/' {} +
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

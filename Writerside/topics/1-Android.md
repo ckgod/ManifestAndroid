@@ -75,13 +75,23 @@ Android Jetpack 라이브러리와 Architecture Components를 다룹니다.
 Compose의 런타임 동작과 상태 관리를 다룹니다.
 
 - [Q11. State](Q11-State.md) - Compose의 상태 관리 시스템
+- [Q12. State hoisting](Q12-State-hoisting.md) - 상태 끌어올리기 패턴
+  - [Details: Stateful vs Stateless](Details-Stateful-vs-Stateless.md)
+- [Q13. remember & rememberSaveable](Q13-remember-rememberSaveable.md) - 상태 저장 및 복원
+- [Q14. rememberCoroutineScope](Q14-rememberCoroutineScope.md) - Compose에서 코루틴 사용하기
+- [Q15. Side Effects](Q15-Side-Effects.md) - Compose의 부수효과 처리
+- [Q20. Composable Lifecycle](Q20-Composable-Lifecycle.md) - Composable 함수의 생명주기
 
 ### 2.3 Compose UI
 
 Compose UI 구성 요소와 레이아웃 시스템을 다룹니다.
+
+- [Q26. Modifier](Q26-Modifier.md) - Compose에서 UI 요소 수정하기
 
 ### 1.2 ETC
 
 이 외로 추가적인 내용을 다룹니다.
 
 - [E1. RecyclerView 렌더링 과정](E1-RecyclerView-렌더링-과정.md) - 효율적인 리스트 구현을 위한 RecyclerView
+- [E2. Kotlin Flow](E2-Kotlin-Flow.md) - Kotlin의 비동기 데이터 스트림
+- [E3. Kotlin Delegation](E3-Kotlin-Delegation.md) - Kotlin의 위임 패턴

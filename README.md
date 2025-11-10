@@ -78,4 +78,4 @@
     * [E3 Kotlin Delegation](https://ckgod.github.io/ManifestAndroid/e3-kotlin-delegation.html)
 ## 참고
 - [skydoves/manifest-android-interview](https://github.com/skydoves/manifest-android-interview)
-- [martup-reference](https://www.jetbrains.com/help/writerside/markup-reference.html) 
+- [markup-reference](https://www.jetbrains.com/help/writerside/markup-reference.html) 

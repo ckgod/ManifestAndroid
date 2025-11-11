@@ -59,6 +59,7 @@
   * [1 2 Android Ui Views](https://ckgod.github.io/ManifestAndroid/1-2-android-ui-views.html)
   * [1 3 Jetpack Library](https://ckgod.github.io/ManifestAndroid/1-3-jetpack-library.html)
     * [Q54 Jetpack Viewmodel](https://ckgod.github.io/ManifestAndroid/q54-jetpack-viewmodel.html)
+    * [Q56 Dagger 2 Hilt](https://ckgod.github.io/ManifestAndroid/q56-dagger-2-hilt.html)
   * [1 4 Business Logic](https://ckgod.github.io/ManifestAndroid/1-4-business-logic.html)
     * [Q66 초기 데이터 Launchedeffect Vs Viewmodel Init](https://ckgod.github.io/ManifestAndroid/q66-초기-데이터-launchedeffect-vs-viewmodel-init.html)
   * [2 1 Jetpack Compose](https://ckgod.github.io/ManifestAndroid/2-1-jetpack-compose.html)

@@ -285,6 +285,16 @@ class FirestoreUserEventsDataSource(
 
 ### Cold Flow vs Hot Flow 비교
 
+#### Cold Flow
+* `flow { ... }` 빌더로 만든 대부분의 Flow
+* `collect()`가 호출되기 전까지는 아무것도 하지 않음.
+* `collect()`가 호출되면, 그때서야 Flow가 활성화되어 값을 생성하고 방출함.
+
+#### Hot FLow
+* StateFlow와 SharedFlow가 여기 속함.
+* `collect()`하는 대상이 있든 없든, Flow 자체가 이미 활성화되어 있음.
+* 값을 생성하거나 이벤트를 받을 준비가 항상 되어있음.
+
 | 구분 | Cold Flow | Hot Flow (StateFlow) |
 |------|-----------|----------------------|
 | 생성 방식 | flow { } | MutableStateFlow() |
@@ -292,6 +302,8 @@ class FirestoreUserEventsDataSource(
 | 구독자 수 | 각 collector마다 독립적 실행 | 모든 collector가 같은 인스턴스 공유 |
 | 초기값 | 없음 | 필수 |
 | 사용 사례 | 일회성 작업, 네트워크 요청 | UI 상태, 실시간 데이터 |
+
+Hot Flow의 기준은 "값을 보유하는가"가 아니라, "Collector(수집가)가 없어도 활성화되어 있는가"이다.
 
 ### StateFlow 사용 예제
 

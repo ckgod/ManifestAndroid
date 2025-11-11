@@ -61,6 +61,7 @@
         <toc-element topic="1-2-Android-UI-Views.md"/>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>
+            <toc-element topic="Q56-Dagger-2-Hilt.md"/>
         </toc-element>
         <toc-element topic="1-4-Business-Logic.md">
             <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>

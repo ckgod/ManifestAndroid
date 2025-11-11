@@ -12,7 +12,7 @@
 
 ### Parcelable
 - 안드로이드 전용 인터페이스: Parcelable은 Android 컴포넌트 내의 고성능 프로세스 간 통신(<tooltip term="IPC">IPC</tooltip>)을 위해 특별히 설계된 Android 전용 인터페이스이다.
-- 성능: Parcelable은 Android에 최적화되어 있고 리플렉션에 의존하지 않기 때문에 Serializable보다 빠르다. 또한 임시 객첼르 많이 생성하지 않아 가비지 컬렉션을 최소화한다.
+- 성능: Parcelable은 Android에 최적화되어 있고 리플렉션에 의존하지 않기 때문에 Serializable보다 빠르다. 또한 임시 객체를 많이 생성하지 않아 가비지 컬렉션을 최소화한다.
 - 사용 사례: 성능이 중요한 경우, 특히 IPC나 Activity 또는 Service 간에 데이터를 전달할 때 Parcelable을 선호한다.
 
 최신 안드로이드 개발에서, [kotlin-parcelize Plugin](https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.parcelize)은 구현을 자동으로 생성하여 `Parcelable` 객체를 생성하는 프로세스를 간소화 한다.

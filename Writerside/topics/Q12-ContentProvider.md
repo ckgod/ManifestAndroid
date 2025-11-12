@@ -29,8 +29,6 @@
 *   `delete()`: 데이터를 제거합니다.
 *   `getType()`: 데이터의 `MIME type`을 반환합니다.
 
-Figure 36. MyContentProvider.kt
-
 ```kotlin
 class MyContentProvider : ContentProvider() {
 
@@ -82,7 +80,6 @@ class MyContentProvider : ContentProvider() {
 
 `ContentProvider`를 다른 앱에서 액세스할 수 있도록 하려면 `Android-Manifest.xml` 파일에 선언해야 합니다. `authority` 속성은 `ContentProvider`를 고유하게 식별합니다.
 
-Figure 37. AndroidManifest.xml
 ```xml
 <provider
 android:name=".MyContentProvider"
@@ -94,8 +91,6 @@ android:grantUriPermissions="true" />
 ### `ContentProvider`에서 데이터 액세스하기 {#CP5}
 
 다른 앱에서 `ContentProvider`와 상호 작용하려면 `ContentResolver` 클래스를 사용할 수 있습니다. `ContentResolver`는 데이터를 쿼리, 삽입, 업데이트 또는 삭제하는 메서드를 제공합니다.
-
-Figure 38. Accessing Data from a ContentProvider
 
 ```kotlin
 val contentResolver = context.contentResolver

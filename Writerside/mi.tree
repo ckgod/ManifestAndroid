@@ -79,6 +79,7 @@
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md">
             <toc-element topic="Q26-Modifier.md"/>
+            <toc-element topic="Q29-Arragement-Alignment.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

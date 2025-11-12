@@ -2,13 +2,16 @@
 
 ## 구성 변경을 어떻게 처리해야 하나요?
 
-구성 변경을 처리하는 것은 원활한 사용자 경험을 유지하는 데 필수적입니다. 특히 화면 회전, 로케일 변경, 다크 모드와 라이트 모드 간 전환, 글꼴 크기 또는 가중치 조정과 같은 이벤트에서 중요합니다. 
-기본적으로 Android 시스템은 이러한 변경이 발생할 때 Activity를 다시 시작하여 일시적인 UI 상태를 잃을 수 있습니다. 이러한 변경을 효과적으로 처리하려면 다음 전략을 고려하십시오
+구성 변경을 처리하는 것은 원활한 사용자 경험을 유지하는 데 필수적입니다. 
+특히 화면 회전, 로케일 변경, 다크 모드와 라이트 모드 간 전환, 글꼴 크기 또는 가중치 조정과 같은 이벤트에서 중요합니다. 
+
+기본적으로 Android 시스템은 이러한 변경이 발생할 때 Activity를 다시 시작하여 일시적인 UI 상태를 잃을 수 있습니다. 
+이러한 변경을 효과적으로 처리하려면 다음 전략을 고려하십시오
 
 1.  **UI 상태 저장 및 복원**: Activity 재생성 중 UI 상태를 보존하고 복원하기 위해 `onSaveInstanceState()` 및 `onRestoreInstanceState()` 메서드를 구현합니다. 이렇게 하면 구성 변경 후 사용자가 동일한 상태로 돌아갈 수 있습니다.
 2.  **Jetpack ViewModel**: 구성 변경에도 유지되는 UI 관련 데이터를 저장하기 위해 `ViewModel` 클래스를 활용합니다. `ViewModel` 객체는 Activity 재생성보다 오래 지속되도록 설계되어 이러한 이벤트 동안 데이터를 관리하는 데 이상적입니다.
 3.  **구성 변경 수동 처리**: 애플리케이션이 특정 구성 변경 중에 리소스를 업데이트할 필요가 없고 Activity 재시작을 피하고 싶다면, `AndroidManifest.xml` 파일에서 `android:configChanges` 속성을 사용하여 Activity가 처리할 구성 변경을 선언합니다. 그런 다음 `onConfigurationChanged()` 메서드를 재정의하여 이러한 변경을 수동으로 관리합니다.
-4.  **Jetpack Compose에서 `rememberSaveable` 활용**: Jetpack Compose에서는 구성 변경 전반에 걸쳐 UI 상태를 저장하기 위해 `rememberSaveable`을 사용할 수 있습니다. 이는 `onSaveInstanceState()`와 유사하게 작동하지만 Compose에 특화되어 Composable 상태를 일관되게 유지하는 데 도움이 됩니다. 이에 대한 자세한 내용은 *Chapter 1: Jetpack Compose Interview Questions*에서 더 자세히 다룰 것입니다.
+4.  **Jetpack Compose에서 `rememberSaveable` 활용**: Jetpack Compose에서는 구성 변경 전반에 걸쳐 UI 상태를 저장하기 위해 `rememberSaveable`을 사용할 수 있습니다. 이는 `onSaveInstanceState()`와 유사하게 작동하지만 Compose에 특화되어 Composable 상태를 일관되게 유지하는 데 도움이 됩니다. 이에 대한 자세한 내용은 [*Chapter 1: Jetpack Compose Interview Questions*](Q13-remember-rememberSaveable.md)에서 더 자세히 다룰 것입니다.
 
 ## 추가 팁
 

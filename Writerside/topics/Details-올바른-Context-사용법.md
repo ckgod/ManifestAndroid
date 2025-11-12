@@ -3,7 +3,7 @@
 ## Context를 사용할 때 주의해야 할 사항은 무엇인가요?
 Context는 잘못 사용하면 메모리 누수, Conflict 또는 비효율적인 리소스 처리와 같은 문제가 발생할 수 있다. 
 
-가장 일반적인 문제 중 하나는 Activity 또는 Fragment Context에 대한 참조를 라이프사이클 이후에도 유지하는 것이다. 
+가장 일반적인 문제 중 하나는 **Activity 또는 Fragment Context에 대한 참조를 라이프사이클 이후에도 유지**하는 것이다. 
 Garbage Collector가 Context 또는 관련 리소스에 대한 메모리를 회수할 수 없기 때문에 메모리 누수가 발생할 수 있다.
 
 예를 들어 아래 코드는 메모리 누수를 유발한다. 

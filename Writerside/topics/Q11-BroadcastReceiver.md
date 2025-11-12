@@ -18,10 +18,10 @@
 
 `BroadcastReceiver`는 `Activity`나 `Service`의 `lifecycle`에 직접 연결되지 않을 수 있는 이벤트를 처리하는 데 사용됩니다. 이는 앱이 백그라운드에서 계속 실행되지 않고도 변경 사항에 반응할 수 있도록 하는 메시징 시스템 역할을 하여 리소스를 절약합니다.
 
-## 브로드캐스트 유형
+## Broadcast 유형
 
-1.  **System 브로드캐스트**: Android `OS`가 배터리 잔량 변경, 시간대 업데이트 또는 네트워크 연결 변경과 같은 시스템 이벤트를 앱에 알리기 위해 보냅니다.
-2.  **Custom 브로드캐스트**: 애플리케이션이 앱 내부 또는 앱 간에 특정 정보나 이벤트를 전달하기 위해 보냅니다.
+1.  **System Broadcast**: Android `OS`가 배터리 잔량 변경, 시간대 업데이트 또는 네트워크 연결 변경과 같은 시스템 이벤트를 앱에 알리기 위해 보냅니다.
+2.  **Custom Broadcast**: 애플리케이션이 앱 내부 또는 앱 간에 특정 정보나 이벤트를 전달하기 위해 보냅니다.
 
 ## BroadcastReceiver 선언하기 {#BC2}
 
@@ -55,16 +55,15 @@ class MyBroadcastReceiver : BroadcastReceiver() {
 
 2. **동적 등록 (코드를 통해)**: 앱이 활성 상태이거나 특정 상태일 때만 처리해야 하는 이벤트에 사용합니다.
 
-    Figure 35. Dynamic Registration in Activity
-    ```kotlin
-    val receiver = MyBroadcastReceiver()
-    val intentFilter = IntentFilter(Intent.ACTION_BATTERY_LOW)
-    registerReceiver(receiver, intentFilter)
-    ```
+```kotlin
+val receiver = MyBroadcastReceiver()
+val intentFilter = IntentFilter(Intent.ACTION_BATTERY_LOW)
+registerReceiver(receiver, intentFilter)
+```
 
 ## 고려 사항
 
-*   **Lifecycle Management**: 동적 등록을 사용하는 경우, `memory leaks`를 방지하기 위해 `unregisterReceiver`를 사용하여 리시버를 등록 해제해야 합니다.
+*   **Lifecycle Management**: 동적 등록을 사용하는 경우, 메모리 누수를 방지하기 위해 `unregisterReceiver`를 사용하여 리시버를 등록 해제해야 합니다.
 *   **Background Execution Limits**: Android 8.0 (`API` level 26)부터 백그라운드 앱은 명시적인 브로드캐스트 예외를 제외하고 브로드캐스트 수신에 제한을 받습니다. 이러한 경우를 처리하려면 `Context.registerReceiver` 또는 `JobScheduler`를 사용하세요.
 *   **보안**: 민감한 정보가 포함된 브로드캐스트의 경우 무단 접근을 방지하기 위해 `permissions`으로 보호하세요.
 

@@ -5,7 +5,7 @@ PendingIntent는 다른 애플리케이션이나 시스템 컴포넌트가 애�
 이는 알림, Service와의 상호작용 같이 앱 수명 외의 트리거해야 하는 작업에 유용하다.
 
 ### PendingIntent의 주요 기능 {#features-pending-intent}
-PendingIntent는 일반 인텐트의 Wrapper 역할을 하여 앱의 수명 주기 이후에도 지속될 수 있다.
+PendingIntent는 일반 인텐트의 Wrapper 역할을 하여 **앱의 수명 주기 이후**에도 지속될 수 있다.
 앱과 동일한 권한을 가진 다른 앱이나 시스템 서비스에 인텐트의 실행을 위임한다.
 Activity, Service, BroadCast Receiver에 대해 PendingIntent를 만들 수 있다.
 

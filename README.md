@@ -73,6 +73,7 @@
     * [Q20 Composable Lifecycle](https://ckgod.github.io/ManifestAndroid/q20-composable-lifecycle.html)
   * [2 3 Compose Ui](https://ckgod.github.io/ManifestAndroid/2-3-compose-ui.html)
     * [Q26 Modifier](https://ckgod.github.io/ManifestAndroid/q26-modifier.html)
+    * [Q29 Arragement Alignment](https://ckgod.github.io/ManifestAndroid/q29-arragement-alignment.html)
   * [1 2 Etc](https://ckgod.github.io/ManifestAndroid/1-2-etc.html)
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
     * [E2 Kotlin Flow](https://ckgod.github.io/ManifestAndroid/e2-kotlin-flow.html)

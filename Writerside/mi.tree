@@ -59,6 +59,7 @@
             <toc-element topic="Q28-ART-Dalvik-Dex-Compiler.md"/>
             <toc-element topic="Q29-APK-AAB.md"/>
             <toc-element topic="Q30-R8-최적화.md"/>
+            <toc-element topic="Q31-App-크기-줄이기.md"/>
         </toc-element>
         <toc-element topic="1-2-Android-UI-Views.md"/>
         <toc-element topic="1-3-Jetpack-Library.md">

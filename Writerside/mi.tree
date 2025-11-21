@@ -64,7 +64,9 @@
                 <toc-element topic="Details-Android-4대-구성요소.md"/>
             </toc-element>
         </toc-element>
-        <toc-element topic="1-2-Android-UI-Views.md"/>
+        <toc-element topic="1-2-Android-UI-Views.md">
+            <toc-element topic="Q33-View-Lifecycle.md"/>
+        </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>
             <toc-element topic="Q56-Dagger-2-Hilt.md"/>

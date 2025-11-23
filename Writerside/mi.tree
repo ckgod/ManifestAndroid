@@ -65,7 +65,9 @@
             </toc-element>
         </toc-element>
         <toc-element topic="1-2-Android-UI-Views.md">
-            <toc-element topic="Q33-View-Lifecycle.md"/>
+            <toc-element topic="Q33-View-Lifecycle.md">
+                <toc-element topic="Details-findViewTreeLifecycleOwner.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>

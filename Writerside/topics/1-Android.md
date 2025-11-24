@@ -49,16 +49,28 @@ Android 플랫폼의 기본 구조와 핵심 개념들을 다룹니다.
 - [Q26. 접근성](Q26-Accessibility.md) - 접근성 구현 및 보장
 - [Q27. File System](Q27-File-System.md) - Android 파일 시스템과 저장소 관리
 - [Q28. ART, Dalvik, Dex, Compiler](Q28-ART-Dalvik-Dex-Compiler.md) - Android 런타임과 컴파일 시스템
+- [Q29. APK & AAB](Q29-APK-AAB.md) - Android 패키징 포맷
+- [Q30. R8 최적화](Q30-R8-최적화.md) - R8 코드 축소 및 최적화
+- [Q31. App 크기 줄이기](Q31-App-크기-줄이기.md) - 앱 크기 최적화 전략
+- [Q32. Android의 프로세스](Q32-Android의-프로세스.md) - Android 프로세스 관리
+  - [Details: Android 4대 구성요소](Details-Android-4대-구성요소.md)
 
 ### 1.2 Android UI & Views
 
 Android의 UI 시스템과 View 구성 요소를 다룹니다.
+
+- [Q33. View Lifecycle](Q33-View-Lifecycle.md) - View의 생명주기
+  - [Details: findViewTreeLifecycleOwner](Details-findViewTreeLifecycleOwner.md)
+- [Q34. View & ViewGroup](Q34-View-ViewGroup.md) - View와 ViewGroup의 관계
+- [Q35. ViewStub](Q35-ViewStub.md) - 지연 로딩을 위한 ViewStub
+- [Q36. Custom View](Q36-Custom-View.md) - 커스텀 View 구현
 
 ### 1.3 Jetpack Library
 
 Android Jetpack 라이브러리와 Architecture Components를 다룹니다.
 
 - [Q54. Jetpack ViewModel](Q54-JetPack-ViewModel.md) - ViewModel을 통한 UI 상태 관리
+- [Q56. Dagger 2 & Hilt](Q56-Dagger-2-Hilt.md) - 의존성 주입 프레임워크
 
 ### 1.4 Business Logic
 
@@ -87,6 +99,7 @@ Compose의 런타임 동작과 상태 관리를 다룹니다.
 Compose UI 구성 요소와 레이아웃 시스템을 다룹니다.
 
 - [Q26. Modifier](Q26-Modifier.md) - Compose에서 UI 요소 수정하기
+- [Q29. Arrangement & Alignment](Q29-Arragement-Alignment.md) - Compose 레이아웃 정렬
 
 ### 1.2 ETC
 

@@ -73,6 +73,7 @@
             <toc-element topic="Q36-Custom-View.md">
                 <toc-element topic="Details-생성자-JvmOverloads.md"/>
             </toc-element>
+            <toc-element topic="Q37-Canvas.md"/>
         </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>

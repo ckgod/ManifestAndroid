@@ -206,13 +206,16 @@ fun WeightedRow() {
 `Modifier`가 적용되는 순서는 동작에 영향을 미치며, 스코프가 지정된 `Modifier`는 해당 부모 `Composable`에 따라 신중하게 사용해야 합니다.
 `Modifier`를 효율적으로 이해하고 적용하면 개발자는 유연하고 성능이 뛰어나며 재사용 가능한 `UI component`를 만들 수 있습니다.
 
-> Q) `Modifier`의 순서가 중요한 이유는 무엇인가요? 순서를 변경하면 다른 동작이 발생하는 예시를 제공해 주시겠어요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `Modifier`의 순서가 중요한 이유는 무엇인가요? 순서를 변경하면 다른 동작이 발생하는 예시를 제공해 주시겠어요?">
 
-#### A {collapsible="true"}
 Modifier는 순차적으로 실행됩니다. 순서가 중요한 이유는 각 Modifier가 이전 Modifier를 감싸는 방식으로 순차적으로 적용되기 때문입니다.
 
-가장 이해하기 쉬운 예시는 padding과 background 적용이 있습니다. 
+가장 이해하기 쉬운 예시는 padding과 background 적용이 있습니다.
 
 padding 먼저 적용하고 background를 적용하면 파란색 영역 안에 텍스트가 padding 만큼 떨어져서 위한 Composable이 됩니다.
 
 background 적용 후 padding을 적용하면 파란색 영역안에 텍스트가 있고 파란색 영역 밖에 padding만큼 투명한 여백이 생깁니다.
+
+</def>
+</deflist>

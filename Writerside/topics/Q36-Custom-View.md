@@ -141,13 +141,12 @@ override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
 ### 요약
 
-XML을 통해 Android에서 Custom View를 구현하면 UI 디자인에 유연성을 제공합니다. 
-Custom View 시스템과 [Canvas](https://developer.android.com/reference/android/graphics/Canvas)를 사용하여 다양한 Custom 위젯을 생성할 수 있습니다. 
+XML을 통해 Android에서 Custom View를 구현하면 UI 디자인에 유연성을 제공합니다.
+Custom View 시스템과 [Canvas](https://developer.android.com/reference/android/graphics/Canvas)를 사용하여 다양한 Custom 위젯을 생성할 수 있습니다.
 더 자세한 내용은 [Custom View에 대한 Android 개발자 문서](https://developer.android.com/guide/topics/ui/custom-components)를 참조하십시오.
 
-> Q) XML 레이아웃에서 하위 호환성을 보장하면서 custom View에 custom 속성을 효율적으로 적용하는 방법은 무엇인가요?
-
-#### A {collapsible="true"}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) XML 레이아웃에서 하위 호환성을 보장하면서 custom View에 custom 속성을 효율적으로 적용하는 방법은 무엇인가요?">
 
 Custom View에 속성을 추가하려면 `attrs.xml`에 속성을 정의하고, View 생성자에서 이를 파싱해야 합니다. (3번 참고)
 
@@ -204,5 +203,8 @@ Android는 리소스 한정자 시스템을 통해 특정 API 레벨 이상에�
 이 방식은 Custom View의 속성 정의에도 적용할 수 있습니다. 
 기본 `values` 폴더에는 모든 API 레벨에서 지원되는 기본 속성만 정의하고, `values-v21` 폴더에는 API 21부터 사용 가능한 elevation 같은 속성을 추가로 정의합니다.
 
-빌드 시스템은 자동으로 현재 기기의 API 레벨에 맞는 리소스를 선택합니다. 
+빌드 시스템은 자동으로 현재 기기의 API 레벨에 맞는 리소스를 선택합니다.
 개발자는 코드에서 별도의 조건문 없이 속성을 사용하되, 해당 속성이 존재하는지 확인하는 방어 코드만 추가하면 됩니다.
+
+</def>
+</deflist>

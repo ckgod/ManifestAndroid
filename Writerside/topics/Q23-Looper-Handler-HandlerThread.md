@@ -79,6 +79,11 @@ Looper, Handler, HandlerThread는 Android에서 스레드와 메시지 큐를 �
 Looper는 스레드가 작업을 지속적으로 처리할 수 있도록 보장하고, Handler는 작업 통신을 위한 인터페이스를 제공하며, 
 HandlerThread는 내장된 메시지 루프를 사용하여 워커 스레드를 편리하게 관리하는 방법을 제공합니다.
 
-> Q) Handler는 Looper와 어떻게 작동하여 스레드 간 통신을 용이하게 하며, Handler를 사용하는 일반적인 사용 사례는 무엇인가요? 
-> 
-> Q) HandlerThread는 무엇이며, Looper.prepare()를 사용하여 수동으로 스레드를 생성하는 것에 비해 백그라운드 스레드 관리를 어떻게 단순화하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Handler는 Looper와 어떻게 작동하여 스레드 간 통신을 용이하게 하며, Handler를 사용하는 일반적인 사용 사례는 무엇인가요?">
+
+</def>
+<def title="Q) HandlerThread는 무엇이며, Looper.prepare()를 사용하여 수동으로 스레드를 생성하는 것에 비해 백그라운드 스레드 관리를 어떻게 단순화하나요?">
+
+</def>
+</deflist>

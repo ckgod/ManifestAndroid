@@ -76,6 +76,11 @@
 * [앱 접근성 개선 원칙](https://developer.android.com/guide/topics/ui/accessibility/principles)
 * [앱 접근성 테스트](https://developer.android.com/guide/topics/ui/accessibility/testing)
 
-> Q) 동적 글꼴 크기를 지원하기 위한 모범 사례는 무엇이며, 텍스트 크기에 `sp` 단위를 사용하는 것이 `dp`보다 선호되는 이유는 무엇인가요?
->
-> Q) 개발자는 보조 기술을 사용하는 사용자를 위해 올바른 포커스 관리 및 탐색을 어떻게 보장할 수 있으며, 접근성 문제를 테스트하는 데 어떤 도구가 도움이 될 수 있나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 동적 글꼴 크기를 지원하기 위한 모범 사례는 무엇이며, 텍스트 크기에 sp 단위를 사용하는 것이 dp보다 선호되는 이유는 무엇인가요?">
+
+</def>
+<def title="Q) 개발자는 보조 기술을 사용하는 사용자를 위해 올바른 포커스 관리 및 탐색을 어떻게 보장할 수 있으며, 접근성 문제를 테스트하는 데 어떤 도구가 도움이 될 수 있나요?">
+
+</def>
+</deflist>

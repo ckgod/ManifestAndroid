@@ -76,51 +76,42 @@ Jetpack 라이브러리는 다양한 사용 사례에 맞춰 ViewModel의 범위
 ### 요약
 Jetpack ViewModel은 UI 관련 데이터를 저장하고 관리하도록 설계된 핵심 구성 요소로, 구성 변경 시에도 원활하게 데이터가 유지되도록 보장합니다. 이는 수명 주기를 인식하고 MVVM 아키텍처 패턴과 효과적으로 통합되어 상태 관리를 단순화하고 화면 회전과 같은 이벤트 중에도 데이터를 보존하여 전반적인 개발 경험을 향상시킵니다.
 
-#### Q1 {#q1}
 
-> Q) ViewModel은 구성 변경 시 데이터를 어떻게 유지하며, `onSaveInstanceState()`를 사용하여 상태를 저장하는 것과 어떻게 다른가요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) ViewModel은 구성 변경 시 데이터를 어떻게 유지하며, onSaveInstanceState()를 사용하여 상태를 저장하는 것과 어떻게 다른가요?">
 
-##### A) {#13 collapsible="true"}
-
-**ViewModel**: 화면 회전 같은 구성 변경 시, 데이터를 메모리에 그대로 유지시켜 UI가 즉시 복원되게 합니다. 
+**ViewModel**: 화면 회전 같은 구성 변경 시, 데이터를 메모리에 그대로 유지시켜 UI가 즉시 복원되게 합니다.
 
 **onSaveInstanceState()**: 앱이 백그라운드에서 시스템에 의해 종료되는 프로세스 데스 시, 데이터를 디스크에 직렬화하여 저장하고, 나중에 앱이 재시작될 때 이 데이터를 복원할 수 있게 합니다.
 
 **Jetpack ViewModel 동작 원리**
 1. Activity가 생성될 때, 안드로이드 프레임워크는 `ViewModelStore`라는 보관함을 생성합니다. (Activity가 `ViewModelStoreOwner`)
-2. `ViewModelProvider`를 통해 `ViewModel`를 요청하면, `ViewModel` 인스턴스가 생성되어 이 `ViewModelStore`에 저장됩니다. 
+2. `ViewModelProvider`를 통해 `ViewModel`를 요청하면, `ViewModel` 인스턴스가 생성되어 이 `ViewModelStore`에 저장됩니다.
 3. 사용자가 화면을 회전하면, Activity 인스턴스는 파괴되고 재생성됩니다.
 4. 하지만 프레임워크는 이것이 일시적인 파괴임을 알기에 `ViewModelStore`는 파괴되지 않고 그대로 유지합니다.
-5. 새로 생성된 Activity가 `ViewModelProvider`를 통해 `ViewModel`을 다시 요청하면, 프레임워크는 `ViewModelStore`에 이미 저장된 `ViewModel` 인스턴스를 즉시 반환합니다. 
+5. 새로 생성된 Activity가 `ViewModelProvider`를 통해 `ViewModel`을 다시 요청하면, 프레임워크는 `ViewModelStore`에 이미 저장된 `ViewModel` 인스턴스를 즉시 반환합니다.
 
 **onSaveInstanceState 동작 원리**
-1. 화면 회전 또는 앱이 백그라운드로 전환될 때처럼 시스템이 Activity를 파괴할 가능성이 생기면, onSaveInstanceState() 콜백이 호출됩니다. 
-2. 개발자는 이 메서드 안에서 복원해야 할 최소한의 데이터를 Bundle 객체에 put 합니다. 
-3. 시스템은 이 Bundle을 직렬화하여 안전한 곳(디스크)에 저장합니다. 
-4. 이후 Activity가 다시 생성될 때, 시스템은 저장했던 Bundle을 onCreate의 파라미터로 전달합니다. 
+1. 화면 회전 또는 앱이 백그라운드로 전환될 때처럼 시스템이 Activity를 파괴할 가능성이 생기면, onSaveInstanceState() 콜백이 호출됩니다.
+2. 개발자는 이 메서드 안에서 복원해야 할 최소한의 데이터를 Bundle 객체에 put 합니다.
+3. 시스템은 이 Bundle을 직렬화하여 안전한 곳(디스크)에 저장합니다.
+4. 이후 Activity가 다시 생성될 때, 시스템은 저장했던 Bundle을 onCreate의 파라미터로 전달합니다.
 
-#### Q2 {#q2}
+</def>
+<def title="Q) ViewModelStoreOwner의 목적은 무엇이며, 동일한 Activity 내에서 여러 Fragment 간에 ViewModel을 어떻게 공유할 수 있나요?">
 
-> Q) ViewModelStoreOwner의 목적은 무엇이며, 동일한 Activity 내에서 여러 Fragment 간에 ViewModel을 어떻게 공유할 수 있나요?
+ViewModel이 언제까지 살아있어야 하는지 그 생명주기를 결정하는 목적입니다. Activity나 Fragment가 이 Owner 역할을 하며, Owner가 파괴될 때 ViewModel의 onCleared가 호출됩니다.
 
-##### A) {#134423 collapsible="true"}
+Fragment간 ViewModel 공유 방법은 두 Fragment가 동일한 ViewModelStoreOwner를 바라보게 만들면 됩니다.
+가장 쉬운 방법은 부모 Activity를 공유 Owner로 삼는 것입니다.
 
-ViewModel이 언제까지 살아있어야 하는지 그 생명주기를 결정하는 목적입니다. Activity나 Fragment가 이 Owner 역할을 하며, Owner가 파괴될 때 ViewModel의 onCleared가 호출됩니다. 
-
-Fragment간 ViewModel 공유 방법은 두 Fragment가 동일한 ViewModelStoreOwner를 바라보게 만들면 됩니다. 
-가장 쉬운 방법은 부모 Activity를 공유 Owner로 삼는 것입니다. 
-
-
-#### Q3 {#q3}
-
-> Q) UI 상태 관리를 위해 ViewModel 내에서 `StateFlow` 또는 `LiveData`를 사용하는 것의 장점과 잠재적인 단점은 무엇인가요?
-
-##### A) {#13533 collapsible="true"}
+</def>
+<def title="Q) UI 상태 관리를 위해 ViewModel 내에서 StateFlow 또는 LiveData를 사용하는 것의 장점과 잠재적인 단점은 무엇인가요?">
 
 **StateFlow**
 1. 장점
-   - Kotlin 코루틴 생태계와 완벽하게 통합되어 있어, suspend 함수와 자연스럽게 연동됩니다. 
-   - Flow 연산자들(map, filter, combind 등)을 활용한 풍부한 데이터 변환이 가능합니다. 
+   - Kotlin 코루틴 생태계와 완벽하게 통합되어 있어, suspend 함수와 자연스럽게 연동됩니다.
+   - Flow 연산자들(map, filter, combind 등)을 활용한 풍부한 데이터 변환이 가능합니다.
    - hot 스트림으로, 구독자가 없어도 상태를 유지합니다.
    - 초기값 보장으로 null 안정성
    - .vlaue 프로퍼티로 현재 상태를 동기적으로 읽을 수 있음
@@ -139,3 +130,6 @@ Fragment간 ViewModel 공유 방법은 두 Fragment가 동일한 ViewModelStoreO
    - 안드로이드 프레임워크 종속성으로 테스트 힘듦
    - 복잡한 데이터 변환 불가
    - null 허용
+
+</def>
+</deflist>

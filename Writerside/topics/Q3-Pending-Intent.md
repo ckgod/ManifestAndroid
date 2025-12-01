@@ -53,7 +53,12 @@ PendingIntent는 시스템 또는 다른 컴포넌트와 상호 작용하는 방
 PendingIntent는 앱이 실행 중이 아닐 때에도 앱과 시스템 구성 요소 또는 다른 앱 간의 원활한 통신을 가능하게 하는 안드로이드의 핵심 매커니즘이다.
 플래그와 권한을 신중하게 관리하면 지연된 작업을 안전하고 효율적으로 실행할 수 있다.
 
-> Q) PendingIntent란 무엇이며 일반 Intent와 어떻게 다른가요?
-> 
-> Q) PendingIntent를 사용해야 하는 시나리오를 알려주실 수 있나요?
 
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) PendingIntent란 무엇이며 일반 Intent와 어떻게 다른가요?">
+
+</def>
+<def title="Q) PendingIntent를 사용해야 하는 시나리오를 알려주실 수 있나요?">
+
+</def>
+</deflist>

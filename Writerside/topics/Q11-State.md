@@ -63,24 +63,26 @@ State가 recomposition을 효율적으로 트리거하기 때문에 개발자는
 그러나 의도치 않은 recomposition이 발생하여 성능이 저하될 수도 있습니다.
 State가 어떻게 작동하는지 이해하는 것은 효율적이고 성능이 좋은 Compose 애플리케이션을 구축하는 데 중요합니다.
 
-> Q) State는 recomposition과 어떻게 관련되어 있으며, recomposition 동안 어떤 일이 발생하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) State는 recomposition과 어떻게 관련되어 있으며, recomposition 동안 어떤 일이 발생하나요?">
 
-#### A) {collapsible="true"}
 Compose에서 State는 Recomposition을 유발하는 **트리거** 역할을 합니다.
 
 State 객체(예: `mutableStateOf()`로 생성)의 .value가 변경되면, Compose 런타임은 해당 State 값을 읽고 있는 Composable 함수들만 다시 실행(Recomposition)하도록 스케줄링합니다.
 
-Recomposition 동안 발생하는 일
+**Recomposition 동안 발생하는 일**
+
 1. 변경 감지: State의 value 변경 감지
 2. 스케줄링: Compose 런타임이 해당 State를 읽는 가장 가까운 restartable한 Composable 스코프를 Recomposition 큐에 추가
 3. 재실행: 다음 프레임에서 Compose 런타임이 큐에있는 Composable 함수들을 다시 호출
-4. 비교 및 스킵:  
+4. 비교 및 스킵:
    - Compose는 함수를 다시 실행하면서 생성되는 UI 트리(노드)를 이전의 UI트리와 비교
    - 재실행되는 함수 내의 자식 Composable이 받는 모든 input이 이전과 동일하고, 해당 매개변수 타입이 Stable이면 Compose는 그 자식 Composable 함수의 recomposition을 스킵
    - 변경된 부분만 실제 UI에 반영
 
-Compose 컴파일러가 Stable을 판단하는 방법
-- 이 타입이 변경되었는지 equals() 비교만으로 100% 신뢰할 수 있는가?
+**Compose 컴파일러가 Stable을 판단하는 방법**
+
+이 타입이 변경되었는지 equals() 비교만으로 100% 신뢰할 수 있는가?
 
 1. 기본적으로 Stable한 타입
 - Primitive 타입: Int, Float, Boolean, String 등
@@ -102,6 +104,9 @@ Compose 컴파일러가 Stable을 판단하는 방법
   - 대표적인 예시가 `MutableState<T>`
   - `MutableState`의 `.value`는 변경 가능하지만, 변경될 때 런타임에 "나 변경됐어!"라고 알리기 때문에 Compose는 이 타입을 Stable로 신뢰한다.
   - 변경됐으면 알려준다 -> 변경됐으면 recomposition 무조건 실행, equals 비교도 신뢰 가능
+
+</def>
+</deflist>
 
 
 

@@ -39,6 +39,9 @@ class User(val firstName: String, val lastName: String, val age: Int) : Parcelab
 - 간단한 경우나 성능이 중요하지 않은 작업을 처리할 때, 또는 Android 전용이 아닌 코드로 작업할 때는 `Serializable`을 사용
 - 안드로이드의 IPC 매커니즘에 훨씬 더 효율적이므로 퍼포먼스가 중요한 안드로이드 전용 컴포넌트로 작업할 때는 `Parcelable`을 사용
 
-> Q) 안드로이드에서 Serializable과 Parcelable의 주요 차이점은 무엇이며 , 일반적으로 컴포넌트 간 데이터 전달에 Parcelable
-이 선호되는 이유는 무엇인가요 ?
 
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 안드로이드에서 Serializable과 Parcelable의 주요 차이점은 무엇이며, 일반적으로 컴포넌트 간 데이터 전달에 Parcelable이 선호되는 이유는 무엇인가요?">
+
+</def>
+</deflist>

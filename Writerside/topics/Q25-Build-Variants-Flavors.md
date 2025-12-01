@@ -72,4 +72,8 @@ Android의 Build Variant는 Build Type과 Product Flavor를 결합하여 맞춤�
 Build Type은 앱이 빌드되는 방식에 대한 구성(예: `debug` vs. `release`)을 정의하고, Product Flavor는 앱의 변형(예: 무료 vs. 유료)을 정의합니다.
 이 둘은 함께 여러 앱 configurations를 관리하는 유용한 시스템을 생성하여 개발 및 배포의 효율성과 scalability를 보장합니다.
 
-> Q) Build Type과 Product Flavor의 차이점은 무엇이며, Build Variant를 생성하기 위해 어떻게 함께 작동하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Build Type과 Product Flavor의 차이점은 무엇이며, Build Variant를 생성하기 위해 어떻게 함께 작동하나요?">
+
+</def>
+</deflist>

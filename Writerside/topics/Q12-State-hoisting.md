@@ -65,25 +65,30 @@ State hoisting은 더 깔끔하고, 모듈화되며, 테스트 가능한 코드�
 이는 단방향 데이터 흐름(unidirectional data flow)을 지원하여 재사용성과 유지보수성을 모두 향상시킵니다. 
 composable을 stateless하게 유지함으로써 개발자는 변화하는 애플리케이션 요구 사항에 적응하는 유연한 UI 컴포넌트를 만들 수 있습니다.
 
-#### Q1
-> State hoisting은 composable 함수의 재사용성과 테스트 용이성을 어떻게 향상시키나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) State hoisting은 composable 함수의 재사용성과 테스트 용이성을 어떻게 향상시키나요?">
 
-##### A) {#A113 collapsible="true"}
-State hoisting는 관심사 분리를 통해 컴포저블을 Stateless하게 만듭니다. 
-1. 재사용성: 상태 관리 로직이 분리되면서, 컴포저블은 UI 렌더링에만 집중합니다. 덕분에 동일한 UI를 어떤 상태의 소스와도 결합하여 재사용할 수 있습니다. 
+State hoisting는 관심사 분리를 통해 컴포저블을 Stateless하게 만듭니다.
+
+1. 재사용성: 상태 관리 로직이 분리되면서, 컴포저블은 UI 렌더링에만 집중합니다. 덕분에 동일한 UI를 어떤 상태의 소스와도 결합하여 재사용할 수 있습니다.
 2. 테스트 용이성: UI와 로직을 따로 테스트할 수 있게 됩니다. UI(컴포저블)는 특정 상태를 주입하고 UI 결과만 확인하면 되고, 상태 로직(ViewModel 등)은 Compose 런타임 없이도 유닛 테스트로 검증할 수 있습니다.
 
-#### Q2
-> 어떤 시나리오에서 State hoisting을 피하고 대신 composable 내부에 state를 유지할까요?
+</def>
+<def title="Q) 어떤 시나리오에서 State hoisting을 피하고 대신 composable 내부에 state를 유지할까요?">
 
-##### A) {#A1213 collapsible="true"}
 UI 전용 상태
 - 애니메이션 상태(비즈니스 로직과 무관)
+
 컴포저블과 강하게 결합된 상태
 - LazyList의 스크롤 위치
+
 상위 컴포저블에 부담을 주지 않아야 할 때
 - 대표적으로 TextField의 중간 입력 값
+
 TextField의 포커스 상태
 - 포커스 상태는 TextField의 내부 동작
 
 결론적으로 상태가 컴포넌트의 외부에서 관심을 가져야 하는가?를 기준으로 판단.
+
+</def>
+</deflist>

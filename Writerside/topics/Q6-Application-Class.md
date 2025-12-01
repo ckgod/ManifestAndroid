@@ -50,4 +50,9 @@ class CustomApplication : Application() {
 `Application` 클래스는 앱 전반에 걸쳐 사용되어야 하는 리소스를 초기화하고 관리하는 중추적인 역할을 한다.
 이 클래스는 전역(global) 설정을 위한 중요하고 기본적인 API지만, 코드의 명확성을 유지하고 불필요한 복잡성을 피하려면 진정으로 전역적인 성격의 작업에만 제한적으로 사용해야 한다.
 
-> Q) `Application` 클래스의 목적은 무엇이고, 라이프사이클 및 리소스 관리 측면에서 Activity와 어떻게 다른가요?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `Application` 클래스의 목적은 무엇이고, 라이프사이클 및 리소스 관리 측면에서 Activity와 어떻게 다른가요?">
+
+</def>
+</deflist>

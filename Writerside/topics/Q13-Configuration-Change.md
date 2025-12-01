@@ -22,20 +22,24 @@
 
 구성 변경을 적절하게 처리하는 것은 사용자 경험을 향상시키고 예기치 않은 상황으로 인해 사용자 데이터가 보존되고 손실되지 않도록 하는 데 중요합니다. 구성 변경 처리에 대한 포괄적인 가이드는 [공식 Android 문서](https://developer.android.com/guide/topics/resources/runtime-changes)를 참조하십시오.
 
-> 1.  구성 변경을 처리하는 다양한 전략은 무엇이며, 이러한 이벤트 동안 `ViewModel`은 `UI` 관련 데이터를 보존하는 데 어떻게 도움이 됩니까?
-> 2.  `AndroidManifest`의 `android:configChanges` 속성은 액티비티 생명주기 동작에 어떤 영향을 미치며, 액티비티 재시작에 의존하는 대신 `onConfigurationChanged()` 메서드를 사용해야 하는 시나리오는 무엇입니까?
 
-#### A) {collapsible="true"}
-1. Android는 화면 전환, 언어 변경, 글꼴 크기 조정 등의 구성 변경 시 기본적으로 액티비티를 재생성합니다. 이를 처리하는 주요 전략은 다음과 같습니다.
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 구성 변경을 처리하는 다양한 전략은 무엇이며, 이러한 이벤트 동안 `ViewModel`은 `UI` 관련 데이터를 보존하는 데 어떻게 도움이 됩니까?">
+
+Android는 화면 전환, 언어 변경, 글꼴 크기 조정 등의 구성 변경 시 기본적으로 액티비티를 재생성합니다. 이를 처리하는 주요 전략은 다음과 같습니다.
 * `Jetpack ViewModel` 사용: 구성 변경 시에도 생존하는 ViewModel에 UI 데이터를 저장
 * `onSaveInstanceState()`: `Bundle에` 간단한 데이터를 저장하여 복원
 * `RetainedFragment`: `Fragment의` `retainInstance` 속성 활용 (deprecated)
 * `android:configChanges`: 특정 구성 변경 시 액티비티 재생성 방지
 
 `ViewModel`의 데이터 보존 매커니즘: `ViewModel`은 `ViewModelStore`를 통해 관리되며, 구성 변경 시 액티비티가 재생성되어도 `ViewModelStore`는 유지됩니다.
-이는 AAC가 제공하는 핵심 기능으로, `ViewModel의` 생명주기가 액티비티/프래그먼트보다 길게 유지되어 데이터를 안전하게 보존할 수 있습니다. 
+이는 AAC가 제공하는 핵심 기능으로, `ViewModel의` 생명주기가 액티비티/프래그먼트보다 길게 유지되어 데이터를 안전하게 보존할 수 있습니다.
 
-2. `android:configChanges` 속성의 영향과 사용 시나리오
+</def>
+<def title="Q) `AndroidManifest`의 `android:configChanges` 속성은 액티비티 생명주기 동작에 어떤 영향을 미치며, 액티비티 재시작에 의존하는 대신 `onConfigurationChanged()` 메서드를 사용해야 하는 시나리오는 무엇입니까?">
+
+**`android:configChanges` 속성의 영향과 사용 시나리오**
+
 `android:configChanges` 속성을 설정하면 지정된 구성 변경 발생 시
 * 액티비티가 재생성되지 않음 (onDestroy() -> onCreate() 호출 안 됨)
 * 대신 `onConfigurationChanged()` 콜백만 호출됨
@@ -49,3 +53,6 @@
 * 네트워크 연결 유지: 진행 중인 다운로드나 소켓 연결 보존
 
 주의사항: Google에선 이 방식을 최후의 수단으로 권장합니다. 리소스 재로딩을 수동으로 처리해야 하며, 다른 구성 변경(언어, 테마 등)은 여전히 액티비티를 재생성시킬 수 있기 때문입니다.
+
+</def>
+</deflist>

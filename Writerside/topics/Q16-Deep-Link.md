@@ -79,4 +79,9 @@ com.example.myapp
 
 딥 링크 데이터를 추출하고 해석함으로써 사용자를 앱의 특정 기능이나 콘텐츠로 안내하여 사용자 경험과 참여도를 향상시킬 수 있습니다.
 
-> Q) Android에서 딥 링크를 어떻게 테스트할 수 있으며, 다양한 devices 및 scenarios에서 올바르게 작동하는지 확인하기 위한 일반적인 debugging 기술들에는 어떤 것들이 있나요?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Android에서 딥 링크를 어떻게 테스트할 수 있으며, 다양한 devices 및 scenarios에서 올바르게 작동하는지 확인하기 위한 일반적인 debugging 기술들에는 어떤 것들이 있나요?">
+
+</def>
+</deflist>

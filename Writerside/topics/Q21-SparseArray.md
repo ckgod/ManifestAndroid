@@ -46,4 +46,8 @@
 ### 요약
 `SparseArray`는 `Android`에서 `integer key`를 `object value`에 매핑하기 위한 특수 데이터 구조로, 메모리 효율성에 최적화되어 있습니다. `auto-boxing`을 피하고 메모리 사용량을 줄이는 측면에서 `HashMap`보다 상당한 이점을 제공하며, 특히 `integer key`를 가진 데이터 세트에 유용합니다. 일부 성능을 메모리 절약과 맞바꿀 수 있지만, `Android application`과 같이 리소스가 제한된 사용 사례에는 탁월한 선택입니다.
 
-> Q) 일반적인 `HashMap` 대신 `SparseArray`를 사용하는 것을 선호하는 시나리오는 무엇이며, `성능`과 `사용성` 측면에서 어떤 절충점이 있나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 일반적인 HashMap 대신 SparseArray를 사용하는 것을 선호하는 시나리오는 무엇이며, 성능과 사용성 측면에서 어떤 절충점이 있나요?">
+
+</def>
+</deflist>

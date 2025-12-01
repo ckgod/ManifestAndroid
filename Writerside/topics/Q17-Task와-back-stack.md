@@ -56,7 +56,7 @@ Intent flag는 Intent가 전송될 때 Activity가 시작되는 방식이나 bac
 
 - **Intent Flag**: Intent를 생성할 때 프로그래밍 방식으로 적용되어, 특정 시나리오에 더 많은 유연성을 제공합니다.
 
-## 예시
+### 예시
 
 ```kotlin
 val intent = Intent(this, SecondActivity::class.java).apply {
@@ -68,7 +68,7 @@ startActivity(intent)
 이 예시에서, SecondActivity가 현재 Task에 이미 존재한다면, 그 위에 있는 모든 Activity가 지워지고 기존 인스턴스가 새 Intent를 받게 됩니다.
 존재하지 않는다면, 새 인스턴스가 생성되어 현재 Task에 추가됩니다.
 
-## 요약
+### 요약
 
 Task와 back stack은 Android의 내비게이션 모델의 핵심이며, Activity의 생명주기와 내비게이션 히스토리를 관리함으로써 사용자 친화적인 워크플로우를 가능하게 합니다.
 
@@ -77,9 +77,11 @@ Launch mode는 Activity가 Task 내에서 시작되고 관리되는 방법에 �
 
 더 자세한 정보는 [Tasks and the back stack](https://developer.android.com/guide/components/activities/tasks-and-back-stack)을 확인하십시오.
 
-## 면접 질문
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) singleTask와 singleInstance launch mode의 차이점은 무엇이며, 각각 어떤 시나리오에서 사용하시겠습니까?">
 
-**Q1.** `singleTask`와 `singleInstance` launch mode의 차이점은 무엇이며, 각각 어떤 시나리오에서 사용하시겠습니까?
+</def>
+<def title="Q) 다양한 Activity launch mode에는 어떤 것들이 있으며, 이들은 Task와 back stack 동작에 어떻게 영향을 미칩니까?">
 
-**Q2.** 다양한 Activity launch mode에는 어떤 것들이 있으며, 이들은 Task와 back stack 동작에 어떻게 영향을 미칩니까?
-
+</def>
+</deflist>

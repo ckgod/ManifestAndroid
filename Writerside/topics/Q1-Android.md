@@ -55,6 +55,9 @@ fun setFlashlight(context: Context, enable: Boolean) {
 - **안드로이드 프레임워크(API)**: 애플리케이션 프레임워크 계층은 앱 개발을 위한 상위 수준의 서비스와 API를 제공한다. ActivityManager, NotificationManager, Content Provider 등이 포함된다.
 - **Application**: 최상위 계층에는 시스템 앱(예: 연락처, 설정) 및 Android SDK를 사용하여 만든 타사 앱과 같은 모든 사용자 대면 앱이 포함된다. 하위 계층에 의존하여 사용자에게 기능을 제공한다.
 
-> Q) Android의 플랫폼 아키텍처는 Linux 커널 , Android 런타임 (ART), 하드웨어 추상화 레이어 (HAL) 등 여러 계층으로 구성
-되어 있습니다. 이러한 구성 요소가 애플리케이션 실행과 하드웨어 상호 작용을 보장하기 위해 어떻게 함께 작동하는지 설명
-해 주시겠어요 ?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Android의 플랫폼 아키텍처는 Linux 커널, Android 런타임(ART), 하드웨어 추상화 레이어(HAL) 등 여러 계층으로 구성되어 있습니다. 이러한 구성 요소가 애플리케이션 실행과 하드웨어 상호 작용을 보장하기 위해 어떻게 함께 작동하는지 설명해 주시겠어요?">
+
+</def>
+</deflist>

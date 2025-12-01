@@ -64,15 +64,12 @@
 
 ### 요약 {#summary}
 
-`ConstraintLayout`은 Android UI를 설계하기 위한 다재다능하고 효율적인 레이아웃입니다. 
-중첩 레이아웃의 필요성을 없애고, 위치 지정 및 정렬을 위한 고급 도구를 제공하며, 성능을 향상시킵니다. 
+`ConstraintLayout`은 Android UI를 설계하기 위한 다재다능하고 효율적인 레이아웃입니다.
+중첩 레이아웃의 필요성을 없애고, 위치 지정 및 정렬을 위한 고급 도구를 제공하며, 성능을 향상시킵니다.
 학습 곡선이 있을 수 있지만, `ConstraintLayout`을 숙달하면 개발자는 반응형이고 시각적으로 매력적인 레이아웃을 효율적으로 만들 수 있습니다.
 
-#### Q1
-
->  `ConstraintLayout`은 중첩된 `LinearLayout` 및 `RelativeLayout`에 비해 성능을 어떻게 향상시키나요? `ConstraintLayout`을 사용하는 것이 더 효율적인 시나리오를 제시하세요.
-
-##### A {collapsible="true" #A1}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) ConstraintLayout은 중첩된 LinearLayout 및 RelativeLayout에 비해 성능을 어떻게 향상시키나요? ConstraintLayout을 사용하는 것이 더 효율적인 시나리오를 제시하세요.">
 
 기존 레이아웃의 가장 큰 성능 병목은 뷰의 크기와 위치를 계산하는 **Measure(측정) 단계**에서 발생합니다. 
 
@@ -112,15 +109,12 @@
 
 **언제 사용하면 안 되는가?**
 
-`ConstraintLayout`이 항상 정답은 아닙니다. 단순한 UI에서는 오히려 오버헤드가 될 수 있습니다. 
+`ConstraintLayout`이 항상 정답은 아닙니다. 단순한 UI에서는 오히려 오버헤드가 될 수 있습니다.
 
 * 단순한 일렬 배치: 아이콘 옆에 텍스트 하나가 있는 단순한 구조라면 LinearLayout이나 FrameLayout이 훨씬 가볍고 빠릅니다. ConstraintLayout은 초기화 시 솔버(Solver)를 로드하는 비용이 있기 때문입니다.
 
-#### Q2
-
-> `ConstraintLayout`에서 `match_constraint` (`0dp`) 동작이 어떻게 작동하는지 설명하세요. `wrap_content` 및 `match_parent`와 어떻게 다르며, 어떤 상황에서 사용해야 하나요?
-
-##### A {collapsible="true" #A2}
+</def>
+<def title="Q) ConstraintLayout에서 match_constraint (0dp) 동작이 어떻게 작동하는지 설명하세요. wrap_content 및 match_parent와 어떻게 다르며, 어떤 상황에서 사용해야 하나요?">
 
 `ConstraintLayout`에서 `android:layout_width="0dp"` 또는 `android:layout_height="0dp"`로 설정하는 것을 `match_constraint`라고 합니다.
 
@@ -137,3 +131,6 @@
 * **`wrap_content`**: 텍스트나 이미지 등 자신의 내용을 크기만큼만 공간을 차지합니다. 제약 조건은 위치(정렬)을 잡는 데만 사용됩니다.
 * **`match_parent`**: 부모 컨테이너의 전체 크기를 가득 채웁니다.
 * **`match_constraint` (`0dp`)**: 연결된 제약 조건 사이의 거리만큼 뷰의 크기를 결정합니다. 마진을 제외한 나머지 공간을 모두 채웁니다.
+
+</def>
+</deflist>

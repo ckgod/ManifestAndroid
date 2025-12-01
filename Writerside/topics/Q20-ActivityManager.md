@@ -49,4 +49,8 @@
 
 `ActivityManager`는 시스템 수준 관리, 성능 튜닝 및 앱 동작 모니터링을 위한 것입니다. 최신 Android에서는 해당 기능이 더 전문화된 `API`에 의해 부분적으로 대체되었지만, Android 애플리케이션에서 리소스 사용량을 관리하고 최적화하는 데 여전히 유용한 도구입니다. 개발자는 의도치 않은 시스템 성능 영향 없이 이를 책임감 있게 사용할 수 있습니다.
 
-> Q) `ActivityManager.getMemoryInfo()`는 앱 성능을 최적화하는 데 어떻게 사용될 수 있으며, 시스템이 `low-memory state`에 진입할 때 개발자는 어떤 조치를 취해야 합니까?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) ActivityManager.getMemoryInfo()는 앱 성능을 최적화하는 데 어떻게 사용될 수 있으며, 시스템이 low-memory state에 진입할 때 개발자는 어떤 조치를 취해야 합니까?">
+
+</def>
+</deflist>

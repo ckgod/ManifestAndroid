@@ -52,5 +52,8 @@ AOT compilation과 향상된 성능을 갖춘 ART는 JIT compilation에 의존�
 Dex Compiler는 Java bytecode를 두 런타임 환경에 최적화된 .dex 파일로 변환하여 간극을 메웁니다.
 이러한 구성 요소들은 함께 Android 기기에서 효율적이고 빠르며 안정적인 앱 실행을 보장합니다.
 
-> Q) ART의 Ahead-of-Time (AOT) compilation과 Dalvik의 Just-in-Time (JIT) compilation은 어떻게 다르며, 앱 시작 시간과 CPU 사용량에 어떤 영향을 미치나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) ART의 Ahead-of-Time (AOT) compilation과 Dalvik의 Just-in-Time (JIT) compilation은 어떻게 다르며, 앱 시작 시간과 CPU 사용량에 어떤 영향을 미치나요?">
 
+</def>
+</deflist>

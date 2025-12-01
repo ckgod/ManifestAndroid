@@ -49,14 +49,12 @@ class CustomView(context: Context) : View(context) {
 
 ### 요약
 
-무효화(Invalidation)는 UI 업데이트가 시각적으로 반영되도록 보장하는 Android 렌더링 파이프라인의 중요한 개념입니다. 
-`invalidate()` 또는 `postInvalidate()`와 같은 메서드를 사용함으로써 개발자는 원활한 성능을 유지하면서 View를 효율적으로 새로 고칠 수 있습니다. 
+무효화(Invalidation)는 UI 업데이트가 시각적으로 반영되도록 보장하는 Android 렌더링 파이프라인의 중요한 개념입니다.
+`invalidate()` 또는 `postInvalidate()`와 같은 메서드를 사용함으로써 개발자는 원활한 성능을 유지하면서 View를 효율적으로 새로 고칠 수 있습니다.
 무효화의 적절한 사용은 불필요한 다시 그리기를 최소화하여 최적화되고 반응성이 뛰어난 애플리케이션으로 이어집니다.
 
-#### Q1
-> `invalidate()` 메서드는 어떻게 작동하며, `postInvalidate()`와 어떻게 다른가요? 각각이 적절한 실제 사용 사례를 제공하세요.
-
-##### A {collapsible="true" #A1}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) invalidate() 메서드는 어떻게 작동하며, postInvalidate()와 어떻게 다른가요? 각각이 적절한 실제 사용 사례를 제공하세요.">
 `invalidate()`와 `postInvalidate()`는 어느 스레드에서 호출하느냐가 가장 결정적인 차이입니다.
 
 1. `invalidate()`: UI 스레드 전용
@@ -67,7 +65,8 @@ class CustomView(context: Context) : View(context) {
    * 내부적으로 Handler를 사용하여 UI 스레드의 메시지 큐에 `invalidate` 요청을 전달합니다.
    * UI 스레드가 해당 메시지를 처리할 때 비로소 `invalidate()`가 호출되고, 이후 과정은 동일합니다.
 
-###### 실제 사용 사례
+**실제 사용 사례**
+
 1. `invalidate()` 사용 - 커스텀 볼륨 조절 뷰
 
 사용자가 화면을 드래그하여 볼륨을 조절하는 커스텀 뷰
@@ -127,34 +126,35 @@ class AudioVisualizerView(context: Context) : View(context) {
 }
 ```
 
-###### 최신 안드로이드 개발에서의 고려사항
+**최신 안드로이드 개발에서의 고려사항**
 
 최근 안드로이드 개발 트렌드(Coroutines, RxJava, Jetpack Compose)에서는 `postInvalidate()`를 직접 호출하는 빈도가 줄어들고 있습니다. 
 
 * **Coroutine 사용 시**: `withContext(Dispatchers.Main)`을 사용하여 UI스레드로 전환한 뒤 `invalidate()`를 호출하거나, LiveData/StateFlow를 관찰(Observe)하여 뷰를 갱신하는 패턴이 더 일반적입니다.
 * **Jetpack Compose**: `invalidate()` 개념이 사라지고, State(상태)가 변경되면 컴포저블 함수가 자동으로 Recomposition 됩니다.
 
-#### Q2
-> 백그라운드 스레드에서 UI 요소를 업데이트해야 하는 경우, 다시 그리기 작업이 메인 스레드에서 안전하게 수행되도록 어떻게 보장하시겠습니까?
-
-##### A {collapsible="true" #A2}
+</def>
+<def title="Q) 백그라운드 스레드에서 UI 요소를 업데이트해야 하는 경우, 다시 그리기 작업이 메인 스레드에서 안전하게 수행되도록 어떻게 보장하시겠습니까?">
 
 백그라운드 스레드에서 UI를 업데이트하려고 할 떄, 안드로이드의 단일 스레드 모델 정책을 준수하면서 안전하게 메인 스레드로 제어권을 넘기는 방법은 여러 가지가 있습니다.
 
-1. Kotlin Coroutines
+**1. Kotlin Coroutines**
 
 현대적인 안드로이드 개발, 특히 MVVM 패턴에서는 코루틴을 사용하는 것이 표준입니다. 스레드 컨텍스트 전환이 매우 간결하며 가독성이 높습니다.
 * `withContext(Dispatchers.Main)`: 백그라운드 작업 도중 UI 갱신이 필요할 때 잠시 메인 스레드로 전환합니다.
 * `lifecycleScope` / `viewLifecycleOwner.lifecycleScope`: 액티비티나 프래그먼트의 수명 주기에 맞춰 안전하게 코루틴을 실행합니다.
 
-2. Reactive Streams (LiveData / StateFlow)
+**2. Reactive Streams (LiveData / StateFlow)**
 
 UI 컨트롤러가 데이터를 관찰하게 만드는 방식입니다. 이 방식은 스레드 안정성을 데이터 홀더가 보장해주거나, 관찰 자체가 메인 스레드에서 이루어지도록 설계되어 있습니다.
 
 * LiveData: `postValue()` 메서드를 사용하면 백그라운드 스레드에서 안전하게 값을 세팅할 수 있으며, 관찰자(UI)는 메인 스레드에서 변경 사항을 수신합니다.
 * StateFlow: `update`를 통해 상태를 변경하고, UI에서는 `collect`를 통해 데이터를 받습니다.
 
-3. `View.post()` 및 `View.postDelayed()`
+**3. `View.post()` 및 `View.postDelayed()`**
 
 특정 뷰에 종속적인 작업이거나, 뷰가 화면에 부착(Attached)된 이후에 실행되어야 할 때 유용합니다.
-내부적으로 핸들러를 사용합니다. 
+내부적으로 핸들러를 사용합니다.
+
+</def>
+</deflist>

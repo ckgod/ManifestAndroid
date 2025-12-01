@@ -86,13 +86,14 @@ class ForegroundService : Service() {
 * 메모리 누수를 방지하기 위해 라이프사이클 변경(서비스 라이프사이클)을 적절하게 처리하세요.
 
 ## 요약
-`Service`는 사용자 상호작용 없이 백그라운드 처리를 가능하게 합니다. 
+`Service`는 사용자 상호작용 없이 백그라운드 처리를 가능하게 합니다.
 시작된 `Service`는 수동으로 중지될 때까지 실행되며, 바인딩된 `Service`는 다른 구성요소와 상호작용하고, 포그라운드 `Service`는 지속적인 알림과 함께 활성 상태를 유지합니다.
 `Service`를 적절히 관리하면 효율적인 시스템 리소스 사용과 원활한 사용자 경험을 보장할 수 있습니다.
 
-> Q) Android에서 시작된 Service와 바인딩된 Service의 차이점은 무엇이며, 각각 언제 사용해야 합니까?
 
-#### A) {collapsible="true"}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Android에서 시작된 Service와 바인딩된 Service의 차이점은 무엇이며, 각각 언제 사용해야 합니까?">
+
 시작된 Service와 바인드된 Service의 가장 큰 차이점은 **컴포넌트와의 상호작용 여부**와 **생명주기의 독립성**에 있습니다.
 
 **시작된 Service(Started Service)** 는 `startService()`를 통해 호출되며, 독립적으로 백그라운드 작업을 수행하는 것이 주 목적입니다.
@@ -108,3 +109,6 @@ class ForegroundService : Service() {
 **사용 시점**: 주로 `Activity가` 서비스의 특정 메서드를 호출하고 그 결과를 직접 받아와 UI를 갱신해야 할 때 사용합니다. 예를 들어, 실시간 위치 정보를 계속 요청해서 지도에 표시하는 경우에 적합합니다.
 
 요약하자면, 단방향으로 작업을 지시하고 잊어버리는(fire-and-forget) 방식의 긴 작업에는 시작된 Service를, 양방향으로 데이터를 주고받는 상호작용이 필요할 때는 바인드된 Service를 선택하겠습니다. 물론, 음악 플레이어처럼 두 가지 특징이 모두 필요한 경우엔 두 방식을 함께 구현할 수도 있습니다.
+
+</def>
+</deflist>

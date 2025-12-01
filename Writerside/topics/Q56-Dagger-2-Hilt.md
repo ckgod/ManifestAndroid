@@ -111,39 +111,42 @@ object NetworkModule {
 ## 요약
 `Dagger 2`와 `Hilt`는 모두 객체 생성 및 관리를 간소화하는 의존성 주입 프레임워크입니다. `Dagger 2`는 더 다재다능하며 모든 Java 또는 Android 프로젝트에서 사용될 수 있지만, 수동 설정이 더 많이 필요합니다. 반면 `Hilt`는 `Dagger 2`를 기반으로 하지만, 라이프사이클을 인식하는 `Component`와 통합하고 반복적인 코드를 줄임으로써 Android용 `DI`를 단순화합니다. 대부분의 Android 프로젝트에는 `Hilt`가 더 편리한 선택이며, `Dagger 2`는 비-Android 프로젝트 또는 고도로 커스텀된 `DI` 요구 사항에 더 적합합니다.
 
-#### Q1
-> `Hilt`는 `Dagger 2`에 비해 의존성 주입을 어떻게 단순화하며, Android 애플리케이션에서 `Hilt`를 사용하는 주요 장점은 무엇인가요?
 
-##### A {collapsible="true" #A2}
-Hilt는 Dagger의 성능과 기능을 유지하면서, 안드로이드 개발에 필요한 반복적인 설정 코드를 극적으로 자동화하여 의존성 주입을 단순화합니다. 
-Dagger 2에서 개발자가 수동으로 처리해야 했던 많은 부분들을 Hilt가 자동으로 처리합니다. 
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Hilt는 Dagger 2에 비해 의존성 주입을 어떻게 단순화하며, Android 애플리케이션에서 Hilt를 사용하는 주요 장점은 무엇인가요?">
+
+Hilt는 Dagger의 성능과 기능을 유지하면서, 안드로이드 개발에 필요한 반복적인 설정 코드를 극적으로 자동화하여 의존성 주입을 단순화합니다.
+Dagger 2에서 개발자가 수동으로 처리해야 했던 많은 부분들을 Hilt가 자동으로 처리합니다.
 1. 컴포넌트 생성 및 관리 자동화
-   * Dagger 2: 개발자가 `@Component` 인터페이스를 직접 정의하고, `AppComponent`, `ActivityComponent` 등 컴포넌트 간의 상하 관계(Subcomponent 등)를 수동으로 연결해야 했습니다. 
+   * Dagger 2: 개발자가 `@Component` 인터페이스를 직접 정의하고, `AppComponent`, `ActivityComponent` 등 컴포넌트 간의 상하 관계(Subcomponent 등)를 수동으로 연결해야 했습니다.
    * Hilt: 이 모든 것을 자동으로 해줍니다. Hilt는 `SingletonComponent`, `ActivityComponent`, `ViewModelComponent` 등 표준화된 컴포넌트 셋을 미리 제공합니다.
 2. 안드로이드 프레임워크 클래스 통합
    * Dagger 2: `Activity`, `Fragment`, `ViewModel` 등 안드로이드 클래스에 의존성을 주입하려면 복잡한 설정이 필요했습니다. `Activity`의 `onCreate()` 에서 수동으로 `inject()` 를 호출하고, `ViewModel`을 위해서는 별도로 `ViewModelFactory`를 구현해야 했습니다.
-   * Hilt: 
-     * `@AndroidEntryPoint`: `Activity`나 `Fragment`에 이 어노테이션 하나만 붙이면, Hilt가 알아서 생명주기에 맞춰 의존성 주입을 실행합니다. 
+   * Hilt:
+     * `@AndroidEntryPoint`: `Activity`나 `Fragment`에 이 어노테이션 하나만 붙이면, Hilt가 알아서 생명주기에 맞춰 의존성 주입을 실행합니다.
      * `@HiltViewModel`: `ViewModel`에 이 어노테이션을 붙이면, `ViewModelFactory`를 자동으로 생성하고 관리해줍니다.
 
-#### Q2
-> `Dagger`와 `Hilt`에서 `@Provides`와 `@Binds`의 차이점은 무엇이며, 각각 언제 사용해야 하나요?
+</def>
+<def title="Q) Dagger와 Hilt에서 @Provides와 @Binds의 차이점은 무엇이며, 각각 언제 사용해야 하나요?">
 
-##### A {collapsible="true" #A3}
 `@Provides`와 `@Binds`는 Hilt/Dagger 모듈(`@Module`)내에서 의존성을 제공하는 방법을 정의하는 어노테이션입니다.
-둘의 가장 큰 차이점은 객체 생성 로직의 필요 여부와 성능입니다. 
+둘의 가장 큰 차이점은 객체 생성 로직의 필요 여부와 성능입니다.
 
 * `@Provides`: 객체를 직접 생성하는 로직이 필요한 경우 (예: `Retrofit.Builder()...build()`)
 * `@Binds`: 인터페이스에 구현체를 단순히 연결(바인딩)만 해주는 경우 (성능상 이점)
 
-#### Q3
-> `@Singleton`, `@ActivityScoped`, `@ViewModelScoped`를 사용하여 `Hilt`에서 스코핑이 어떻게 작동하는지, 그리고 이러한 스코프가 애플리케이션 내 의존성 라이프타임에 어떤 영향을 미치는지 설명하세요.
+</def>
+<def title="Q) @Singleton, @ActivityScoped, @ViewModelScoped를 사용하여 Hilt에서 스코핑이 어떻게 작동하는지, 그리고 이러한 스코프가 애플리케이션 내 의존성 라이프타임에 어떤 영향을 미치는지 설명하세요.">
 
-##### A {collapsible="true" #A1}
-Hilt의 스코핑은 의존성(객체)의 생명주기를 관리하고, 특정 컴포넌트 범위 내에서 인스턴스를 재사용하기 위한 매커니즘 입니다. 
+Hilt의 스코핑은 의존성(객체)의 생명주기를 관리하고, 특정 컴포넌트 범위 내에서 인스턴스를 재사용하기 위한 매커니즘 입니다.
+
 간단히 말해, 스코프는 hilt에게 "이 객체를 언제까지 살아있게 할 것이며, 이 범위 안에서는 항상 같은 인스턴스를 줘야 해" 라고 알려주는 규칙입니다.
 
-`@Singleton`: 애플리케이션 컴포넌트에 연결되고, 애플리케이션 생명주기와 동일합니다. 즉, 앱이 시작할 때 생성되어 앱이 종료될 때까지 유지됩니다. 
-`@ActivityScoped`: 액티비티 컴포넌트에 연결되고, Activity 생명주기와 동일합니다. 
+`@Singleton`: 애플리케이션 컴포넌트에 연결되고, 애플리케이션 생명주기와 동일합니다. 즉, 앱이 시작할 때 생성되어 앱이 종료될 때까지 유지됩니다.
+
+`@ActivityScoped`: 액티비티 컴포넌트에 연결되고, Activity 생명주기와 동일합니다.
+
 `@ViewModelScoped`: ViewModel의 생명주기와 동일합니다. ViewModel은 구성 변경에도 파괴되지 않습니다. 이 스코프로 주입된 의존성 또한 구성 변경 시에도 파괴되지 않고 그대로 유지됩니다.
- 
+
+</def>
+</deflist>

@@ -129,4 +129,9 @@ contentResolver.insert(Uri.parse("content://com.example.myapp.provider/users"), 
 
 `ContentProvider`는 앱 간에 구조화된 데이터를 안전하고 효율적으로 공유하기 위한 중요한 구성 요소입니다. 이는 기본 데이터 스토리지 메커니즘을 추상화하면서 데이터 액세스를 위한 표준화된 인터페이스를 제공합니다. 적절한 구현 및 등록은 데이터 무결성, 보안 및 `Android` 시스템 기능과의 호환성을 보장합니다.
 
-> Q) `ContentProvider URI`의 주요 구성 요소는 무엇이며, `ContentResolver`는 `ContentProvider`와 어떻게 상호 작용하여 데이터를 쿼리하거나 수정합니까?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `ContentProvider URI`의 주요 구성 요소는 무엇이며, `ContentResolver`는 `ContentProvider`와 어떻게 상호 작용하여 데이터를 쿼리하거나 수정합니까?">
+
+</def>
+</deflist>

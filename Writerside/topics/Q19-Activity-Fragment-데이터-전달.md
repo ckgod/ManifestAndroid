@@ -172,4 +172,8 @@ class MainActivity : ComponentActivity() {
 3.  `Jetpack Navigation`을 `Safe Args` 플러그인과 함께 사용하여 생성된 `direction` 및 `argument` 클래스를 통해 `Fragment` 간에 `type-safe`한 인자 전달을 가능하게 합니다.
 4.  동일한 `Activity` 내의 `Fragment` 간 데이터 공유를 위해 공유 `ViewModel`은 `lifecycle-aware`하고 느슨하게 결합된 솔루션을 제공합니다.
 
-> Q) 공유 `ViewModel`은 동일한 `Activity` 내의 `Fragment` 간 통신을 어떻게 용이하게 하며, `Bundle` 또는 직접적인 `Fragment` 트랜잭션을 사용하는 것에 비해 어떤 장점을 제공하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 공유 ViewModel은 동일한 Activity 내의 Fragment 간 통신을 어떻게 용이하게 하며, Bundle 또는 직접적인 Fragment 트랜잭션을 사용하는 것에 비해 어떤 장점을 제공하나요?">
+
+</def>
+</deflist>

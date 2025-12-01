@@ -75,34 +75,39 @@ fun DisposableExample() {
 ### 요약
 Composable 함수의 생명 주기는 초기 Composition, Recomposition, 그리고 Composition 이탈의 세 가지 주요 단계로 구성됩니다. 각 단계는 효율적인 렌더링, 반응형 업데이트, 그리고 적절한 리소스 정리를 보장하는 데 중요한 역할을 합니다. Activity, Fragment, ViewModel과 같은 전통적인 Android 컴포넌트의 생명 주기를 이해하는 것이 필수적인 것처럼, Composable 함수의 생명 주기를 올바르게 이해하는 것은 효율적인 UI 컴포넌트를 설계하는 데 핵심입니다.
 
-> Q) Composable 함수의 생명 주기 단계를 설명하고, 상태가 변경될 때 Compose가 Recomposition을 어떻게 처리하는지 설명하세요.
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Composable 함수의 생명 주기 단계를 설명하고, 상태가 변경될 때 Compose가 Recomposition을 어떻게 처리하는지 설명하세요.">
 
-#### A {collapsible="true"}
-기본적으로 Composition에 들어오기, Recomposition, Composition에서 나가기 3단계로 요약할 수 있습니다. 
+기본적으로 Composition에 들어오기, Recomposition, Composition에서 나가기 3단계로 요약할 수 있습니다.
+
 1. Composition
-   * Composable 함수가 처음 호출되어 UI 트리에 추가되는 단계입니다. 
-   * remember 및 rememberSaveable을 통해 State와 객체가 초기화되고 메모리에 저장됩니다. 
-   * LaunchedEffect(Unit) 또는 DisposableEffect(Unit) 의 메인 블록이 실행됩니다.
+   - Composable 함수가 처음 호출되어 UI 트리에 추가되는 단계입니다.
+   - remember 및 rememberSaveable을 통해 State와 객체가 초기화되고 메모리에 저장됩니다.
+   - LaunchedEffect(Unit) 또는 DisposableEffect(Unit) 의 메인 블록이 실행됩니다.
 2. Recomposition
-   * Composable이 구독하고 있던 State가 변경되면, 해당 Composable이 다시 호출되는 단계입니다. 
-   * 이 단계는 앱이 실행되는 동안 매우 빈번하게 발생할 수 있습니다. 
-   * Compose는 변경되지 않은 Composable은 건너뛰므로 이 과정이 매우 효율적입니다.
-   * SideEffect 블록이 이 단계가 성공적으로 완료될 때마다 실행됩니다.
+   - Composable이 구독하고 있던 State가 변경되면, 해당 Composable이 다시 호출되는 단계입니다.
+   - 이 단계는 앱이 실행되는 동안 매우 빈번하게 발생할 수 있습니다.
+   - Compose는 변경되지 않은 Composable은 건너뛰므로 이 과정이 매우 효율적입니다.
+   - SideEffect 블록이 이 단계가 성공적으로 완료될 때마다 실행됩니다.
 3. Leaving Composition
-   * Composable이 더 이상 UI 트리에 필요하지 않아 제거되는 단계입니다.
-   * DisposableEffect의 onDispose 블록이 실행되어 리스너 해제와 같은 정리 작업을 수행합니다.
+   - Composable이 더 이상 UI 트리에 필요하지 않아 제거되는 단계입니다.
+   - DisposableEffect의 onDispose 블록이 실행되어 리스너 해제와 같은 정리 작업을 수행합니다.
 
 **Recomposition 처리 방식**
+
 1. 상태 구독
-   * Composable 함수가 State 객체의 .value 속성을 읽는 순간, Compose는 이 Composable이 State를 구독했다고 자동으로 기록합니다. 
+   - Composable 함수가 State 객체의 .value 속성을 읽는 순간, Compose는 이 Composable이 State를 구독했다고 자동으로 기록합니다.
 2. 상태 변경
-   * Button의 onClick 등 어딘가에서 해당 State의 .value가 새로운 값으로 변경됩니다.
-   * Compose는 이 상태의 값이 바뀌었다고 인지합니다. 
-   * 즉시 1단계에서 이 상태를 구독했던 모든 Composable을 무효화(다시 그려야 함) 시킵니다.
+   - Button의 onClick 등 어딘가에서 해당 State의 .value가 새로운 값으로 변경됩니다.
+   - Compose는 이 상태의 값이 바뀌었다고 인지합니다.
+   - 즉시 1단계에서 이 상태를 구독했던 모든 Composable을 무효화(다시 그려야 함) 시킵니다.
 3. 재실행 및 비교
-   * Compose 스케줄러가 다음 프레임에 무효화된 Composable 함수들만 다시 실행합니다. 
-   * 이 때 Smart Skipping이 발생합니다. 
-     * 만약 재실행되는 Composable의 입력 파라미터가 모두 안정적(Stable)이고 변경되지 않았다면, Compose는 이 Composable의 내부는 실행조차 하지 않고 그냥 건너뜁니다.
-   * 재실행된 Composable이 반환한 새로운 UI트리를 이전의 UI트리와 비교합니다.
+   - Compose 스케줄러가 다음 프레임에 무효화된 Composable 함수들만 다시 실행합니다.
+   - 이 때 Smart Skipping이 발생합니다.
+     - 만약 재실행되는 Composable의 입력 파라미터가 모두 안정적(Stable)이고 변경되지 않았다면, Compose는 이 Composable의 내부는 실행조차 하지 않고 그냥 건너뜁니다.
+   - 재실행된 Composable이 반환한 새로운 UI트리를 이전의 UI트리와 비교합니다.
 4. 적용
-   * 비교 결과, 실제로 변경된 부분만 식별하여 화면에 적용합니다.
+   - 비교 결과, 실제로 변경된 부분만 식별하여 화면에 적용합니다.
+
+</def>
+</deflist>

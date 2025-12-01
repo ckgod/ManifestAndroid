@@ -53,24 +53,31 @@ fun CounterWithReset() {
 Coroutine Scope를 Composition에 연결함으로써 리소스의 적절한 정리를 보장하고 메모리 누수를 방지합니다. 
 그러나 기본적으로 Main Thread에서 실행되므로, 신중하게 사용하고 네트워크 요청이나 데이터베이스 쿼리와 같은 비즈니스 로직을 직접 실행하는 것은 피해야 합니다.
 
-> Q) Composable 내에서 Coroutine을 직접 시작할 경우의 위험은 무엇이며, 이를 어떻게 피할 수 있습니까?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Composable 내에서 Coroutine을 직접 시작할 경우의 위험은 무엇이며, 이를 어떻게 피할 수 있습니까?">
 
-#### A {collapsible="true"}
-Composable 함수 본문 내에서 코루틴을 직접 시작하는 것은 심각한 버그를 유발할 수 있습니다. 
-Composable 함수는 recomposition에 의해 언제든, 매우 자주 다시 실행될 수 있습니다. 
-만약 본문에 scope.launch 코드가 있다면, 리컴포지션이 일어날 때마다 새로운 코루틴이 시작됩니다. 
-사용자가 글자 하나를 입력할 때마다, 또는 관련 상태가 조금이라도 바뀔 때마다 네트워크 요청이나 무거운 계산이 다시 시작되는 것입니다. 
+Composable 함수 본문 내에서 코루틴을 직접 시작하는 것은 심각한 버그를 유발할 수 있습니다.
+
+Composable 함수는 recomposition에 의해 언제든, 매우 자주 다시 실행될 수 있습니다.
+만약 본문에 `scope.launch` 코드가 있다면, 리컴포지션이 일어날 때마다 새로운 코루틴이 시작됩니다.
+사용자가 글자 하나를 입력할 때마다, 또는 관련 상태가 조금이라도 바뀔 때마다 네트워크 요청이나 무거운 계산이 다시 시작되는 것입니다.
 이는 엄청난 리소스 낭비와 앱 성능 저하를 일으킵니다.
 
-만일 GlobalScope를 사용했다면 Composable이 dispose되어도 취소되지 않고 계속 실행됩니다. 
+만일 GlobalScope를 사용했다면 Composable이 dispose되어도 취소되지 않고 계속 실행됩니다.
 이 코루틴이 만약 화면의 State를 업데이트하려고 시도한다면, 이미 존재하지 않는 UI를 참조하게 되어 크래시가 발생하거나, Composable에 대한 참조를 계속 붙잡고 있어, 메모리 누수를 일으킵니다.
 
-이를 피하기 위해선 코루틴의 생명주기를 Composable의 생명주기에 맞추는 것이 핵심입니다. 
-이를 위해 두 가지 목적별 해결책이 있습니다. 
+이를 피하기 위해선 코루틴의 생명주기를 Composable의 생명주기에 맞추는 것이 핵심입니다.
+이를 위해 두 가지 목적별 해결책이 있습니다.
 
 1. `LaunchedEffect`: Composable이 화면에 나타났을 때 실행
+
 `LaunchedEffect`는 Composable이 Composition에 처음 추가되었을때 코루틴을 실행하고, Composable이 사라질 때 자동으로 코루틴을 취소하는 가장 이상적인 방법입니다.
+
 2. `rememberCoroutineScope`: 사용자 이벤트로 실행
+
 `LaunchedEffect`는 Composable이 등장할 때 실행됩니다. 만약 버튼 클릭처럼 사용자의 특정 이벤트에 대한 응답으로 코루틴을 시작해야 한다면 `rememberCoroutineScope`를 사용합니다.
 이 스코프는 Composable의 생명주기에 바인딩되어, Composable이 사라지면 이 스코프에서 시작된 모든 코루틴도 함께 취소됩니다.
+
+</def>
+</deflist>
 

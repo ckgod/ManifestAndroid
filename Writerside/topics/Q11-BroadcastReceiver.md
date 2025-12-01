@@ -71,5 +71,9 @@ registerReceiver(receiver, intentFilter)
 
 `BroadcastReceiver`는 특히 `OS` 시스템과 상호 작용하는 반응형 애플리케이션을 구축하는 데 필수적인 컴포넌트입니다. 이를 통해 앱은 시스템 또는 앱 이벤트를 효율적으로 수신하고 응답할 수 있습니다. `lifecycle`을 인식하는 등록 및 최신 Android 제한 사항 준수와 같은 적절한 사용은 앱이 견고하고 리소스 효율적으로 유지되도록 보장합니다.
 
-> Q) 브로드캐스트의 유형은 무엇이며, 시스템 브로드캐스트는 기능 및 사용 측면에서 사용자 지정 브로드캐스트와 어떻게 다른가요?
 
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 브로드캐스트의 유형은 무엇이며, 시스템 브로드캐스트는 기능 및 사용 측면에서 사용자 지정 브로드캐스트와 어떻게 다른가요?">
+
+</def>
+</deflist>

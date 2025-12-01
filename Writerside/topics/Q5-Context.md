@@ -44,10 +44,16 @@ Broadcast Context는 Broadcast Receiver가 호출될 때 제공된다.
 5. Database and SharedPreferences Access: `SQLite` 데이터베이스 또는 `SharedPreferences`와 같은 저장소 매커니즘에 액세스할 수 있다.
 
 ### 요약
-Context는 안드로이드 핵심 구성 요소로, **앱과 시스템 간의 상호 작용**을 가능하게 한다. 
+Context는 안드로이드 핵심 구성 요소로, **앱과 시스템 간의 상호 작용**을 가능하게 한다.
 Application Context, Activity Context, Service Context 등 다양한 유형의 컨텍스트가 존재하고 고유한 용도로 사용된다.
 Context를 올바르게 사용하면 리소스를 효율적으로 관리하고 메모리 누수나 Conflict를 방지할 수 있으므로 올바른 Context를 선택하고 불필요하게 유지하지 않는 것이 중요하다.
 
-> Q) 안드로이드 애플리케이션에서 올바른 유형의 컨텍스트를 사용하는 것이 중요한 이유? 
-> 
-> Q) Activity Context에 대한 참조를 오래 보유할 경우 발생할 수 있는 잠재적 위험?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 안드로이드 애플리케이션에서 올바른 유형의 컨텍스트를 사용하는 것이 중요한 이유?">
+
+</def>
+<def title="Q) Activity Context에 대한 참조를 오래 보유할 경우 발생할 수 있는 잠재적 위험?">
+
+</def>
+</deflist>

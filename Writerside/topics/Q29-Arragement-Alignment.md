@@ -65,3 +65,9 @@ Jetpack Compose에서 효율적이고 잘 구성된 레이아웃을 구축하려
 
 ### 요약
 Arrangement와 Alignment는 모두 UI 요소를 배치하는 데 도움이 되지만, 서로 다른 축에서 작동하며 뚜렷한 목적을 가지고 있습니다. Arrangement는 여러 항목이 주 축을 따라 어떻게 간격을 두는지를 제어하고, Alignment는 부모 컨테이너 내에서 항목이 교차 축을 따라 어떻게 배치되는지를 결정합니다.
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Arrangement와 Alignment의 차이점은 무엇인가요?">
+
+</def>
+</deflist>

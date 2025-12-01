@@ -1,6 +1,6 @@
 # Q9) Fragment 생명주기
 
-## Fragment 생명주기
+## Fragment 생명주기 {#F1}
 
 각 Fragment 인스턴스는 자신이 연결된 Activity의 생명주기와 별개로 고유한 생명주기를 가집니다.
 사용자가 앱과 상호작용함에 따라, Fragment는 추가되거나 제거되거나 화면에 나타나거나 사라지는 등 다양한 생명주기 상태를 거칩니다. 
@@ -29,11 +29,14 @@ Android 앱에서 Fragment 생명 주기를 이해하는 것은 리소스를 효
 
 [Fragment Lifecycle](https://developer.android.com/guide/fragments/lifecycle)
 
-> Q) `onCreateView()` 및 `onDestroyView()`의 목적은 무엇이며, 이 메서드에서 뷰 관련 리소스를 적절히 처리하는 것이 왜 중요한가요?
 
-#### A) {collapsible="true"}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `onCreateView()` 및 `onDestroyView()`의 목적은 무엇이며, 이 메서드에서 뷰 관련 리소스를 적절히 처리하는 것이 왜 중요한가요?">
+
 `onCreateView()`와 `onDestroyView()`는 Android Fragment의 생명주기 메서드로, 뷰의 생성과 소멸을 관리하는 핵심적인 역할을 합니다.
-##### onCreateView()의 목적
+
+**onCreateView()의 목적**
+
 `onCreateView()`는 Fragment의 UI를 생성하는 메서드입니다. 이 메서드에서:
 - Fragment의 레이아웃을 인플레이트(inflate)합니다
 - View 객체를 반환하여 Fragment의 UI 계층구조를 정의합니다
@@ -48,20 +51,23 @@ override fun onCreateView(
     return inflater.inflate(R.layout.fragment_example, container, false)
 }
 ```
-##### onDestroyView()의 목적
+
+**onDestroyView()의 목적**
+
 `onDestroyView()`는 Fragment의 뷰가 소멸될 때 호출됩니다. 이 메서드에서:
 - 뷰와 관련된 리소스를 정리합니다
 - 메모리 누수를 방지합니다
 - Fragment가 백스택에서 제거되거나 교체될 때 호출됩니다
 
-##### 뷰 관련 리소스 적절한 처리의 중요성
+**뷰 관련 리소스 적절한 처리의 중요성**
+
 1. 메모리 누수 방지
 Fragment가 소멸되어도 뷰에 대한 참조가 남아있으면 가비지 컬렉션이 되지 않아 메모리 누수가 발생합니다.
 
 ```kotlin
 class ExampleFragment : Fragment() {
     private var binding: FragmentExampleBinding? = null
-    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,7 +76,7 @@ class ExampleFragment : Fragment() {
         binding = FragmentExampleBinding.inflate(inflater, container, false)
         return binding?.root
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null // 중요: 바인딩 참조 해제
@@ -78,7 +84,8 @@ class ExampleFragment : Fragment() {
 }
 ```
 
-##### 2. 리스너 및 콜백 해제
+**2. 리스너 및 콜백 해제**
+
 등록된 리스너들이 제대로 해제되지 않으면 메모리 누수의 원인이 됩니다.
 
 ```kotlin
@@ -92,13 +99,17 @@ override fun onDestroyView() {
 }
 ```
 
-##### 3. 백그라운드 작업 정리
+**3. 백그라운드 작업 정리**
+
 진행 중인 비동기 작업들을 정리하여 불필요한 작업을 방지합니다.
 
-##### Fragment 생명주기에서의 위치 {#135135}
+**Fragment 생명주기에서의 위치**
 
 Fragment 생명주기에서 이 메서드들의 위치:
 1. `onAttach()` → `onCreate()` → **`onCreateView()`** → `onViewCreated()` → `onStart()` → `onResume()`
 2. `onPause()` → `onStop()` → **`onDestroyView()`** → `onDestroy()` → `onDetach()`
 
 이러한 적절한 리소스 관리는 안정적인 앱 성능과 메모리 효율성을 보장하는 Android 개발의 핵심 원칙입니다.
+
+</def>
+</deflist>

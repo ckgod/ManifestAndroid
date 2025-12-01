@@ -66,27 +66,30 @@ fun RememberSaveableExample() {
 하지만 `rememberSaveable`의 추가 기능에는 약간의 오버헤드가 따르므로 모든 시나리오에서 항상 최선의 선택은 아닙니다.
 이들의 차이점을 이해하고 각 `API`를 적절하게 사용하면 애플리케이션의 필요에 따라 가장 효율적인 `API`를 선택하는 데 도움이 됩니다.
 
-### Q1
-> Q) `remember`보다 `rememberSaveable`을 사용하는 것이 선호되는 상황은 언제이며, 어떤 장단점을 고려해야 할까요? 
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `remember`보다 `rememberSaveable`을 사용하는 것이 선호되는 상황은 언제이며, 어떤 장단점을 고려해야 할까요?">
 
-#### A {collapsible="true"}
-remember는 컴포저블이 화면에 있는 동안에만 상태를 기억하지만, rememberSaveable은 화면 회전이나 앱이 백그라운드로 갔다 오는 상황에서도 상태를 기억합니다. 
+remember는 컴포저블이 화면에 있는 동안에만 상태를 기억하지만, rememberSaveable은 화면 회전이나 앱이 백그라운드로 갔다 오는 상황에서도 상태를 기억합니다.
 
 애니메이션이나 단순한 UI 상태와 같이 컴포지션 이후에 지속될 필요가 없는 일시적인 상태에는 remember를 사용하고, 사용자 입력이나 중요한 UI 상태가 예기치 않게 사라지는 것을 막고 싶을 때는 rememberSaveable을 사용합니다.
 
 rememberSaveable은 상태를 Bundle에 저장하고 복원하는 비용에 있어서 remember보다 비용이 높으며, 저장 타입에 제한이 있습니다. 따라서 Int, String, Boolean 같은 primitive 타입이나 Parcelable 인터페이스를 구현한 객체만 자동으로 저장할 수 있습니다.
 
-### Q2
+</def>
+<def title="Q) `rememberSaveable`에서 기본적으로 지원되지 않는 custom non-primitive state를 저장하는 방법은 무엇인가요?">
 
-> Q) `rememberSaveable`에서 기본적으로 지원되지 않는 custom non-primitive state를 저장하는 방법은 무엇인가요?
- 
-#### A {#A1 collapsible="true"}
-크게 두 가지가 있습니다. 
+크게 두 가지가 있습니다.
+
 1. 클래스를 Parcelable로 만들기
-클래스 자체를 Parcelable로 만들면, rememberSaveable이 추가 설정 없이 자동으로 저장하고 복원할 수 있습니다. 
+
+클래스 자체를 Parcelable로 만들면, rememberSaveable이 추가 설정 없이 자동으로 저장하고 복원할 수 있습니다.
 Kotlin에서는 `@Parcelize`어노테이션으로 이 작업을 매우 쉽게 처리할 수 있습니다.
 
 2. 커스텀 Saver 객체 제공하기
+
 `@Parcelize` 어노테이션을 사용할 수 없는 경우(예: 외부 라이브러리 클래스, Parcelable로 만들 수 없는 멤버가 있는 경우) Saver를 직접 구현해야 합니다.
 
 Saver는 rememberSaveable에게 이 객체를 어떻게 분해해서 저장하고, 어떻게 다시 조립해서 복원할지 알려주는 번역기입니다.
+
+</def>
+</deflist>

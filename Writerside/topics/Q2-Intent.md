@@ -91,6 +91,11 @@ class ShareActivity : AppCompatActivity() {
 다른 앱에서 텍스트를 공유할 때, 내 앱의 ShareActivity가 선택지에 나타나도록 만드는 간단한 예제이다.
 
 
-> Q) 명시적 인텐트와 암시적 인텐트의 주요 차이점은 무엇이고 어떤 시나리오에서 사용되나요?
->
-> Q) 안드로이드 시스템은 암시적 인텐트를 처리할 앱을 어떻게 결정하고, 적합한 앱이 없을 경우 어떻게 되나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) 명시적 인텐트와 암시적 인텐트의 주요 차이점은 무엇이고 어떤 시나리오에서 사용되나요?">
+
+</def>
+<def title="Q) 안드로이드 시스템은 암시적 인텐트를 처리할 앱을 어떻게 결정하고, 적합한 앱이 없을 경우 어떻게 되나요?">
+
+</def>
+</deflist>

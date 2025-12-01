@@ -66,10 +66,8 @@ val linearLayout = LinearLayout(context).apply {
 이 둘은 함께 복잡한 Android 사용자 인터페이스를 구축하기 위한 빌딩 블록을 형성합니다.
 이들의 역할과 차이점을 이해하는 것은 레이아웃을 최적화하고 반응성이 뛰어난 사용자 경험을 보장하는 데 필수적입니다.
 
-#### Q1
-> `View` 라이프사이클에서 `requestLayout()`, `invalidate()`, `postInvalidate()`가 어떻게 작동하며, 각각을 언제 사용해야 하는지 설명하세요.
-
-##### A {collapsible="true"}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) View 라이프사이클에서 requestLayout(), invalidate(), postInvalidate()가 어떻게 작동하며, 각각을 언제 사용해야 하는지 설명하세요.">
 이 세 가지 메서드는 어떤 스레드에서 호출하는지와 View 라이프사이클의 어느 단계(Measure, Layout, Draw)를 다시 실행하는지에 따라 명확히 구분됩니다.
 
 1. **`invalidate()`**
@@ -96,10 +94,8 @@ val linearLayout = LinearLayout(context).apply {
    * View를 추가하거나 제거할 때
    * View의 `LayoutParams`를 변경했을 때
 
-#### Q2
-> `View` 라이프사이클은 `Activity` 라이프사이클과 어떻게 다르며, 효율적인 UI 렌더링을 위해 둘 모두를 이해하는 것이 중요한 이유는 무엇인가요?
-
-##### A {collapsible="true" #A2}
+</def>
+<def title="Q) View 라이프사이클은 Activity 라이프사이클과 어떻게 다르며, 효율적인 UI 렌더링을 위해 둘 모두를 이해하는 것이 중요한 이유는 무엇인가요?">
 
 | 구분        | Activity Lifecycle                                    | View Lifecycle                                               |
 |-----------|-------------------------------------------------------|--------------------------------------------------------------|
@@ -125,4 +121,7 @@ Activity의 상태에 맞춰 View의 그리기 작업을 동기화하여 리소�
    * Activity가 onStop() 상태가 되어 화면이 사용자에게 보이지 않게 되면, View 역시 애니메이션이나 invalidate() 호출을 멈춰야 합니다.
    * 만일 Activity의 라이프사이클을 무시하고 백그라운드에서도 View가 계속 그려진다면, CPU와 GPU 자원을 낭비하고 배터리 소모를 야기하게 됩니다.
 2. 메모리 누수 방지
-   * View는 생성 시 Context로 Activity를 참조합니다. Activity가 onDestroy() 되어 종료되었는데도, View 내부의 핸들러나 비동기 작업이 View를 계속 참조하고 있다면, Activity 전체가 GC되지 못하는 심각한 메모리 누수가 발생합니다. 따라서 Activity 종료 시점에 맞춰 View의 리스너나 작업을 해제해 주는 것이 중요합니다. 
+   * View는 생성 시 Context로 Activity를 참조합니다. Activity가 onDestroy() 되어 종료되었는데도, View 내부의 핸들러나 비동기 작업이 View를 계속 참조하고 있다면, Activity 전체가 GC되지 못하는 심각한 메모리 누수가 발생합니다. 따라서 Activity 종료 시점에 맞춰 View의 리스너나 작업을 해제해 주는 것이 중요합니다.
+
+</def>
+</deflist>

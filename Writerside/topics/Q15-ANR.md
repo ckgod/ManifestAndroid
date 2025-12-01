@@ -33,4 +33,9 @@ ANR(Application Not Responding)은 앱의 `main thread` (`UI thread`)가 일반�
 또한 데이터 작업을 최적화하고 [Android Studio Profiler](https://developer.android.com/studio/profile)를 사용하여 앱을 프로파일링할 수 있습니다.
 더 자세한 정보는 [ANR에 대한 공식 Android 문서](https://developer.android.com/topic/performance/vitals/anr)를 참조하세요.
 
-> Q) `ANR`을 감지 및 진단하고 앱 성능을 향상시키는 방법은 무엇인가요?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `ANR`을 감지 및 진단하고 앱 성능을 향상시키는 방법은 무엇인가요?">
+
+</def>
+</deflist>

@@ -45,4 +45,9 @@
 `AndroidManifest.xml` 파일은 모든 안드로이드 앱의 기초이며, 안드로이드 OS가 앱의 생명주기, 권한, 그리고 상호작용을 관리하는 데 필요한 상세 정보를 제공한다.
 이 파일은 본질적으로 앱의 구조와 요구사항을 정의하는 **청사진(bluepring)** 역할을 한다.
 
-> Q) `AndroidManifest`의 인텐트 필터는 어떻게 앱 간의 상호작용을 가능하게 하며, 만약 Activity 클래스가 `AndroidManifest`에 등록되지 않으면 어떤 일이 발생하나요?
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) `AndroidManifest`의 인텐트 필터는 어떻게 앱 간의 상호작용을 가능하게 하며, 만약 Activity 클래스가 `AndroidManifest`에 등록되지 않으면 어떤 일이 발생하나요?">
+
+</def>
+</deflist>

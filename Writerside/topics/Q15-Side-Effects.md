@@ -126,31 +126,31 @@ SideEffect {
 *   SideEffect는 모든 리컴포지션 직후 적용되어야 하는 작업을 실행하고 외부 시스템을 Compose 상태와 동기화하는 데 사용합니다.
     이러한 사이드 이펙트 핸들러 API를 언제 어떻게 사용해야 하는지 이해하면 깔끔하고 선언적인 접근 방식을 유지하면서 Side Effects를 효과적으로 관리하는 데 도움이 될 수 있습니다. 세 가지 주요 사이드 이펙트 핸들링 API의 내부 동작과 작동 방식에 대한 더 깊은 이해를 위해서는 [Understanding the Internals of Side-Effect Handlers in Jetpack Compose](https://medium.com/proandroiddev/understanding-the-internals-of-Side-Effect-handlers-in-Jetpack-Compose-d55fbf914fde)를 확인하십시오.
 
-#### Q1
-> Q) LaunchedEffect는 컴포저블에서 suspend functions를 관리하는 데 어떻게 도움이 되며, 키가 변경되면 어떤 일이 발생하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) LaunchedEffect는 컴포저블에서 suspend functions를 관리하는 데 어떻게 도움이 되며, 키가 변경되면 어떤 일이 발생하나요?">
 
-##### A {collapsible="true" #A14}
 LaunchedEffect는 컴포저블의 생명주기에 연결된 코루틴 스코프를 제공하여, suspend 함수를 안전하게 실행할 수 있게 해줍니다.
 key가 변경되면, LaunchedEffect는 기존의 실행 중이던 코루틴을 즉시 취소하고, 새로운 key 값으로 새 코루틴을 시작합니다.
 
-#### Q2
-> Q) LaunchedEffect 대신 DisposableEffect를 언제 사용하시겠습니까?
+</def>
+<def title="Q) LaunchedEffect 대신 DisposableEffect를 언제 사용하시겠습니까?">
 
-##### A {collapsible="true" #A17}
 DisposableEffect는 명시적인 `onDispose` 정리 블록이 필요할 때 사용합니다.
 LaunchedEffect도 코루틴을 취소하는 정리 작업을 하지만, DisposableEffect는 코루틴이 아닌 리스너, 옵저버, 콜백 등을 등록하고, Composable이 사라질 때 이를 수동으로 해제해야 하는 경우에 특화되어 있습니다.
 
 예를 들어 LifecyclerObserver 등록 및 해제가 있습니다. onResume, onPause같은 화면 생명주기 이벤트를 받아야할 때, 옵저버를 등록해주고 명시적으로 해제할 수 있습니다.
 
-#### Q3
-> Q) SideEffect의 사용 사례와 LaunchedEffect와의 차이점을 설명해 주세요.
+</def>
+<def title="Q) SideEffect의 사용 사례와 LaunchedEffect와의 차이점을 설명해 주세요.">
 
-##### A {collapsible="true" #A15}
-SideEffect는 매 **리컴포지션**이 성공적으로 완료될 때마다 suspend 함수가 아닌 일반 코드를 실행해야 할 때 사용합니다. 
-LaunchedEffect와의 가장 큰 차이점은 실행 시점과 코루틴 스코프의 유무입니다. 
+SideEffect는 매 **리컴포지션**이 성공적으로 완료될 때마다 suspend 함수가 아닌 일반 코드를 실행해야 할 때 사용합니다.
+LaunchedEffect와의 가장 큰 차이점은 실행 시점과 코루틴 스코프의 유무입니다.
 
 간단히 말해, SideEffect는 Compose의 State를 Compose가 아닌 외부 세계와 동기화하기 위한 매우 드물게 사용되는 Effect 입니다.
 
 가장 대표적인 예: 외부 애널리틱스 라이브러리와 연동
 
-Composable 본문에 직접 작성하면 리컴포지션이 취소되어도, 실행될 수 있어 로그가 부정확하게 쌓이게 됩니다. 
+Composable 본문에 직접 작성하면 리컴포지션이 취소되어도, 실행될 수 있어 로그가 부정확하게 쌓이게 됩니다.
+
+</def>
+</deflist> 

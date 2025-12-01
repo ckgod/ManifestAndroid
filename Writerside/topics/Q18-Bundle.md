@@ -68,4 +68,8 @@ override fun onRestoreInstanceState(savedInstanceState: Bundle) {
 
 `Bundle`은 `Android`에서 구성 요소 및 `lifecycle events` 전반에 걸쳐 데이터를 효율적으로 전달하고 보존하는 데 중요한 구성 요소입니다. 가볍고 유연한 구조 덕분에 애플리케이션 상태 및 데이터 전송을 관리하는 데 필수적인 도구입니다.
 
-> Q) `onSaveInstanceState()`는 `Bundle`을 사용하여 구성 변경 중 `UI` 상태를 어떻게 보존하며, `Bundle`에 저장할 수 있는 데이터 유형은 무엇입니까?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) onSaveInstanceState()는 Bundle을 사용하여 구성 변경 중 UI 상태를 어떻게 보존하며, Bundle에 저장할 수 있는 데이터 유형은 무엇입니까?">
+
+</def>
+</deflist>

@@ -89,4 +89,8 @@ Firebase Crashlytics는 프로덕션 환경에서 충돌 보고 및 디버깅을
 Android Studio의 Breakpoints는 개발 중에 더욱 대화식인 디버깅 경험을 제공합니다. 
 이러한 방법들을 함께 사용하여 포괄적인 예외 관리 및 문제 해결이 가능합니다.
 
-> Q) Logcat을 사용하여 개발 환경에서 예외를 디버깅하는 것과 Firebase Crashlytics와 같은 도구를 사용하여 프로덕션 환경에서 예외를 처리하는 것의 주요 차이점은 무엇인가요? 각 경우에 이러한 예외를 어떻게 해결하나요?
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Logcat을 사용하여 개발 환경에서 예외를 디버깅하는 것과 Firebase Crashlytics와 같은 도구를 사용하여 프로덕션 환경에서 예외를 처리하는 것의 주요 차이점은 무엇인가요? 각 경우에 이러한 예외를 어떻게 해결하나요?">
+
+</def>
+</deflist>

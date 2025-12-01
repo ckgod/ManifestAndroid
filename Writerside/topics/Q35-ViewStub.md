@@ -80,9 +80,8 @@ class MainActivity : AppCompatActivity() {
 
 `ViewStub`은 필요할 때까지 레이아웃 인플레이션을 지연시켜 성능을 최적화하는 `Android`의 유용한 도구입니다. 특히 조건부 레이아웃이나 항상 필요하지 않을 수 있는 뷰에 유용하며, 메모리 사용량을 줄이고 앱 응답성을 향상시키는 데 도움이 됩니다. `ViewStub`을 적절하게 사용하면 더욱 효율적이고 간소화된 사용자 경험을 얻을 수 있습니다.
 
-> Q) `ViewStub`이 인플레이션될 때 무슨 일이 발생하며, 레이아웃 성능 및 메모리 사용량 측면에서 뷰 계층에 어떤 영향을 미칩니까?
-
-#### A {collapsible="true" #A1}
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) ViewStub이 인플레이션될 때 무슨 일이 발생하며, 레이아웃 성능 및 메모리 사용량 측면에서 뷰 계층에 어떤 영향을 미칩니까?">
 `ViewStub`의 인플레이션이 호출되면, ViewStub 자신을 부모 ViewGroup에서 제거하고, 지정된 layout을 인플레이트하고 같은 위치에 새로운 View를 삽입하게 됩니다. 
 한 번 인플레이트되면 ViewStub은 뷰 계층에서 완전히 사라집니다. 다시 사용할 수 없습니다.
 
@@ -118,3 +117,6 @@ ViewGroup (depth=0)
 └── RecyclerView (depth=2)
 └── ... (depth=3+)
 ```
+
+</def>
+</deflist>

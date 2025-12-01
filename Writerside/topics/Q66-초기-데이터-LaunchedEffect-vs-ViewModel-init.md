@@ -64,12 +64,18 @@ val pokemonInfo: StateFlow<PokemonInfo?> =
 
 ## 요약
 
-Android에서 초기 데이터를 로드하는 방법에는 Jetpack Compose의 LaunchedEffect, ViewModel의 init() 메서드, 또는 cold flow를 통한 지연 관찰 등 여러 가지가 있습니다. 이 논의는 효율성과 부작용 방지를 위해 cold flow를 활용하는 것을 제안하는 것으로 결론지어졌습니다. 
+Android에서 초기 데이터를 로드하는 방법에는 Jetpack Compose의 LaunchedEffect, ViewModel의 init() 메서드, 또는 cold flow를 통한 지연 관찰 등 여러 가지가 있습니다. 이 논의는 효율성과 부작용 방지를 위해 cold flow를 활용하는 것을 제안하는 것으로 결론지어졌습니다.
 
-그러나 보편적인 해결책은 없으며, 각 프로젝트에는 고유한 요구 사항이 따릅니다. 앱의 특정 요구 사항을 이해하는 것이 가장 적합한 접근 방식을 선택하는 데 중요합니다. 이 논의는 애플리케이션의 컨텍스트에 효과적으로 적용할 수 있는 실용적인 전략을 강조합니다. 
+그러나 보편적인 해결책은 없으며, 각 프로젝트에는 고유한 요구 사항이 따릅니다. 앱의 특정 요구 사항을 이해하는 것이 가장 적합한 접근 방식을 선택하는 데 중요합니다. 이 논의는 애플리케이션의 컨텍스트에 효과적으로 적용할 수 있는 실용적인 전략을 강조합니다.
 
 이 주제에 관심이 있다면 [Loading Initial Data in LaunchedEffect vs. ViewModel](https://proandroiddev.com/loading-initial-data-in-launchedeffect-vs-viewmodel-f1747c20ce62)에서 더 자세히 읽어볼 수 있습니다.
 
-> Q) Jetpack Compose에서 ViewModel.init()과 LaunchedEffect를 사용하여 초기 데이터를 로드하는 것의 장단점은 무엇이며, 어떤 상황에서 한 가지 접근 방식을 다른 것보다 선택해야 합니까? 다른 해결책을 선호한다면 무엇입니까?
 
-> Q) cold flow를 사용한 지연 관찰이 ViewModel.init() 또는 LaunchedEffect에 비해 초기 데이터를 로드할 때 효율성을 어떻게 향상합니까? 이 접근 방식이 유익한 시나리오의 예시를 제공하십시오.
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) Jetpack Compose에서 ViewModel.init()과 LaunchedEffect를 사용하여 초기 데이터를 로드하는 것의 장단점은 무엇이며, 어떤 상황에서 한 가지 접근 방식을 다른 것보다 선택해야 합니까? 다른 해결책을 선호한다면 무엇입니까?">
+
+</def>
+<def title="Q) cold flow를 사용한 지연 관찰이 ViewModel.init() 또는 LaunchedEffect에 비해 초기 데이터를 로드할 때 효율성을 어떻게 향상합니까? 이 접근 방식이 유익한 시나리오의 예시를 제공하십시오.">
+
+</def>
+</deflist>

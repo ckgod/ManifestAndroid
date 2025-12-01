@@ -30,9 +30,8 @@ class CustomApplication : Application() {
 
 ```xml
 <application
-    android:name=".CustomApplication"
-    ... >
-    ...
+    android:name=".CustomApplication" >
+<!--    ...-->
 </application>
 ```
 

@@ -71,6 +71,7 @@
     * [Q37 Canvas](https://ckgod.github.io/ManifestAndroid/q37-canvas.html)
     * [Q38 Invalidate](https://ckgod.github.io/ManifestAndroid/q38-invalidate.html)
     * [Q39 Constraintlayout](https://ckgod.github.io/ManifestAndroid/q39-constraintlayout.html)
+    * [Q40 Surfaceview Textureview](https://ckgod.github.io/ManifestAndroid/q40-surfaceview-textureview.html)
   * [1 3 Jetpack Library](https://ckgod.github.io/ManifestAndroid/1-3-jetpack-library.html)
     * [Q54 Jetpack Viewmodel](https://ckgod.github.io/ManifestAndroid/q54-jetpack-viewmodel.html)
     * [Q56 Dagger 2 Hilt](https://ckgod.github.io/ManifestAndroid/q56-dagger-2-hilt.html)

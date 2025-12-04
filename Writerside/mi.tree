@@ -79,6 +79,7 @@
             <toc-element topic="Q40-SurfaceView-TextureView.md"/>
             <toc-element topic="Q41-RecyclerView.md">
                 <toc-element topic="Details-Multiple-Item-Types.md"/>
+                <toc-element topic="Details-DiffUtil.md"/>
             </toc-element>
         </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">

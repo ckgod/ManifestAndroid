@@ -81,6 +81,7 @@
                 <toc-element topic="Details-Multiple-Item-Types.md"/>
                 <toc-element topic="Details-DiffUtil.md"/>
             </toc-element>
+            <toc-element topic="Q42-Dp-Sp.md"/>
         </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>

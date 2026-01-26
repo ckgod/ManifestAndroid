@@ -75,6 +75,8 @@
     * [Q41 Recyclerview](https://ckgod.github.io/ManifestAndroid/q41-recyclerview.html)
       * [Details Multiple Item Types](https://ckgod.github.io/ManifestAndroid/details-multiple-item-types.html)
       * [Details Diffutil](https://ckgod.github.io/ManifestAndroid/details-diffutil.html)
+    * [Q42 Dp Sp](https://ckgod.github.io/ManifestAndroid/q42-dp-sp.html)
+      * [Details Sp 사용 시 화면 깨짐 처리](https://ckgod.github.io/ManifestAndroid/details-sp-사용-시-화면-깨짐-처리.html)
   * [1 3 Jetpack Library](https://ckgod.github.io/ManifestAndroid/1-3-jetpack-library.html)
     * [Q54 Jetpack Viewmodel](https://ckgod.github.io/ManifestAndroid/q54-jetpack-viewmodel.html)
     * [Q56 Dagger 2 Hilt](https://ckgod.github.io/ManifestAndroid/q56-dagger-2-hilt.html)

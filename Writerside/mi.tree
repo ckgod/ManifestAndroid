@@ -89,6 +89,9 @@
             <toc-element topic="Q45-Bitmap.md">
                 <toc-element topic="Details-대용량-Bitmap-캐싱.md"/>
             </toc-element>
+            <toc-element topic="Q46-애니메이션.md">
+                <toc-element topic="Details-애니메이션-Interpolator.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q54-JetPack-ViewModel.md"/>

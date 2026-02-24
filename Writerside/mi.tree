@@ -101,6 +101,7 @@
         <toc-element topic="1-3-Jetpack-Library.md">
             <toc-element topic="Q49-AppCompat.md"/>
             <toc-element topic="Q50-Material-Design-Components.md"/>
+            <toc-element topic="Q51-ViewBinding.md"/>
             <toc-element topic="Q54-JetPack-ViewModel.md"/>
             <toc-element topic="Q56-Dagger-2-Hilt.md"/>
         </toc-element>

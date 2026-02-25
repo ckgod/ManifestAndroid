@@ -120,6 +120,9 @@
             <toc-element topic="Q13-remember-rememberSaveable.md"/>
             <toc-element topic="Q14-rememberCoroutineScope.md"/>
             <toc-element topic="Q15-Side-Effects.md"/>
+            <toc-element topic="Q16-rememberUpdatedState.md">
+                <toc-element topic="Details-rememberUpdatedState-내부-구현.md"/>
+            </toc-element>
             <toc-element topic="Q20-Composable-Lifecycle.md"/>
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md">

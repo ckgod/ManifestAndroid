@@ -111,7 +111,11 @@
         <toc-element topic="1-4-Business-Logic.md">
             <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>
         </toc-element>
-        <toc-element topic="2-1-Jetpack-Compose.md"/>
+        <toc-element topic="2-1-Jetpack-Compose.md">
+            <toc-element topic="Q0-Jetpack-Compose-구조.md">
+                <toc-element topic="Details-SlotTable-Link-Table.md"/>
+            </toc-element>
+        </toc-element>
         <toc-element topic="2-2-Compose-Runtime.md">
             <toc-element topic="Q11-State.md"/>
             <toc-element topic="Q12-State-hoisting.md">

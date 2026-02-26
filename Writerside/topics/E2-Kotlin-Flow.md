@@ -290,7 +290,7 @@ class FirestoreUserEventsDataSource(
 * `collect()`가 호출되기 전까지는 아무것도 하지 않음.
 * `collect()`가 호출되면, 그때서야 Flow가 활성화되어 값을 생성하고 방출함.
 
-#### Hot FLow
+#### Hot Flow
 * StateFlow와 SharedFlow가 여기 속함.
 * `collect()`하는 대상이 있든 없든, Flow 자체가 이미 활성화되어 있음.
 * 값을 생성하거나 이벤트를 받을 준비가 항상 되어있음.

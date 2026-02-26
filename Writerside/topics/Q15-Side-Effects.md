@@ -124,7 +124,8 @@ SideEffect {
 *   LaunchedEffect는 `Coroutine` 기반 작업을 시작하거나 키 매개변수 변경에 따라 작업을 다시 시작하는 데 사용합니다.
 *   DisposableEffect는 컴포저블의 컴포지션에 연결된 리소스를 관리하고 정리하는 데 사용합니다.
 *   SideEffect는 모든 리컴포지션 직후 적용되어야 하는 작업을 실행하고 외부 시스템을 Compose 상태와 동기화하는 데 사용합니다.
-    이러한 사이드 이펙트 핸들러 API를 언제 어떻게 사용해야 하는지 이해하면 깔끔하고 선언적인 접근 방식을 유지하면서 Side Effects를 효과적으로 관리하는 데 도움이 될 수 있습니다. 세 가지 주요 사이드 이펙트 핸들링 API의 내부 동작과 작동 방식에 대한 더 깊은 이해를 위해서는 [Understanding the Internals of Side-Effect Handlers in Jetpack Compose](https://medium.com/proandroiddev/understanding-the-internals-of-Side-Effect-handlers-in-Jetpack-Compose-d55fbf914fde)를 확인하십시오.
+
+이러한 사이드 이펙트 핸들러 API를 언제 어떻게 사용해야 하는지 이해하면 깔끔하고 선언적인 접근 방식을 유지하면서 Side Effects를 효과적으로 관리하는 데 도움이 될 수 있습니다. 세 가지 주요 사이드 이펙트 핸들링 API의 내부 동작과 작동 방식에 대한 더 깊은 이해를 위해서는 [Understanding the Internals of Side-Effect Handlers in Jetpack Compose](https://medium.com/proandroiddev/understanding-the-internals-of-Side-Effect-handlers-in-Jetpack-Compose-d55fbf914fde)를 확인하십시오.
 
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) LaunchedEffect는 컴포저블에서 suspend functions를 관리하는 데 어떻게 도움이 되며, 키가 변경되면 어떤 일이 발생하나요?">

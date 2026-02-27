@@ -100,6 +100,7 @@
   * [2 1 Jetpack Compose](https://ckgod.github.io/ManifestAndroid/2-1-jetpack-compose.html)
     * [Q0 Jetpack Compose 구조](https://ckgod.github.io/ManifestAndroid/q0-jetpack-compose-구조.html)
       * [Details Slottable Link Table](https://ckgod.github.io/ManifestAndroid/details-slottable-link-table.html)
+    * [Q1 Compose Phase](https://ckgod.github.io/ManifestAndroid/q1-compose-phase.html)
   * [2 2 Compose Runtime](https://ckgod.github.io/ManifestAndroid/2-2-compose-runtime.html)
     * [Q11 State](https://ckgod.github.io/ManifestAndroid/q11-state.html)
     * [Q12 State Hoisting](https://ckgod.github.io/ManifestAndroid/q12-state-hoisting.html)
@@ -119,6 +120,7 @@
     * [E1 Recyclerview 렌더링 과정](https://ckgod.github.io/ManifestAndroid/e1-recyclerview-렌더링-과정.html)
     * [E2 Kotlin Flow](https://ckgod.github.io/ManifestAndroid/e2-kotlin-flow.html)
     * [E3 Kotlin Delegation](https://ckgod.github.io/ManifestAndroid/e3-kotlin-delegation.html)
+    * [E4 Thread Safe](https://ckgod.github.io/ManifestAndroid/e4-thread-safe.html)
 ## 참고
 - [skydoves/manifest-android-interview](https://github.com/skydoves/manifest-android-interview)
 - [markup-reference](https://www.jetbrains.com/help/writerside/markup-reference.html) 

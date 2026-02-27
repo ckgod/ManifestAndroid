@@ -5,4 +5,5 @@
     <term name="HAL">Hardware Abstraction Layer</term>
     <term name="IPC">프로세스 간 통신(IPC)은 서로 다른 프로세스가 서로 통신하고 데이터를 공유하여 별도의 애플리케이션 또는 시스템 서비스 간의 협업을 가능하게 하는 메커니즘입니다. Android에서 IPC는 바인더, 인텐트, 콘텐츠제공자, 메신저와 같은 구성 요소를 통해 이루어지며, 이를 통해 프로세스 간에 안전하고 효율적으로 데이터를 교환할 수 있습니다.</term>
     <term name="cold_flow">cold flow는 수집될 때까지 비활성 상태를 유지하는 flow입니다. 실행 로직은 수집자가 구독할 때만 시작되므로, 활성 구독자가 없는 경우 불필요한 작업이 수행되지 않도록 보장합니다.</term>
+    <term name="Happens_Before">JMM(Java Memory Model)에서 "A happens-before B"란 A의 결과(쓰기)가 B에서 반드시 보인다는 보장, 단순히 시간 순서가 아니라, 메모리 가시성(visibility)을 보장하는 규칙입니다.</term>
 </terms>

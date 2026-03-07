@@ -109,6 +109,7 @@
             <toc-element topic="Q55-Jetpack-Navigation-Library.md"/>
             <toc-element topic="Q56-Dagger-2-Hilt.md"/>
             <toc-element topic="Q57-Jetpack-Paging-Library.md"/>
+            <toc-element topic="Q58-Baseline-Profile.md"/>
         </toc-element>
         <toc-element topic="1-4-Business-Logic.md">
             <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>

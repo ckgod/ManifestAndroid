@@ -93,6 +93,8 @@
     * [Q51 Viewbinding](https://ckgod.github.io/ManifestAndroid/q51-viewbinding.html)
     * [Q52 Databinding](https://ckgod.github.io/ManifestAndroid/q52-databinding.html)
       * [Details Viewbinding Vs Databinding](https://ckgod.github.io/ManifestAndroid/details-viewbinding-vs-databinding.html)
+    * [Q53 Livedata](https://ckgod.github.io/ManifestAndroid/q53-livedata.html)
+      * [Details Setvalue Vs Postvalue](https://ckgod.github.io/ManifestAndroid/details-setvalue-vs-postvalue.html)
     * [Q54 Jetpack Viewmodel](https://ckgod.github.io/ManifestAndroid/q54-jetpack-viewmodel.html)
     * [Q56 Dagger 2 Hilt](https://ckgod.github.io/ManifestAndroid/q56-dagger-2-hilt.html)
   * [1 4 Business Logic](https://ckgod.github.io/ManifestAndroid/1-4-business-logic.html)

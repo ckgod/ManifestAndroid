@@ -94,5 +94,5 @@ interface ExampleApi {
 ### 요약 {#summary}
 
 <tldr>
-Retrofit의 **CallAdapter** 는 기본 반환 타입인 `Call<T>`를 LiveData, Flow, RxJava observable, 사용자 정의 타입 등 다양한 형태로 변환할 수 있게 해 주는 메커니즘입니다. 덕분에 Retrofit을 선호하는 아키텍처나 라이브러리와 자연스럽게 결합할 수 있습니다. Retrofit은 `Call<T>`와 코루틴용 기본 CallAdapter를 포함하지만, 커스텀 어댑터를 만들면 특정 요구사항에 맞춘 더 고도화된 사용 사례에도 대응할 수 있습니다. 더 깊이 있는 활용은 *Modeling Retrofit Responses With Sealed Classes and Coroutines* 같은 자료를 참고하면 좋습니다.
+Retrofit의 **CallAdapter** 는 기본 반환 타입인 `Call&lt;T&gt;`를 LiveData, Flow, RxJava observable, 사용자 정의 타입 등 다양한 형태로 변환할 수 있게 해 주는 메커니즘입니다. 덕분에 Retrofit을 선호하는 아키텍처나 라이브러리와 자연스럽게 결합할 수 있습니다. Retrofit은 `Call&lt;T&gt;`와 코루틴용 기본 CallAdapter를 포함하지만, 커스텀 어댑터를 만들면 특정 요구사항에 맞춘 더 고도화된 사용 사례에도 대응할 수 있습니다. 더 깊이 있는 활용은 *Modeling Retrofit Responses With Sealed Classes and Coroutines* 같은 자료를 참고하면 좋습니다.
 </tldr>

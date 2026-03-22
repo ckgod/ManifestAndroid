@@ -137,7 +137,7 @@ JSON을 객체로 직렬화·역직렬화할 때 Gson, Moshi, kotlinx.serializat
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) API에서 받은 JSON 응답을 Kotlin data class로 역직렬화하려면 어떻게 처리해야 하며, Kotlin 우선 프로젝트라면 어떤 라이브러리를 선택하시겠습니까?">
 
-가장 자연스러운 방법은 data class를 정의하고, 선택한 라이브러리의 어노테이션으로 직렬화 정보를 부여한 뒤, Retrofit 같은 네트워크 레이어와 결합해 응답 변환을 라이브러리에 위임하는 것입니다. 예를 들어 kotlinx.serialization을 사용한다면 `@Serializable`을 붙인 data class를 정의하고 `Json.decodeFromString<User>(jsonString)` 형태로 변환하거나, Retrofit에 `kotlinx-serialization-converter`를 등록해 응답을 자동 매핑하게 만들 수 있습니다.
+가장 자연스러운 방법은 data class를 정의하고, 선택한 라이브러리의 어노테이션으로 직렬화 정보를 부여한 뒤, Retrofit 같은 네트워크 레이어와 결합해 응답 변환을 라이브러리에 위임하는 것입니다. 예를 들어 kotlinx.serialization을 사용한다면 `@Serializable`을 붙인 data class를 정의하고 `Json.decodeFromString&lt;User&gt;(jsonString)` 형태로 변환하거나, Retrofit에 `kotlinx-serialization-converter`를 등록해 응답을 자동 매핑하게 만들 수 있습니다.
 
 Kotlin 우선 프로젝트에서는 **kotlinx.serialization** 을 우선 후보로 두는 것이 합리적입니다. JetBrains가 직접 유지보수하기 때문에 Kotlin 언어 기능 변화와 호흡이 맞고, 컴파일러 플러그인이 직렬화 코드를 생성하므로 런타임 리플렉션 없이도 빠르고 타입 안전한 변환을 보장합니다. 또한 Kotlin Multiplatform을 정식 지원해 향후 코드 공유나 KMP 전환에도 유연하게 대응할 수 있습니다.
 

@@ -95,7 +95,7 @@ Compose Compiler 1.5.4에서 실험적으로 도입된 [Strong Skipping Mode](ht
 
 가장 먼저 점검할 부분은 **컬렉션 자체가 stable 로 인식되고 있는가** 입니다. 표준 `List` 인터페이스는 구현체가 가변일 수 있으므로 Compose 컴파일러가 unstable 로 분류하고, 그 결과 컴포저블이 매번 리컴포지션 후보가 됩니다. 이 자리에서 일반적으로 가장 적은 비용으로 큰 효과를 보는 변경은 `kotlinx.collections.immutable` 의 `ImmutableList` 로 타입을 바꾸는 것입니다. 이렇게 하면 컴파일러가 컬렉션을 stable 로 인식해 동일 인스턴스가 다시 들어왔을 때 컴포저블을 건너뛸 수 있습니다.
 
-`ImmutableList` 도입이 어렵다면 stability 설정 파일이나 래퍼 클래스가 차선책이 됩니다. 예를 들어 `@Immutable data class WrappedList(val items: List<Item>)` 같은 래퍼를 만들고 컴포저블에서는 이 래퍼 타입을 파라미터로 받는 식입니다. 실제로 컬렉션의 내용이 같은 한 같은 래퍼 인스턴스를 그대로 흘려보내면 리컴포지션이 안전하게 스킵됩니다. 외부 모델을 그대로 쓸 수밖에 없는 경우에는 `compose_compiler_config.conf` 에 해당 클래스를 stable 로 등록해 동일한 효과를 얻을 수 있습니다.
+`ImmutableList` 도입이 어렵다면 stability 설정 파일이나 래퍼 클래스가 차선책이 됩니다. 예를 들어 `@Immutable data class WrappedList(val items: List&lt;Item&gt;)` 같은 래퍼를 만들고 컴포저블에서는 이 래퍼 타입을 파라미터로 받는 식입니다. 실제로 컬렉션의 내용이 같은 한 같은 래퍼 인스턴스를 그대로 흘려보내면 리컴포지션이 안전하게 스킵됩니다. 외부 모델을 그대로 쓸 수밖에 없는 경우에는 `compose_compiler_config.conf` 에 해당 클래스를 stable 로 등록해 동일한 효과를 얻을 수 있습니다.
 
 여기서 한 단계 더 나아가려면 Compose Compiler 리포트로 실제 분류 결과를 확인하는 것이 좋습니다. "왜 unstable 인가" 가 적힌 리포트를 보면 List 자체가 문제인 경우와, 그 안의 요소 타입이 문제인 경우가 분명히 갈립니다. 후자라면 List 만 ImmutableList 로 바꾸어도 의미가 없고, 요소 타입까지 stable 하게 정리해야 합니다. 마지막으로 화면이 정말 큰 데이터셋을 다룬다면 Strong Skipping Mode를 켜는 것도 고려할 수 있습니다. 단 이 모드는 동작 모델이 달라지므로, 도입 전에 회귀 테스트와 프로파일링을 함께 수행하는 것이 안전합니다.
 

@@ -145,6 +145,9 @@
             </toc-element>
             <toc-element topic="Q6-Compose-Stability-Optimization.md"/>
             <toc-element topic="Q7-Composition.md"/>
+            <toc-element topic="Q8-XML-Compose-Migration.md">
+                <toc-element topic="Details-Compose-XML-App-Size.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="2-2-Compose-Runtime.md">
             <toc-element topic="Q11-State.md"/>

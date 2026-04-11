@@ -168,6 +168,7 @@
             <toc-element topic="Q18-snapshotFlow.md"/>
             <toc-element topic="Q19-derivedStateOf.md"/>
             <toc-element topic="Q20-Composable-Lifecycle.md"/>
+            <toc-element topic="Q21-SaveableStateHolder.md"/>
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md">
             <toc-element topic="Q26-Modifier.md"/>

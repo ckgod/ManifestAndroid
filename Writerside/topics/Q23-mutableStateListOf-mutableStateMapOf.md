@@ -124,7 +124,7 @@ fun Settings() {
 
 가장 자연스러운 해결책은 `mutableStateListOf` 같은 **snapshot 인지 컬렉션** 을 사용하는 것입니다. `mutableStateListOf` 가 만들어 주는 `SnapshotStateList` 는 내부 변경을 snapshot 시스템에 그대로 알려 주므로, 리스트의 add/remove/replace 가 곧 리컴포지션 트리거가 됩니다. 항목 단위로 변화를 추적하므로 LazyColumn 같은 화면에서 실제로 영향을 받는 항목만 다시 그릴 수 있다는 이점도 있습니다. Map 이라면 `mutableStateMapOf` 가 동일한 역할을 합니다.
 
-또 다른 해결 방향은 **불변 데이터로 모델링하고 매번 새 인스턴스를 발행하는 것** 입니다. 즉 `var items by remember { mutableStateOf(emptyList<String>()) }` 처럼 두고, 수정이 필요할 때 `items = items + "kotlin"` 같이 새 리스트를 할당하는 방식입니다. 이 방식은 ViewModel의 StateFlow나 immutable list 와 자연스럽게 어울리고, 단방향 데이터 흐름을 만들기 좋습니다. 다만 항목이 매우 많거나 변경이 잦은 화면에서는 매번 리스트를 새로 만드는 비용이 부담이 될 수 있어, 그런 경우에는 SnapshotStateList 쪽이 유리합니다.
+또 다른 해결 방향은 **불변 데이터로 모델링하고 매번 새 인스턴스를 발행하는 것** 입니다. 즉 `var items by remember { mutableStateOf(emptyList&lt;String&gt;()) }` 처럼 두고, 수정이 필요할 때 `items = items + "kotlin"` 같이 새 리스트를 할당하는 방식입니다. 이 방식은 ViewModel의 StateFlow나 immutable list 와 자연스럽게 어울리고, 단방향 데이터 흐름을 만들기 좋습니다. 다만 항목이 매우 많거나 변경이 잦은 화면에서는 매번 리스트를 새로 만드는 비용이 부담이 될 수 있어, 그런 경우에는 SnapshotStateList 쪽이 유리합니다.
 
 </def>
 <def title="Q) LazyColumn에서 항목을 동적으로 추가/제거할 때 UI 갱신을 효율적으로 추적하려면 어떻게 해야 하나요?">

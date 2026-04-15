@@ -173,6 +173,7 @@
                 <toc-element topic="Details-Mutable-Snapshot.md"/>
             </toc-element>
             <toc-element topic="Q23-mutableStateListOf-mutableStateMapOf.md"/>
+            <toc-element topic="Q24-Flow-Safe-Collection.md"/>
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md">
             <toc-element topic="Q26-Modifier.md"/>

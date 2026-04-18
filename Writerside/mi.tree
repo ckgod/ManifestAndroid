@@ -174,6 +174,9 @@
             </toc-element>
             <toc-element topic="Q23-mutableStateListOf-mutableStateMapOf.md"/>
             <toc-element topic="Q24-Flow-Safe-Collection.md"/>
+            <toc-element topic="Q25-CompositionLocals.md">
+                <toc-element topic="Details-CompositionLocal-Caution.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="2-3-Compose-UI.md">
             <toc-element topic="Q26-Modifier.md"/>

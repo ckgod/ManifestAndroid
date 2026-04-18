@@ -111,5 +111,7 @@ interface UiState<T : Result<T>> {
 ### 요약 {#summary}
 
 <tldr>
+
 적절한 stability 어노테이션을 적용하면 Jetpack Compose 앱을 보다 효과적으로 최적화할 수 있습니다. 완전 불변으로 다뤄져야 하는 클래스에는 `@Immutable` 을, 통제된 가변성을 가지면서도 예측 가능한 동작을 보장하는 클래스에는 `@Stable` 을 사용하면 됩니다. 두 어노테이션을 정확히 이해하고 활용하면 앱의 성능과 유지보수성을 크게 향상시킬 수 있습니다.
+
 </tldr>

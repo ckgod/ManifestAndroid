@@ -72,7 +72,9 @@ file.writeText("Sample user data")
 ### 요약 {#summary}
 
 <tldr>
+
 Android에서 어떤 저장 메커니즘을 선택할지는 데이터의 성격과 복잡도에 달려 있습니다. **SharedPreferences** 와 **DataStore** 는 사용자 설정, 기능 플래그처럼 가벼운 키-값 데이터에 적합하고, **Room** 은 구조화된 관계형 데이터를 SQL 기반으로 다루는 데 좋습니다. **파일 저장소** 는 바이너리 파일이나 큰 사용자 정의 데이터셋을 보관하는 데 적합합니다. 각각의 도구가 가진 특성을 이해하고 요구사항에 맞춰 선택하면 효율적이고 안정적인 데이터 보관을 보장할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

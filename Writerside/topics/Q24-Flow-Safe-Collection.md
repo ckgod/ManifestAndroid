@@ -54,7 +54,9 @@ fun UserProfileScreen(viewModel: UserViewModel) {
 ### 요약 {#summary}
 
 <tldr>
+
 Compose에서 Flow를 안전하게 수집하려면 lifecycle 인지를 빼놓을 수 없습니다. `collectAsState` 는 상태 변화에 따라 리컴포지션이 일어나도록 보장하지만 UI가 보이지 않을 때도 수집을 멈추지 않습니다. `collectAsStateWithLifecycle` 은 UI가 백그라운드일 때 수집을 일시 중단시켜 불필요한 작업과 메모리 누수를 방지합니다. 어떤 API를 선택할지는 "수집을 항상 유지할 것인가, 아니면 lifecycle 에 맞춰 다룰 것인가" 에 달려 있습니다. 더 깊은 자료는 *Consuming flows safely in Jetpack Compose* 글을 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

@@ -75,7 +75,9 @@ fun Counter() {
 ### 요약 {#summary}
 
 <tldr>
+
 `@Composable` 함수는 Compose Compiler 플러그인을 통해 Kotlin 코드가 반응형 UI 컴포넌트로 변환되어 Compose Runtime이 관리할 수 있는 형태로 만들어집니다. 슬롯 테이블 기반의 효율적인 트리 관리, `remember`/`State` 같은 상태 도구가 결합되어, 상태 변화에 따른 효율적인 렌더링과 동적 UI 갱신이 가능해집니다. 이 구조가 Jetpack Compose가 선언형이면서도 효율적인 UI 프레임워크일 수 있는 이유입니다. 더 깊이 들여다보고 싶다면 *Android Developers: Under the hood of Jetpack Compose* 글을 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

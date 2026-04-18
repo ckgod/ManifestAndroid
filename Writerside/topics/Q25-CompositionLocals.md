@@ -69,7 +69,9 @@ fun App() {
 ### 요약 {#summary}
 
 <tldr>
+
 CompositionLocal은 Compose 트리 전반에 걸쳐 데이터를 암묵적으로 공유하게 해 주는 메커니즘으로, 파라미터를 일일이 통과시킬 필요를 줄여 줍니다. 테마, 사용자 세션, 내비게이션 핸들러 같은 전역 구성을 다루는 데 특히 유용합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

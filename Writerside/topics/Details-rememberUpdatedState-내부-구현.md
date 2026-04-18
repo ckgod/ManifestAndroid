@@ -55,7 +55,9 @@ fun Example(callback: () -> Unit) {
 ### 요약 {#summary}
 
 <tldr>
+
 `rememberUpdatedState`는 `remember { mutableStateOf(newValue) }.apply { value = newValue }` 한 줄로 구현됩니다. `remember`로 상태 객체를 한 번만 생성하고, `apply`를 통해 매 리컴포지션마다 최신 값으로 갱신하는 단순하면서도 강력한 패턴입니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

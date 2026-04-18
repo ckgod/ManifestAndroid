@@ -79,7 +79,9 @@ fun DataScreen(query: String) {
 ### 요약 {#summary}
 
 <tldr>
+
 `produceState`는 코루틴 작업을 실행하고 그 결과를 Composition을 인식하는 선언형 방식으로 상태화하는 사이드 이펙트 핸들러 API입니다. 코루틴으로 비동기 데이터 페칭을 수행하여 Compose UI에 통합하는 과정을 단순화해 줍니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

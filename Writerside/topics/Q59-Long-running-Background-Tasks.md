@@ -99,7 +99,9 @@ jobScheduler.schedule(jobInfo)
 ### 요약 {#summary}
 
 <tldr>
+
 어떤 도구를 선택할지는 작업의 성격에 달려 있습니다. **WorkManager** 는 신뢰성 있고 영속적인 작업에, **Service** 는 미디어 재생이나 위치 추적처럼 연속 실행이 필요한 작업에, **Kotlin Coroutines** 는 수명 주기에 묶인 작업에, **JobScheduler** 는 시스템 수준의 잡(job)을 다루는 데 적합합니다. 각 도구의 성격을 이해하고 알맞게 선택·관리하는 것이 Android에서 백그라운드 작업을 효율적으로 처리하는 핵심입니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

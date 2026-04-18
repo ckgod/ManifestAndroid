@@ -39,7 +39,9 @@ window.setBackgroundDrawable(ColorDrawable(Color.BLACK))
 ### 요약 {#summary}
 
 <tldr>
+
 Window는 Android에서 앱의 View와 UI 요소를 담는 최상위 컨테이너입니다. Activity, Dialog, Toast 모두 각자의 Window와 연결되며, WindowManager를 통해 관리됩니다. Window를 활용하면 시스템 UI 제어, 애니메이션 적용, 오버레이 구현 등 화면 표시 방식을 세밀하게 제어할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

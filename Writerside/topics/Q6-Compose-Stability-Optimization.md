@@ -87,7 +87,9 @@ Compose Compiler 1.5.4에서 실험적으로 도입된 [Strong Skipping Mode](ht
 ### 요약 {#summary}
 
 <tldr>
+
 파라미터를 안정화하고, 불변 컬렉션을 사용하고, 람다 캡처를 정리하고, 래퍼 클래스나 stability 설정 파일을 활용하고, Strong Skipping Mode 같은 고급 기능을 함께 동원하면 Jetpack Compose 앱의 성능을 의미 있는 수준으로 끌어올릴 수 있습니다. 이 전략들은 불필요한 리컴포지션을 줄이고 UI 반응성을 높여 매끄러운 사용자 경험을 만들어 줍니다. 더 깊은 자료는 *Optimize App Performance by Mastering Stability in Jetpack Compose* 와 GitHub의 *compose-performance* 저장소를 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

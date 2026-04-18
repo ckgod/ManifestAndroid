@@ -57,7 +57,9 @@ Compose 컴파일러는 Kotlin 컴파일러 플러그인으로 동작하며, 빌
 ### 요약 {#summary}
 
 <tldr>
+
 Stability는 Compose의 성능과 신뢰성에 직접 영향을 주는 기초 개념입니다. 컴포저블이 stable 한 타입을 사용하고 부수 효과를 피하도록 설계하면, 리컴포지션이 매끄러워지고 UI 갱신 비용이 최소화됩니다. Compose Runtime의 효율성을 온전히 활용하기 위해서는 stability 원칙을 받아들이는 것이 출발점이 됩니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

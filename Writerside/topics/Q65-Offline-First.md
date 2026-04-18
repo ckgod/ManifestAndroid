@@ -91,7 +91,9 @@ class SyncWorker(
 ### 요약 {#summary}
 
 <tldr>
+
 Android에서 offline-first 접근은 연결 상태와 무관하게 매끄럽게 동작하는 앱을 만들기 위한 전략입니다. Room, WorkManager, 적절한 캐싱 전략을 함께 활용하면 사용자에게 일관된 경험을 제공할 수 있습니다. 더 깊이 있는 가이드는 [공식 문서](https://developer.android.com/topic/architecture/data-layer/offline-first)에서 확인할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

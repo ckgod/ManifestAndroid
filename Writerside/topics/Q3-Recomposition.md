@@ -22,7 +22,9 @@ Android Studio의 Layout Inspector는 리컴포지션이 발생하는 순간 해
 ### 요약 {#summary}
 
 <tldr>
+
 리컴포지션은 Compose의 반응형 UI를 만들어 주는 핵심 메커니즘이지만, 매번 Compose 단계가 다시 실행되는 만큼 성능 비용이 따라옵니다. 입력 파라미터 변화와 State 관찰이 리컴포지션을 트리거하며, Layout Inspector나 Composition tracing 같은 도구로 빈도를 추적해 불필요한 리컴포지션을 줄이는 것이 최적화의 출발점입니다. 더 깊은 가이드는 *6 Jetpack Compose Guidelines to Optimize Your App Performance*, *Optimize App Performance By Mastering Stability in Jetpack Compose* 같은 자료를 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

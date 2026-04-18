@@ -77,7 +77,9 @@ recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 ### 요약 {#summary}
 
 <tldr>
+
 데이터를 페이지 단위로 나누고, RecyclerView의 스크롤 이벤트를 관찰하면서 Adapter를 점진적으로 갱신하면 수동 페이징 시스템을 만들 수 있습니다. 구현 방식은 다양하며, [Jetpack Paging 라이브러리](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)를 활용하면 같은 문제를 더 표준적인 방식으로 해결할 수 있습니다. 학습 자료로는 오픈 소스 라이브러리에서 제공하는 [RecyclerViewPaginator](https://github.com/skydoves/BaseRecyclerViewAdapter?tab=readme-ov-file#recyclerviewpaginator) 같은 커스텀 접근을 살펴보는 것도 도움이 됩니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

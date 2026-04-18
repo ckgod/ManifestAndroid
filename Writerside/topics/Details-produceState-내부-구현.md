@@ -78,7 +78,9 @@ fun LocationTracker(): State<Location?> {
 ### 요약 {#summary}
 
 <tldr>
+
 `produceState`는 내부적으로 `remember + mutableStateOf`로 상태를 생성하고, `LaunchedEffect`로 프로듀서 코루틴을 실행하는 조합으로 구현됩니다. 복잡해 보이는 API지만 기존 Compose 메커니즘을 재활용한 단순하고 효율적인 구현이며, `awaitDispose`를 통해 리소스 정리까지 선언적으로 처리할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

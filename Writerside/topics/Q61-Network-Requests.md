@@ -105,7 +105,9 @@ val retrofit = Retrofit.Builder()
 ### 요약 {#summary}
 
 <tldr>
+
 Retrofit과 OkHttp를 함께 사용하면 Android에서 네트워크 요청을 견고하게 처리할 수 있습니다. Retrofit은 HTTP 호출의 정의와 실행을 단순화해 주고, OkHttp는 네트워크 동작을 세밀하게 커스터마이즈할 수 있는 유연성을 제공합니다. 두 라이브러리를 함께 쓰면 효율적이고 유지보수하기 좋은 네트워킹 레이어를 만들 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

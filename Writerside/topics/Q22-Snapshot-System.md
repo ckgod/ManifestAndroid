@@ -73,7 +73,9 @@ fun main() {
 ### 요약 {#summary}
 
 <tldr>
+
 `Snapshot.takeSnapshot()` 은 특정 시점의 앱 상태를 읽기 전용으로 캡처해 주는 도구입니다. 디버깅, 상태 분석, 또는 라이브 상태에 영향을 주지 않으면서 일관된 데이터 스냅샷이 필요한 작업에 특히 유용합니다. 이 API를 잘 활용하면 Jetpack Compose 앱을 더 안전하고 예측 가능하게 만들 수 있습니다. 더 깊은 이해를 위해서는 *Introduction to the Compose Snapshot System by Zach Klippenstein* 글을 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

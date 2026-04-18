@@ -85,7 +85,9 @@ val composeView = ComposeView(context).apply {
 ### 요약 {#summary}
 
 <tldr>
+
 Composition은 컴포저블 함수를 실행해 Compose UI의 계층 구조를 만들고 관리하는 과정입니다. 새 Composition을 만들려면 컴포저블 함수로 UI를 정의한 뒤 `ComponentActivity.setContent` 또는 `ComposeView.setContent` 같은 메커니즘으로 초기화하면 됩니다. 두 방식 모두 결국 `ComposeView` 위에서 동작하며, 이 `ComposeView` 가 전통적인 View 시스템과 Compose UI를 연결하는 다리 역할을 합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

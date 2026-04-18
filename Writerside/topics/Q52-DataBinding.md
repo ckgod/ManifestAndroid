@@ -120,7 +120,9 @@ Activity 또는 Fragment가 활성 상태일 때만 UI를 자동으로 업데이
 ### 요약 {#summary}
 
 <tldr>
+
 DataBinding은 XML 레이아웃에서 UI 요소를 데이터 소스에 직접 연결하여 보일러플레이트를 줄이고 선언형 UI 프로그래밍을 가능하게 합니다. 양방향 데이터 바인딩, 바인딩 표현식 등 고급 기능을 지원하여 실시간 인터랙티브 UI를 구현하는 MVVM 아키텍처에 적합하지만, 단순한 프로젝트에는 ViewBinding이 더 적절한 선택일 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

@@ -133,7 +133,9 @@ Button(onClick = {
 ### 요약 {#summary}
 
 <tldr>
+
 Compose는 Kotlin idiom 들을 적극적으로 받아들여 더 직관적이고 표현력 있는 UI 개발 경험을 제공합니다. 기본 인자, 람다 표현식, 후행 람다, DSL 같은 기능은 가독성을 끌어올리고, 위임 프로퍼티와 코루틴은 상태 관리와 비동기 처리의 비용을 줄여 줍니다. 이 Kotlin 기능들을 잘 이해하고 사용하면 Compose 코드가 짧고 명료하면서도 효율적이고 유지보수하기 좋은 형태로 자리 잡습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

@@ -68,7 +68,9 @@ ViewBinding이 공식적으로 지원되기 전, Android 생태계에서는 **Bu
 ### 요약 {#summary}
 
 <tldr>
+
 ViewBinding은 Android에서 View와 상호작용하는 가볍고 타입 안전한 방법입니다. `findViewById()` 대비 보일러플레이트를 줄이고 런타임 안전성을 높이며, DataBinding의 고급 기능이 필요 없는 경우에 탁월한 선택입니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

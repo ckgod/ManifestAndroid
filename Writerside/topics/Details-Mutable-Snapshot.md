@@ -75,5 +75,7 @@ fun main() {
 ### 요약 {#summary}
 
 <tldr>
+
 `Snapshot.takeMutableSnapshot()` 으로 mutable snapshot 을 만들면 Jetpack Compose의 상태 관리에 대해 더 정밀한 통제권을 얻게 됩니다. 상태 변경을 격리해 두고 검증·실험·검토 후에 전역 상태로 반영할 수 있어, 복잡한 상태 상호작용을 다룰 때 안전성과 유연성, 일관성을 함께 챙길 수 있습니다.
+
 </tldr>

@@ -49,7 +49,9 @@ Compose UI 라이브러리는 Compose 레이아웃 트리 구성을 단순화하
 ### 요약 {#summary}
 
 <tldr>
+
 Jetpack Compose의 구조는 세 가지 계층으로 나뉩니다. **Compose Compiler**는 `@Composable` 함수를 최적화된 실행 코드로 변환하고, **Compose Runtime**은 슬롯 테이블을 이용한 상태 관리와 리컴포지션 엔진을 담당하며, **Compose UI**는 화면에 표시할 고수준 위젯과 레이아웃 컴포넌트를 제공합니다. 이 계층적 아키텍처는 모듈화되고 효율적이며 유지보수하기 쉬운 Android 애플리케이션 개발을 가능하게 합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

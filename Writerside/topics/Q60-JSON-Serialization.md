@@ -131,7 +131,9 @@ Gson과 Moshi 모두에 기여한 Jake Wharton의 의견도 같은 맥락을 시
 ### 요약 {#summary}
 
 <tldr>
+
 JSON을 객체로 직렬화·역직렬화할 때 Gson, Moshi, kotlinx.serialization은 모두 효율적인 매핑 API를 제공합니다. **kotlinx.serialization** 은 Kotlin 우선·멀티플랫폼 프로젝트에 최적이며 컴파일 타임 안전성, 가벼운 런타임, 네이티브 Kotlin 지원을 함께 누릴 수 있습니다. **Moshi** 는 빠른 성능과 안전한 JSON 처리가 필요한 Android 중심 앱에 적합하며, 특히 codegen 모드를 권장합니다. **Gson** 은 JVM 전용 빠른 통합에는 여전히 편리하지만 성능, Kotlin 지원, 최신 베스트 프랙티스 측면에서는 두 라이브러리에 비해 뒤처집니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

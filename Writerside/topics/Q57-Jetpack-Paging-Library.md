@@ -109,7 +109,9 @@ class ExampleAdapter : PagingDataAdapter<ExampleData, ExampleViewHolder>(DIFF_CA
 ### 요약 {#summary}
 
 <tldr>
+
 Jetpack Paging 라이브러리는 점진적인 데이터 로딩 구현을 도와주는 도구입니다. PagingSource, Pager, PagingDataAdapter 같은 핵심 구성 요소가 협력해 큰 데이터셋의 처리 부담을 라이브러리 쪽으로 옮겨 줍니다. 무한 스크롤, 페이지네이션 API, 대규모 데이터베이스를 다루는 앱에서 특히 유용하며, 개발자는 데이터 fetching이나 UI 갱신 같은 반복적인 작업 대신 애플리케이션 로직 자체에 집중할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

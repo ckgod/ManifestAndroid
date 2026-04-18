@@ -93,7 +93,9 @@ val fullNameCorrect = "$firstName $lastName" // 더 효율적
 ### 요약 {#summary}
 
 <tldr>
+
 `derivedStateOf` 는 반응형이며 최적화된 파생 상태를 만들기 위한 부수 효과 핸들러 API입니다. 정말 필요할 때만 리컴포지션을 트리거하므로 UI 효율을 높이고 코드를 더 선언적으로 만들어 줍니다. 복잡한 상태 관계를 효율적으로 다루면서도 성능과 명료함을 유지하는 데 유용한 도구입니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

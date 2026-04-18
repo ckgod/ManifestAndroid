@@ -89,7 +89,9 @@ fun Screen2() {
 ### 요약 {#summary}
 
 <tldr>
+
 **SaveableStateHolder** 를 내비게이션 흐름에 끼워 넣으면, 각 화면의 상태를 별도의 복잡한 코드 없이 보존할 수 있습니다. 다중 화면 앱에서 사용자 경험과 상태 보존을 동시에 챙기는 데 유용한 도구입니다. [Jetpack Navigation Compose](https://developer.android.com/develop/ui/compose/navigation)를 사용하는 환경에서도, 화면 전환과 구성 변경을 가로질러 다양한 UI 상태를 유지해야 할 때 `SaveableStateProvider` 가 여전히 의미 있는 역할을 합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

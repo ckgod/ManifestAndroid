@@ -114,7 +114,9 @@ fun Settings() {
 ### 요약 {#summary}
 
 <tldr>
+
 `mutableStateListOf` 와 `mutableStateMapOf` 는 Compose의 snapshot 시스템과 통합된, 반응형 컬렉션을 제공하는 API입니다. 네트워크 응답이나 데이터베이스 쿼리 결과처럼 도메인 로직에서 흘러온 데이터를 List/Map 형태로 보관하면서 컴포저블이 변화를 자연스럽게 관찰하고 UI를 갱신할 수 있게 만들어 줍니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

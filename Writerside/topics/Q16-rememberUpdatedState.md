@@ -67,7 +67,9 @@ fun TimerWithCallback(
 ### 요약 {#summary}
 
 <tldr>
+
 `rememberUpdatedState`는 콜백이나 장시간 실행되는 이펙트에서 상태 업데이트를 관리하는 사이드 이펙트 핸들러 API입니다. 가장 최근의 상태 값이 항상 사용되도록 보장하여 오래된 데이터로 인한 잠재적 문제를 방지합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

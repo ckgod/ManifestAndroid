@@ -90,7 +90,9 @@ imageView.setImageBitmap(
 ### 요약 {#summary}
 
 <tldr>
+
 Bitmap은 Android에서 메모리를 많이 차지하는 이미지 표현 방식입니다. 대용량 Bitmap을 효율적으로 처리하려면 `inJustDecodeBounds`로 이미지 크기를 먼저 확인하고, `inSampleSize`로 다운샘플링하여 필요한 크기만 로드합니다. 이 두 단계 전략으로 메모리 부족으로 인한 앱 크래시를 예방할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
 ### 요약 {#summary}
 
 <tldr>
+
 AppCompat 라이브러리는 광범위한 기기와 API 레벨과 호환되는 Android 앱을 빌드하는 데 유용합니다. 하위 호환 컴포넌트, Material Design 지원, 일관된 테마를 제공함으로써 개발을 단순화하고 구버전 기기에서의 사용자 경험을 향상시킵니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

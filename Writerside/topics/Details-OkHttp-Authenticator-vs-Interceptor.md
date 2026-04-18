@@ -91,5 +91,7 @@ val okHttpClient = OkHttpClient.Builder()
 ### 요약 {#summary}
 
 <tldr>
+
 OAuth 토큰 갱신은 서버가 보내는 401 챌린지를 자동으로 처리하기에는 `Authenticator`가, 토큰 관리 로직을 더 세밀하게 다루기에는 `Interceptor`가 적합합니다. 어느 쪽을 선택할지는 애플리케이션의 복잡도와 요구사항에 따라 달라집니다. 두 방식 모두 API 호출을 끊김 없이 이어 가면서 사용자 경험을 매끄럽게 유지하는 데 기여합니다.
+
 </tldr>

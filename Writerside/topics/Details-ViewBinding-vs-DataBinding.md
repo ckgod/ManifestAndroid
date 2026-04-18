@@ -78,7 +78,9 @@ class MainActivity : AppCompatActivity() {
 ### 요약 {#summary}
 
 <tldr>
+
 `findViewById()` 없는 단순 View 참조가 필요한 경우, 특히 소규모 프로젝트에서는 ViewBinding을 사용하세요. 복잡한 데이터 기반 UI나 MVVM 아키텍처 작업 시에는 동적 바인딩 기능과 LiveData, StateFlow, `@Bindable` 어노테이션이 적용된 옵저버블 속성과의 뛰어난 통합성을 제공하는 DataBinding을 선택하세요. DataBinding이 더 다재다능하지만, ViewBinding으로 충분한 단순한 사용 사례에는 그 추가 오버헤드가 불필요할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

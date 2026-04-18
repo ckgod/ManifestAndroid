@@ -36,7 +36,9 @@ Compose 앱의 실제 성능을 정확히 측정하려면 항상 R8과 Baseline 
 ### 요약 {#summary}
 
 <tldr>
+
 Debug 모드에는 Jetpack Compose의 실제 성능을 왜곡시키는 오버헤드가 다수 포함되어 있어, release 모드에서의 측정이 필수입니다. R8 최적화와 Baseline Profile은 Compose 앱이 본래 설계된 성능을 발휘하도록 만들어 주는 핵심 도구이며, 현실적인 성능 벤치마킹을 위해서는 이 환경에서의 측정이 가장 신뢰할 수 있습니다. 더 깊이 있는 자료는 *Why should you always test Compose performance in release?* 글을 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

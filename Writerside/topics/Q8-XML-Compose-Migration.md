@@ -80,7 +80,9 @@ Compose의 호환성(interoperability)은 아직 Compose에 대응하지 않은 
 ### 요약 {#summary}
 
 <tldr>
+
 Jetpack Compose 마이그레이션은 점진적으로 진행할 수도 있고 전면 재작성으로 진행할 수도 있으며, 프로젝트의 범위와 목표에 맞춰 선택해야 합니다. Compose는 XML과의 호환성(interoperability)을 통해 두 방식이 공존할 수 있게 해 주므로 매끄러운 전환이 가능합니다. 컴포넌트 단위든 화면 단위든, 핵심은 위험은 줄이면서 Compose가 제공하는 유지보수성·확장성·모던한 UI 경험의 이점을 최대한 끌어내는 전략을 선택하는 일입니다. 더 깊이 있는 자료는 *Migration strategy*, *Migrating Sunflower to Jetpack Compose*, *Migrating to Jetpack Compose — an interop love story* 시리즈를 참고할 수 있습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

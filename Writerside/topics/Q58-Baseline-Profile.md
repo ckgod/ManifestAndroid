@@ -20,7 +20,9 @@ Google이 직접 개발·운영하는 [Now in Android](https://github.com/androi
 ### 요약 {#summary}
 
 <tldr>
+
 Baseline Profile은 핵심 코드 경로를 미리 컴파일해 앱 시작 시간을 줄이고 런타임 실행을 매끄럽게 만들어 주는 성능 최적화 도구입니다. Jetpack Macrobenchmark 같은 도구로 핵심 경로를 식별·정의하면, 다양한 디바이스에서 더 빠르고 반응성 높은 사용자 경험을 일관되게 제공할 수 있습니다. 더 깊이 있는 활용법은 *Improve Your Android App Performance With Baseline Profiles* 같은 자료를 참고하면 좋습니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

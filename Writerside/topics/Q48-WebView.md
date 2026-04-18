@@ -129,7 +129,9 @@ function callAndroidFunction() {
 ### 요약 {#summary}
 
 <tldr>
+
 WebView는 Android 앱 내에서 웹 콘텐츠를 렌더링하는 핵심 컴포넌트입니다. `WebViewClient`로 탐색을 제어하고, 필요 시 JavaScript를 활성화하며, `addJavascriptInterface()`로 JavaScript와 Android 네이티브 코드를 연동할 수 있습니다. 다만 JavaScript 활성화와 인터페이스 노출은 XSS 등 보안 위험을 동반하므로 신중하게 다뤄야 합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

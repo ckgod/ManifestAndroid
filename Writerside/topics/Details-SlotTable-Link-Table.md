@@ -33,7 +33,9 @@ Compose Runtime의 SlotTable은 리컴포지션 시 지속적으로 편집되는
 ### 요약 {#summary}
 
 <tldr>
+
 Compose Runtime은 내부적으로 SlotTable을 사용하여 Composition 상태를 관리하며, 기존에는 갭 버퍼 자료구조에 기반했습니다. Android 팀은 현재 SlotTable의 **편집** 성능을 향상시키기 위해 링크 테이블로 마이그레이션을 진행 중이며, 이는 초기 구축 효율은 유지하면서 리컴포지션 과정에서 발생하는 상태 편집 성능을 개선하는 것을 목표로 합니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

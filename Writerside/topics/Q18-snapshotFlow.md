@@ -74,7 +74,9 @@ LaunchedEffect(listState) {
 ### 요약 {#summary}
 
 <tldr>
+
 snapshotFlow는 Compose의 상태 관찰 시스템과 코틀린 Flow를 잇는 부수 효과 핸들러 API입니다. 분석 이벤트 발송, 데이터 동기화, UI 외 부수 효과처럼 코루틴 연산자가 필요한 시나리오에 잘 어울립니다. snapshotFlow를 잘 이해해 두면 단순한 상태 관찰을 넘어 더 복잡한 Compose 패턴까지 다룰 수 있는 도구가 늘어납니다.
+
 </tldr>
 
 <deflist collapsible="true" default-state="collapsed">

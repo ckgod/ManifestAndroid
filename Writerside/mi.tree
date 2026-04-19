@@ -183,6 +183,9 @@
             <toc-element topic="Q27-Layout.md">
                 <toc-element topic="Details-SubcomposeLayout.md"/>
             </toc-element>
+            <toc-element topic="Q28-Box.md">
+                <toc-element topic="Details-BoxWithConstraints.md"/>
+            </toc-element>
             <toc-element topic="Q29-Arragement-Alignment.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">

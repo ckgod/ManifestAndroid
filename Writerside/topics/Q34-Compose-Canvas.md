@@ -54,7 +54,7 @@ fun DrawCircleCanvas() {
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) Canvas로 커스텀 애니메이션 원형 진행률(progress) 바를 만든다면 어떻게 구현하시겠습니까?">
 
-가장 단순한 형태는 **`Canvas` + `drawArc` + `Animatable`** 의 조합입니다. 진행률을 0f~1f 범위의 `Animatable<Float>` 으로 두고, 이 값이 바뀔 때마다 `Canvas` 안에서 `drawArc` 의 `sweepAngle = progress * 360f` 를 그려 주면 자연스럽게 원이 차오르는 형태가 됩니다. 배경 트랙은 `drawArc(color = trackColor, startAngle = -90f, sweepAngle = 360f, useCenter = false, style = Stroke(width = trackWidth, cap = StrokeCap.Round))` 로 한 번 그리고, 그 위에 진행 호(arc)를 같은 시작 각도에서 진행률만큼만 그려 주면 두 호가 같은 위치에 정렬됩니다.
+가장 단순한 형태는 **`Canvas` + `drawArc` + `Animatable`** 의 조합입니다. 진행률을 0f~1f 범위의 `Animatable&lt;Float&gt;` 으로 두고, 이 값이 바뀔 때마다 `Canvas` 안에서 `drawArc` 의 `sweepAngle = progress * 360f` 를 그려 주면 자연스럽게 원이 차오르는 형태가 됩니다. 배경 트랙은 `drawArc(color = trackColor, startAngle = -90f, sweepAngle = 360f, useCenter = false, style = Stroke(width = trackWidth, cap = StrokeCap.Round))` 로 한 번 그리고, 그 위에 진행 호(arc)를 같은 시작 각도에서 진행률만큼만 그려 주면 두 호가 같은 위치에 정렬됩니다.
 
 여기서 핵심은 **State 와의 결합** 입니다. `var progress by remember { Animatable(0f) }` 로 두고 `LaunchedEffect(targetProgress) { progress.animateTo(targetProgress, tween(durationMillis = 600, easing = FastOutSlowInEasing)) }` 형태로 외부 입력 변화에 반응해 애니메이션을 시작하면, 진행률 변화가 부드러운 보간으로 화면에 반영됩니다. 또한 `Canvas` 의 람다 안은 매 프레임 다시 그려지는 영역이므로, 색상이나 stroke 폭처럼 자주 바뀌지 않는 객체는 람다 바깥에서 `remember` 로 보관해 두는 편이 안전합니다.
 

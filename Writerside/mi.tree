@@ -192,6 +192,7 @@
             <toc-element topic="Q32-Lazy-List-Rendering.md"/>
             <toc-element topic="Q33-Lazy-List-Pagination.md"/>
             <toc-element topic="Q34-Compose-Canvas.md"/>
+            <toc-element topic="Q35-graphicsLayer.md"/>
         </toc-element>
         <toc-element topic="1-2-ETC.md">
             <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>

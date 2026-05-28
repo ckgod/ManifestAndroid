@@ -2,7 +2,7 @@
 
 ## PendingIntent의 목적은 무엇인가요? {#purpose-pending-intent}
 PendingIntent는 다른 애플리케이션이나 시스템 컴포넌트가 애플리케이션을 대신하여 나중에 미리 정의된 인텐트를 실행할 수 있는 권한을 부여하는 특수 인텐트이다.
-이는 알림, Service와의 상호작용처럼 앱의 수명 주기를 벗어나 트리거되어야 하는 작업에 유용하다.
+이는 알림, Service와의 상호작용처럼 **앱의 수명 주기를 벗어나 트리거되어야 하는 작업**에 유용하다.
 
 ### PendingIntent의 주요 기능 {#features-pending-intent}
 PendingIntent는 일반 인텐트의 Wrapper 역할을 하여 **앱의 수명 주기 이후**에도 지속될 수 있다.
@@ -35,10 +35,22 @@ NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, notification)
 
 PendingIntent는 시스템 또는 다른 컴포넌트와 상호 작용하는 방식을 제어하는 다양한 플래그를 지원한다.
 
-- **FLAG_UPDATE_CURRENT**: 기존 PendingIntent를 새 데이터로 업데이트한다.
-- **FLAG_CANCEL_CURRENT**: 생성하기 전에 기존 PendingIntent를 취소한다.
+- **FLAG_UPDATE_CURRENT**: 기존 PendingIntent를 그대로 재사용하면서, 내부 Intent의 데이터만 새 값으로 교체한다.
+- **FLAG_CANCEL_CURRENT**: 기존 PendingIntent를 취소(무효화)한 뒤 새 PendingIntent를 만든다.
 - **FLAG_IMMUTABLE**: 수신자의 수정을 방지하기 위해 PendingIntent를 변경할 수 없게 만든다.
 - **FLAG_ONE_SHOT**: PendingIntent를 한 번만 사용할 수 있도록 한다.
+
+#### FLAG_UPDATE_CURRENT vs FLAG_CANCEL_CURRENT
+두 플래그는 "이미 등록된 동일한 PendingIntent가 있을 때"만 의미를 가지므로, 먼저 시스템이 두 PendingIntent를 **언제 같은 것으로 보는지** 알아야 한다.
+시스템은 `requestCode`와 `Intent.filterEquals()`(`action`, `data`, `type`, `component`, `category`)가 모두 같으면 동일한 PendingIntent로 판단한다.
+이때 **`putExtra()`로 넣은 extras는 비교에 포함되지 않는다.** 따라서 extras만 바꿔 다시 만들어도 시스템은 기존 PendingIntent를 재사용한다.
+
+이 상황에서 두 플래그의 동작이 갈린다.
+
+- **FLAG_UPDATE_CURRENT**: 기존 토큰을 **그대로 유지**하면서 내부 Intent의 extras만 최신 값으로 갱신한다. 이미 알림 등에 넘겨둔 기존 토큰도 계속 유효하며, 트리거되면 갱신된 데이터로 동작한다. "기존 예약은 살려두고 내용만 최신화"하려는 알림에서 가장 흔히 쓴다.
+- **FLAG_CANCEL_CURRENT**: 기존 토큰을 **취소한 뒤 새 토큰을 만든다.** 이전에 외부로 넘긴 토큰은 더 이상 동작하지 않으므로, 옛 PendingIntent를 확실히 무력화해야 할 때(예: 로그아웃하며 이전 사용자 정보가 담긴 토큰을 끊을 때) 사용한다.
+
+> 아무 플래그도 지정하지 않으면 기존 토큰을 재사용하되 extras를 갱신하지 않아, 데이터를 바꿨는데도 과거 데이터로 동작하는 버그가 생길 수 있다. 그래서 extras가 달라질 수 있다면 위 두 플래그 중 하나를 명시해야 한다.
 
 ### 사용 사례
 1. 알림(Notifications): 사용자가 알림을 탭하면 Activity 열기와 같은 작업을 허용

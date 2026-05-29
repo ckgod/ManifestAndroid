@@ -75,6 +75,8 @@ val serializedJson: String = Json.encodeToString(user) // 객체 → JSON
 
 kotlinx.serialization은 최신 Android·Kotlin 개발에서 가장 선호되는 방식 중 하나입니다. Kotlin 컴파일러 플러그인을 활용해 타입 안전하고 리플렉션 없는(reflection-free) 변환 메커니즘을 제공하기 때문입니다. 내부적으로 컴파일러가 생성한 코드를 사용하므로, Moshi의 reflection 모드나 Gson과 달리 무거운 런타임 리플렉션이 필요하지 않습니다.
 
+> kotlinx.serialization의 `@Serializable`은 자바 표준 `java.io.Serializable`이나 안드로이드 `Parcelable`과 **이름만 비슷할 뿐 다른 개념**입니다. 이 문서의 `@Serializable`은 객체를 JSON 같은 **텍스트 포맷으로 변환**하기 위한 것이고, `java.io.Serializable`/`Parcelable`은 컴포넌트 간 데이터 전달을 위해 객체를 **바이트로 평탄화**하는 용도입니다. 패키지도 `kotlinx.serialization.Serializable`과 `java.io.Serializable`로 서로 다르며 대체재가 아닙니다. 후자의 비교는 [Serializable, Parcelable](Q4-Serializable-Parcelable.md) 문서를 참고하세요.
+
 ### Moshi {#moshi}
 
 [Moshi](https://github.com/square/moshi)는 Square가 만든 모던 JSON 라이브러리로, 타입 안전성과 Kotlin 친화성을 강조합니다. Gson과 달리 **Kotlin의 nullability와 기본 파라미터(default parameters)** 를 기본 동작으로 지원하기 때문에, Kotlin 우선 개발에 더 적합합니다.

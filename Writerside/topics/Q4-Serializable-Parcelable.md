@@ -10,6 +10,8 @@
 - 성능: Serializable은 리플렉션이 느리기 때문에 Parcelable에 비해 속도가 느리다. 또한 직렬화하는 동안 많은 임시 객체를 생성하여 메모리 오버헤드가 증가한다.
 - 사용 사례: Serializable은 성능이 중요하지 않은 시나리오나 안드로이드 전용이 아닌 코드베이스를 다룰 때 유용하다.
 
+> 여기서 말하는 `Serializable`은 자바 표준 `java.io.Serializable`이다. Kotlin의 `kotlinx.serialization`이 사용하는 `@Serializable` 어노테이션과는 **이름만 비슷할 뿐 전혀 다른 것**이다. 후자는 객체를 JSON 등 텍스트 포맷으로 변환하기 위한 라이브러리이며, 컴포넌트 간 데이터 전달(객체의 바이트 평탄화)을 다루는 이 문서의 `Serializable`/`Parcelable`과는 목적이 다르다. JSON 직렬화는 [JSON Serialization](Q60-JSON-Serialization.md) 문서를 참고한다.
+
 ### Parcelable
 - 안드로이드 전용 인터페이스: Parcelable은 Android 컴포넌트 내의 고성능 프로세스 간 통신(<tooltip term="IPC">IPC</tooltip>)을 위해 특별히 설계된 Android 전용 인터페이스이다.
 - 성능: Parcelable은 Android에 최적화되어 있고 리플렉션에 의존하지 않기 때문에 Serializable보다 빠르다. 또한 임시 객체를 많이 생성하지 않아 가비지 컬렉션을 최소화한다.

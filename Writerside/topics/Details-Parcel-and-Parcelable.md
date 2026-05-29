@@ -1,6 +1,6 @@
 # Details: Parcel and Parcelable
 
-## Pacel 과 Parcelable
+## Parcel과 Parcelable
 
 ### Parcel과 Parcelable의 개념과 역할
 

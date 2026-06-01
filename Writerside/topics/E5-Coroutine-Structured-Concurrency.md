@@ -12,7 +12,7 @@
 
 ## CoroutineScope와 Job {#C1}
 
-### CoroutineScope란
+### CoroutineScope란 {#scope-basics}
 
 `CoroutineScope`는 **코루틴이 실행되는 범위이자 생명주기의 경계**입니다. 모든 코루틴 빌더(`launch`, `async`)는 `CoroutineScope`의 확장 함수이므로, 코루틴은 반드시 어떤 스코프 안에서만 시작할 수 있습니다.
 
@@ -27,7 +27,7 @@ scope.launch {
 }
 ```
 
-### Job: 코루틴의 핸들이자 생명주기
+### Job: 코루틴의 핸들이자 생명주기 {#job-handle}
 
 `Job`은 **코루틴 하나의 생명주기를 제어하는 핸들**입니다. 코루틴을 취소(`cancel()`)하거나, 완료될 때까지 기다리거나(`join()`), 현재 상태(active/completing/cancelled/completed)를 조회할 수 있습니다.
 
@@ -43,7 +43,7 @@ scope.launch {
 
 > `Completing`(본문은 끝났지만 자식 완료를 기다리는 중) 상태는 외부에서 관찰하면 `Active`와 구분되지 않습니다(`isActive=true`). 그래서 위 표에는 별도로 두지 않았습니다.
 
-### Job 계층 구조 (부모-자식)
+### Job 계층 구조 (부모-자식) {#job-hierarchy}
 
 가장 중요한 메커니즘입니다. 어떤 코루틴 안에서 다시 코루틴을 시작하면, **새 코루틴의 Job은 자동으로 바깥 코루틴의 Job을 부모로 삼는 자식 Job**이 됩니다.
 
@@ -141,7 +141,7 @@ coroutineScope {
 2. **취소 전파**: 스코프를 취소하면 그 안의 모든 코루틴이 한 번에 취소됩니다. 일일이 핸들을 추적할 필요가 없습니다.
 3. **예외 전파**: 자식 하나가 실패하면 형제들을 취소하고 부모로 예외가 올라갑니다. 실패가 조용히 묻히지 않습니다.
 
-### coroutineScope 빌더
+### coroutineScope 빌더 {#coroutinescope-builder}
 
 `coroutineScope { }`는 **새로운 자식 스코프를 만들어, 그 안의 모든 코루틴이 끝날 때까지 일시 중단되는** suspend 함수입니다. 위 `loadDashboard` 예시처럼 여러 `async`를 묶는 표준 도구입니다.
 
@@ -189,7 +189,7 @@ launch {
 
 두 빌더의 차이는 단 하나, **자식 하나가 실패했을 때 형제와 부모로 실패를 전파하는가**입니다.
 
-### coroutineScope: 실패가 전파된다
+### coroutineScope: 실패가 전파된다 {#coroutinescope-fails}
 
 `coroutineScope`가 만드는 스코프는 일반 `Job`을 씁니다. 자식 하나가 예외로 실패하면, **나머지 형제 자식이 모두 취소되고** 예외가 `coroutineScope` 밖으로 던져집니다. "전부 성공 아니면 전부 실패"가 필요한 작업에 적합합니다.
 

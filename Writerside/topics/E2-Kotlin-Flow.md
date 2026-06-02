@@ -28,6 +28,8 @@ Flow 기반 데이터 스트림은 세 가지 역할로 구성됩니다.
 | UI Layer | 사용자 입력 이벤트의 생산자 | 클릭·텍스트 입력 등 |
 | ViewModel | 중개자 + 소비자 | 데이터 변환 후 UI 상태 관리 |
 
+![flow.png](flow.png)
+
 ## Flow 빌더 {#flow-builders}
 
 Flow를 만드는 빌더는 크게 세 가지입니다.
@@ -157,6 +159,8 @@ class NewsRepository(
 }
 ```
 
+실무에서는 위 예시처럼 계층별로 컨텍스트를 나눕니다. 데이터소스의 네트워크·디스크 작업은 `Dispatchers.IO`, Repository의 데이터 가공은 `Dispatchers.Default` 로 각각 `flowOn`을 두고, ViewModel은 메인 컨텍스트에서 수집합니다.
+
 `flow { }` 내부에서 `withContext`로 직접 컨텍스트를 바꾸면 방출 컨텍스트가 어긋나 예외가 발생합니다. Flow에서 컨텍스트 변경은 반드시 `flowOn`으로 해야 합니다.
 
 ## callbackFlow: 콜백 API를 Flow로 {#callback-flow}
@@ -185,7 +189,7 @@ class FirestoreUserEventsDataSource(
 핵심 요소는 두 가지입니다.
 
 - **`trySend` / `send`**: `flow { }`의 `emit`이 `suspend` 함수인 것과 달리, `callbackFlow`는 코루틴 바깥의 콜백에서 호출되는 `send`(suspend)와 `trySend`(non-suspend)를 제공합니다.
-- **`awaitClose { }`**: **반드시 호출해야 하는** 마지막 구문입니다. Flow가 수집을 멈추거나 취소될 때까지 빌더를 살려 두었다가, 그 시점에 콜백 리스너를 해제하는 정리 작업을 수행합니다. `awaitClose`가 없으면 Flow가 즉시 닫혀 콜백 등록이 무의미해지고, 리스너 누수가 발생합니다.
+- **`awaitClose { }`**: **반드시 호출해야 하는** 마지막 구문입니다. Flow가 수집을 멈추거나 취소될 때까지 빌더를 살려 두었다가, 그 시점에 콜백 리스너를 해제하는 정리 작업을 수행합니다. `awaitClose`가 없으면 빌더 블록이 끝나는 즉시 Flow가 닫혀 콜백 등록이 무의미해지고 리스너 누수가 생깁니다. 그래서 `callbackFlow`는 `awaitClose` 호출이 빠지면 `IllegalStateException` 을 던져 이를 강제합니다.
 
 | 구분 | flow | callbackFlow |
 |------|------|--------------|

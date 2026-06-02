@@ -97,7 +97,7 @@ launch {
 }
 ```
 
-`catch (e: Exception)`은 `CancellationException`도 함께 잡습니다(상속 계층상 `CancellationException`은 `IllegalStateException` → ... → `Exception`의 하위입니다). 이를 삼키면 부모가 보낸 취소가 무시되어 코루틴이 멈추지 않고, 구조적 동시성의 취소 보장이 깨집니다.
+`catch (e: Exception)`은 `CancellationException`도 함께 잡습니다(상속 계층상 `CancellationException`은 `IllegalStateException` → `RuntimeException` → `Exception`의 하위입니다). 이를 삼키면 부모가 보낸 취소가 무시되어 코루틴이 멈추지 않고, 구조적 동시성의 취소 보장이 깨집니다.
 
 올바른 처리는 **취소 예외만 다시 던지는 것**입니다.
 
@@ -156,7 +156,14 @@ inline fun <R> runCatchingCoroutine(block: () -> R): Result<R> =
     }
 ```
 
-`coroutineContext.ensureActive()`를 `onFailure` 안에서 호출하는 방법도 있습니다. 이는 현재 컨텍스트가 취소됐는지 확인해 취소됐으면 `CancellationException`을 던지므로, 취소가 `runCatching`에 갇혔더라도 다시 표면화시킵니다. 핵심 원칙은 동일합니다. **`Throwable`이나 `Exception`을 광범위하게 잡는 모든 코드는 코루틴 안에서 취소를 별도로 통과시켜야 합니다.**
+`coroutineContext.ensureActive()`를 `onFailure` 안에서 호출하는 방법도 있습니다.
+
+```kotlin
+val result = runCatching { repository.fetch() }
+    .onFailure { coroutineContext.ensureActive() }   // 취소됐으면 여기서 다시 던짐
+```
+
+이는 현재 컨텍스트가 취소됐는지 확인해 취소됐으면 `CancellationException`을 던지므로, 취소가 `runCatching`에 갇혔더라도 다시 표면화시킵니다. 핵심 원칙은 동일합니다. **`Throwable`이나 `Exception`을 광범위하게 잡는 모든 코드는 코루틴 안에서 취소를 별도로 통과시켜야 합니다.**
 
 ## SupervisorJob {#C4}
 

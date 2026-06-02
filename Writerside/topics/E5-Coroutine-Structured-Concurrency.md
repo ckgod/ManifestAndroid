@@ -241,16 +241,14 @@ supervisorScope {
 | 부모 취소 시 자식 | 모두 취소 | 모두 취소 (동일) |
 | 적합한 상황 | 전부 성공해야 하는 묶음 | 독립적 작업, 일부 실패 허용 |
 
-## 정리
+## 요약 {#summary}
 
-### 핵심 개념 요약 {#summary}
+> **TL;DR** — 코루틴은 스코프와 Job 계층으로 묶여 생명주기를 공유합니다(구조적 동시성). 그 덕분에 코루틴 누수 방지·취소 전파·예외 전파가 구조적으로 보장됩니다. 병렬은 `async` 의 시작과 `await` 의 대기를 분리해야 얻어지고, 일부 실패를 허용하려면 `supervisorScope` 로 실패를 격리합니다.
 
 1. **CoroutineScope와 Job**: 모든 코루틴은 스코프 안에서 시작되고, Job 계층(부모-자식)으로 묶여 생명주기를 공유한다.
 2. **async/await와 병렬 분해**: 독립 작업을 `async`로 동시에 띄우고 `await`로 결과를 모은다. 시작과 대기를 분리해야 병렬이 된다.
 3. **구조적 동시성**: 부모 스코프는 모든 자식이 끝나야 완료된다 — 누수 방지, 취소 전파, 예외 전파를 구조적으로 보장한다.
 4. **coroutineScope vs supervisorScope**: 자식 실패의 위쪽(부모·형제) 전파 여부가 유일한 차이. supervisorScope는 실패를 격리하되 아래쪽 취소 전파는 유지한다.
-
-## 자가 점검
 
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) 구조적 동시성(structured concurrency)이 무엇이고, 어떤 문제를 해결해 주나요?">

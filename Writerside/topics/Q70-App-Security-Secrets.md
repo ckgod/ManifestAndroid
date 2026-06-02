@@ -70,7 +70,9 @@ android {
         )
     }
     buildFeatures {
-        buildConfig = true   // AGP 8.0+ 에서는 명시적으로 켜야 한다
+        // buildConfigField가 BuildConfig 클래스에 필드를 추가하므로 buildConfig 생성을 켜야 한다.
+        // AGP 8.0+ 에서는 이 옵션이 기본 false라 명시적으로 켜야 한다
+        buildConfig = true
     }
 }
 ```
@@ -99,7 +101,7 @@ defaultConfig {
 `local.properties`는 커밋되지 않으므로, 새 팀원이나 CI 빌드 머신에는 그 파일이 없습니다. 두 가지로 보완합니다.
 
 - **예시 파일 커밋**: 키 값은 비운 `local.properties.example`을 커밋해 어떤 키가 필요한지 문서화합니다.
-- **CI는 환경변수/시크릿 스토어 사용**: GitHub Actions라면 키를 레포지토리 Secret에 넣고, 빌드 스텝에서 `local.properties`를 생성하거나 `ORG_GRADLE_PROJECT_` 접두사 환경변수로 Gradle 프로퍼티를 주입합니다.
+- **CI는 환경변수/시크릿 스토어 사용**: GitHub Actions라면 키를 레포지토리 Secret에 넣고, 빌드 스텝에서 `local.properties`를 생성하거나 `ORG_GRADLE_PROJECT_` 접두사 환경변수로 Gradle 프로퍼티를 주입합니다. Gradle은 환경변수 이름 앞에 `ORG_GRADLE_PROJECT_`가 붙어 있으면 그 뒷부분을 프로젝트 프로퍼티로 인식합니다(예: `ORG_GRADLE_PROJECT_MAPS_API_KEY` → `MAPS_API_KEY` 프로퍼티).
 
 > `BuildConfig`로 주입한 키는 결국 컴파일된 바이트코드 안에 문자열로 들어갑니다. `local.properties`는 **git 유출과 소스 하드코딩을 막는 것**이지, 디컴파일로부터 키를 숨기는 수단이 아닙니다. 디컴파일 방어는 다음 섹션의 난독화와, 무엇보다 콘솔의 키 사용 제한이 담당합니다.
 

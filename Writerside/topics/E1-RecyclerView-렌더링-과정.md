@@ -103,7 +103,7 @@
 2.  `onMeasure` 시작:
     1.  `LayoutManager`는 화면을 채우기 위해 필요한 아이템들을 파악합니다 (`A`, `B`, `C`, `D`, `E`...).
     2.  아이템 '`A`'에 대해: `RecycledViewPool`이 비어있으므로, `createViewHolder()`를 통해 `item_a.xml`을 `inflate`하고, `bindViewHolder()`를 호출합니다.
-    3.  `wrap_content`이므로, '`A`' 뷰 내부의 모든 자식 콘텐츠까지 **재귀적으로 측정(`measure`)**하여 '`A`'의 최종 높이를 계산합니다.
+    3.  `wrap_content`이므로, '`A`' 뷰 내부의 모든 자식 콘텐츠까지 **재귀적으로 측정(`measure`)** 하여 '`A`'의 최종 높이를 계산합니다.
     4.  아이템 '`B`'에 대해: `RecycledViewPool`에 '`B`' 타입 뷰가 없으므로, `item_b.xml`을 `inflate`하고, 바인딩하고, 내부 콘텐츠까지 전부 측정합니다.
     5.  ... (`E`까지 반복) ...
     6.  `LayoutManager`는 측정된 아이템들의 높이 합으로 `RecyclerView`의 최종 높이를 결정합니다.

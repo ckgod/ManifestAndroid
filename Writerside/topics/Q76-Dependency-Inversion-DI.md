@@ -17,7 +17,7 @@ class OrderService {
 - `SqlOrderRepository`를 다른 구현(예: `InMemoryOrderRepository`)으로 바꾸려면 `OrderService` 코드를 고쳐야 합니다.
 - 테스트에서 가짜 저장소를 끼워 넣을 수 없습니다. 생성 지점이 클래스 내부에 박혀 있기 때문입니다.
 
-이 두 문제를 구조적으로 해결하는 원리가 **의존성 역전(DIP)**, 그 원리를 실현하는 기법이 **의존성 주입(DI)**입니다. 둘은 다른 층위의 개념이며, 이 토픽의 출발점입니다.
+이 두 문제를 구조적으로 해결하는 원리가 **의존성 역전(DIP)**, 그 원리를 실현하는 기법이 **의존성 주입(DI)** 입니다. 둘은 다른 층위의 개념이며, 이 토픽의 출발점입니다.
 
 ## DIP 원리: 의존성 역전 {#dip-principle}
 
@@ -32,7 +32,7 @@ class OrderService {
 
 ### 무엇이 '역전'되는가 {#what-inverts}
 
-일반적인 의존 방향은 **상위 모듈 → 하위 구현**입니다. 위 예시에서 `OrderService`가 `SqlOrderRepository`를 직접 가리킵니다. DIP는 둘 사이에 **인터페이스(추상화)**를 끼워, 의존 방향을 다음과 같이 바꿉니다.
+일반적인 의존 방향은 **상위 모듈 → 하위 구현**입니다. 위 예시에서 `OrderService`가 `SqlOrderRepository`를 직접 가리킵니다. DIP는 둘 사이에 **인터페이스(추상화)** 를 끼워, 의존 방향을 다음과 같이 바꿉니다.
 
 ```kotlin
 // 추상화 — 상위 모듈이 소유하는 계약
@@ -158,7 +158,7 @@ abstract class RepositoryModule {
 
 특징:
 
-- 메서드가 **추상(abstract)**이며 본문이 없습니다. 모듈은 `abstract class` 또는 `interface`여야 합니다.
+- 메서드가 **추상(abstract)** 이며 본문이 없습니다. 모듈은 `abstract class` 또는 `interface`여야 합니다.
 - 파라미터가 구현체, 반환 타입이 인터페이스입니다. Hilt는 "이 인터페이스를 요청받으면 저 구현을 주라"로 해석합니다.
 - 본문 코드를 생성하지 않으므로 **`@Provides`보다 생성 코드가 가볍습니다.**
 
@@ -186,7 +186,7 @@ object NetworkModule {
 
 특징:
 
-- 메서드에 **실제 생성 로직(본문)**이 있습니다. 모듈은 보통 `object`로 둡니다.
+- 메서드에 **실제 생성 로직(본문)** 이 있습니다. 모듈은 보통 `object`로 둡니다.
 - 메서드 파라미터도 Hilt가 주입해 줍니다(`provideApi`가 `Retrofit`을 받는 것처럼).
 - `Retrofit`처럼 우리가 소스를 수정해 `@Inject`를 붙일 수 없는 외부 타입에 필수적입니다.
 

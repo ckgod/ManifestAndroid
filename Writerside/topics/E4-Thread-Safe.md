@@ -30,7 +30,7 @@ class Counter {
 }
 ```
 
-`synchronized`는 **모니터 락(monitor lock)**을 사용합니다. 
+`synchronized`는 **모니터 락(monitor lock)** 을 사용합니다. 
 한 스레드가 락을 획득하면 다른 스레드는 대기합니다.
 
 #### `volatile`
@@ -40,7 +40,7 @@ class Counter {
 ```
 
 `volatile`은 JMM에서 <tooltip term="Happens_Before">happens-before</tooltip> 관계를 보장합니다. 쓰기 후 읽기가 항상 최신 값을 보도록 강제합니다.
-단, **복합 연산(read-modifiy-write)**은 atomic하지 않으므로 `volatile`만으로는 Race Condition을 완전히 막을 수 없습니다.
+단, **복합 연산(read-modifiy-write)** 은 atomic하지 않으므로 `volatile`만으로는 Race Condition을 완전히 막을 수 없습니다.
 
 #### `AtomicInteger` / `AtomicReference`
 

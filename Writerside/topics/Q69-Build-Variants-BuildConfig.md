@@ -115,7 +115,7 @@ val client = Retrofit.Builder()
 
 주의할 점은 `buildConfigField`로 넣은 값이 **APK 안에 평문으로 남는다**는 것입니다. 따라서 API base URL 같은 비밀이 아닌 구성에는 적합하지만, 실제 비밀 키를 여기에 그대로 넣으면 디컴파일로 노출됩니다. 비밀은 서버 측 보관이나 별도 보안 저장소를 써야 합니다.
 
-> `resValue`는 BuildConfig 필드 대신 **리소스(R.string 등)**를 variant별로 생성합니다. 코드에서 상수로 읽을 값은 `buildConfigField`, XML이나 리소스로 참조할 값(앱 이름 등)은 `resValue`를 씁니다.
+> `resValue`는 BuildConfig 필드 대신 **리소스(R.string 등)** 를 variant별로 생성합니다. 코드에서 상수로 읽을 값은 `buildConfigField`, XML이나 리소스로 참조할 값(앱 이름 등)은 `resValue`를 씁니다.
 
 ## 빌드별 분기 {#build-time-branching}
 

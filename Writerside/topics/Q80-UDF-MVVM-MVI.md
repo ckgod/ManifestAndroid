@@ -1,6 +1,6 @@
 # Q80) UDF와 MVVM·MVI 상태관리
 
-화면의 상태를 누가 소유하고, 그 상태가 어떤 방향으로 흐르며, 사용자 입력은 어떻게 상태로 반영되는가. 이 질문에 답하는 설계 원칙이 **UDF(Unidirectional Data Flow, 단방향 데이터 흐름)**이고, 그 위에 세워진 두 패턴이 **MVVM**과 **MVI**입니다. 이 토픽은 단방향 흐름의 정의에서 출발해, 상태를 표현하는 `sealed` 계층, 상태와 일회성 이벤트의 분리, 그리고 두 패턴의 실제 차이를 다룹니다.
+화면의 상태를 누가 소유하고, 그 상태가 어떤 방향으로 흐르며, 사용자 입력은 어떻게 상태로 반영되는가. 이 질문에 답하는 설계 원칙이 **UDF(Unidirectional Data Flow, 단방향 데이터 흐름)** 이고, 그 위에 세워진 두 패턴이 **MVVM**과 **MVI**입니다. 이 토픽은 단방향 흐름의 정의에서 출발해, 상태를 표현하는 `sealed` 계층, 상태와 일회성 이벤트의 분리, 그리고 두 패턴의 실제 차이를 다룹니다.
 
 ## 단방향 데이터 흐름(UDF) {#udf}
 
@@ -156,7 +156,7 @@ class ProfileViewModel : ViewModel() {
 
 ### MVI의 상태 노출 {#mvi-state}
 
-MVI(Model-View-Intent)는 화면 상태를 **단 하나의 불변 객체(State)**로 합치고, 모든 사용자 입력을 **하나의 진입점(Intent)**으로 받습니다. Intent는 보통 `sealed` 타입으로 열거되며, ViewModel은 `(현재 State, Intent) → 새 State`로 상태를 갱신합니다.
+MVI(Model-View-Intent)는 화면 상태를 **단 하나의 불변 객체(State)** 로 합치고, 모든 사용자 입력을 **하나의 진입점(Intent)** 으로 받습니다. Intent는 보통 `sealed` 타입으로 열거되며, ViewModel은 `(현재 State, Intent) → 새 State`로 상태를 갱신합니다.
 
 ```kotlin
 data class ProfileState(

@@ -97,7 +97,7 @@ inline fun run(action: () -> Unit, noinline onError: () -> Unit) {
 
 ### crossinline: 비지역 반환을 막아라 {#crossinline-keyword}
 
-인라인된 람다 안에서는 `return`이 **바깥 함수를 종료하는 비지역 반환(non-local return)**으로 동작합니다. 본문이 호출 지점에 펼쳐지기 때문에 가능한 일입니다.
+인라인된 람다 안에서는 `return`이 **바깥 함수를 종료하는 비지역 반환(non-local return)** 으로 동작합니다. 본문이 호출 지점에 펼쳐지기 때문에 가능한 일입니다.
 
 ```kotlin
 inline fun forEachInt(list: List<Int>, action: (Int) -> Unit) {

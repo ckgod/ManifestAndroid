@@ -100,7 +100,7 @@ val linearLayout = LinearLayout(context).apply {
 | 구분        | Activity Lifecycle                                    | View Lifecycle                                               |
 |-----------|-------------------------------------------------------|--------------------------------------------------------------|
 | **관점**    | 시스템 관점 (OS Level)                                     | 화면 그리기 관점 (Rendering Level)                                  |
-| **역활**    | 앱의 화면(Window)을 생성하고, 사용자와 상호작용하는 진입점이자 컨테이너입니다.       | 컨테이너 내부에서 실제로 보여지는 **UI 구성 요소(Widget)**의 크기, 위치, 그리기를 담당합니다. |
+| **역활**    | 앱의 화면(Window)을 생성하고, 사용자와 상호작용하는 진입점이자 컨테이너입니다.       | 컨테이너 내부에서 실제로 보여지는 **UI 구성 요소(Widget)** 의 크기, 위치, 그리기를 담당합니다. |
 | **주요 상태** | Created, Started, Resumed, Paused, Stopped, Destroyed | Constructor, Attached, Measure, Layout, Draw, Detached       |
 | **핵심 질문** | "지금 이 화면이 사용자에게 보이는가?"                                | "이 UI 요소를 어떻게, 어디에 그릴 것인가?"                                  |
 

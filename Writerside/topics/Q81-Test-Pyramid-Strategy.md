@@ -38,7 +38,7 @@ class PriceCalculatorTest {
 
 ### 통합 테스트: 중간층 {#integration-layer}
 
-통합 테스트는 **여러 컴포넌트가 함께 동작하는 경계**를 검증합니다. 예를 들어 ViewModel과 Repository, 또는 Repository와 Room DAO가 올바르게 연결되는지 봅니다. 안드로이드 컴포넌트(예: Room, SQLite)가 필요하면 `src/androidTest/`에서 계측 테스트로 돌리거나, JVM에서 Robolectric으로 프레임워크를 흉내 내 돌립니다.
+통합 테스트는 **여러 컴포넌트가 함께 동작하는 경계**를 검증합니다. 예를 들어 ViewModel과 Repository, 또는 Repository와 Room DAO가 올바르게 연결되는지 봅니다. 안드로이드 컴포넌트(예: Room, SQLite)가 필요하면 `src/androidTest/`에서 계측 테스트로 돌리거나, `src/test/`에 두고 Robolectric으로 프레임워크를 JVM에서 흉내 내 돌립니다.
 
 ```kotlin
 @RunWith(AndroidJUnit4::class)
@@ -165,7 +165,7 @@ FIRST는 **좋은 단위 테스트가 갖춰야 할 다섯 속성**의 머리글
 
 ### Fast — 빠를 것 {#first-fast}
 
-단위 테스트는 수 밀리초 안에 끝나야 합니다. 느리면 개발자가 자주 돌리지 않게 되고, 그 순간 테스트의 피드백 가치가 사라집니다. 그래서 단위 테스트에서는 실제 네트워크·DB·`Thread.sleep` 같은 느린 의존을 가짜로 대체합니다.
+단위 테스트는 수 밀리초 안에 끝나야 합니다. 느리면 개발자가 자주 돌리지 않게 되고, 그 순간 테스트의 피드백 가치가 사라집니다. 그래서 단위 테스트에서는 실제 네트워크·DB·`Thread.sleep` 같은 느린 의존을 가짜로 대체합니다. 코루틴 코드라면 `runTest`의 가상 시간(virtual time)이 `delay`를 실제 대기 없이 건너뛰므로, 지연이 있어도 테스트는 즉시 끝납니다.
 
 ### Independent — 독립적일 것 {#first-independent}
 

@@ -11,7 +11,7 @@ Test Double은 **테스트 대상(SUT, System Under Test)이 의존하는 실제
 3. **비결정성 제거**: 현재 시각, 난수, 외부 서버 상태처럼 매번 달라지는 값을 고정해, 같은 입력에 항상 같은 결과가 나오게 합니다.
 4. **검증 지점 확보**: SUT가 협력 객체를 올바르게 호출했는지(어떤 인자로, 몇 번) 직접 확인하고 싶을 때가 있습니다.
 
-Test Double은 위 목적에 따라 **Dummy / Fake / Stub / Spy / Mock** 다섯 종류로 나뉩니다. 이 중 Fake·Stub·Spy·Mock 네 가지가 실무의 핵심이며, 이들을 구분하는 기준은 **(가) 동작 구현이 있는가 (나) 검증을 상태로 하는가 행위로 하는가**입니다.
+Test Double은 위 목적에 따라 **Dummy / Fake / Stub / Spy / Mock** 다섯 종류로 나뉩니다. 이 중 **Dummy**는 호출되지 않지만 시그니처상 필요해 자리만 채우는 인자이며, 나머지 Fake·Stub·Spy·Mock 네 가지가 실무의 핵심입니다. 이 네 가지를 구분하는 기준은 **(가) 동작 구현이 있는가 (나) 검증을 상태로 하는가 행위로 하는가**입니다.
 
 ```kotlin
 // 이 토픽 전반에서 쓸 SUT와 의존성
@@ -67,6 +67,7 @@ Mock이 적합한 경우는 **SUT의 효과가 반환값이 아니라 다른 객
 ```kotlin
 @Test
 fun `rename 은 변경된 이름으로 save 를 호출한다`() {
+    // relaxUnitFun = true: Unit 반환 함수(여기선 save)는 every로 정의하지 않아도 통과시키는 옵션
     val repo = mockk<UserRepository>(relaxUnitFun = true)
     every { repo.loadUser("1") } returns User("1", "철수")
     val service = UserService(repo)
@@ -139,6 +140,7 @@ fun `가입 시 환영 메일을 1번 보낸다`() {
 둘째, **프레임워크 Spy**(MockK `spyk`, Mockito `spy`)는 **실제 구현을 그대로 호출하되, 필요한 일부 메서드만 stubbing하거나 호출 여부를 검증**할 수 있게 합니다. Mock이 기본적으로 모든 메서드를 비워(stub) 두는 것과 달리, Spy는 **기본이 실제 동작**이라는 점이 결정적 차이입니다.
 
 ```kotlin
+// 실제로는 의존성을 깔끔히 분리하기 어려워 실객체를 그대로 감싸야 하는 상황을 가정
 val real = FakeUserRepository().apply { save(User("1", "철수")) }
 val spy = spyk(real)                              // 실제 동작 유지
 

@@ -86,6 +86,7 @@ class PaymentProcessor {
 `Rectangle`을 상속한 `Square`는 너비/높이를 독립적으로 설정할 수 있다는 부모의 계약을 깹니다.
 
 ```kotlin
+// 정사각형-직사각형 문제의 '의도'를 보여주는 의사코드입니다.
 open class Rectangle(open var width: Int, open var height: Int)
 
 class Square(side: Int) : Rectangle(side, side) {
@@ -112,6 +113,8 @@ interface Shape { fun area(): Int }
 class Rectangle(val w: Int, val h: Int) : Shape { override fun area() = w * h }
 class Square(val side: Int) : Shape { override fun area() = side * side }
 ```
+
+위반의 근원은 너비·높이를 독립적으로 바꾸는 setter 계약이었습니다. 개선 모델은 변이 setter를 노출하지 않고 불변 값으로 면적만 계산하므로, 한쪽을 바꾸면 다른 쪽도 따라 바뀌는 계약 위반 자체가 생길 수 없습니다.
 
 **왜 중요한가**: OCP가 다형성으로 확장을 가능하게 하려면, 그 다형성이 안전해야 합니다. LSP가 깨지면 자식 타입을 구분하려는 `if (x is Square)` 분기가 다시 등장하고 OCP가 함께 무너집니다. 실무 신호로는, 자식에서 부모 메서드를 빈 구현으로 두거나 `UnsupportedOperationException`을 던진다면 LSP 위반을 의심해야 합니다.
 

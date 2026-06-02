@@ -38,7 +38,7 @@ val unconfined = UnconfinedTestDispatcher(scheduler)
 `runTest`는 **코루틴 테스트의 진입점**입니다. suspend 람다를 받아 `TestScope` 안에서 실행하며, 다음을 자동으로 처리합니다.
 
 - 테스트 본문을 코루틴으로 실행해 그 안에서 suspend 함수를 직접 호출할 수 있게 합니다.
-- 본문에서 시작된 자식 코루틴이 모두 끝날 때까지 기다린 뒤 종료합니다. 이를 **자동 advance**라고 합니다. 본문 끝에서 스케줄러를 idle 상태까지 진행시켜 줍니다.
+- 본문에서 시작된 자식 코루틴이 모두 끝날 때까지 기다린 뒤 종료합니다. 본문이 끝나면 스케줄러가 idle 상태가 될 때까지 가상 시간을 진행시켜 줍니다. 이 동작을 흔히 **자동 advance**라고 부르는데, 공식 문서 용어가 아니라 설명을 위한 명칭입니다.
 - 실제 시간 기준 타임아웃(기본 60초)을 걸어, 코루틴이 영원히 끝나지 않는 경우 테스트가 실패하도록 합니다.
 
 ```kotlin
@@ -72,7 +72,7 @@ fun delayedWork() = runTest {
 }
 ```
 
-- `advanceTimeBy(ms)`: 가상 시간을 지정한 만큼 진행시키고, 그 사이에 예약된 작업을 실행합니다. 다만 정확히 그 시각에 예약된 작업은 실행하지 않으므로, 경계 시점 작업까지 실행하려면 뒤에 `runCurrent()`를 붙입니다.
+- `advanceTimeBy(ms)`: 가상 시간을 지정한 만큼 진행시키고, 그 사이에 예약된 작업을 실행합니다. 다만 정확히 그 시각에 예약된 작업은 실행하지 않으므로, 경계 시점 작업까지 실행하려면 뒤에 `runCurrent()`를 붙입니다. 위 예시는 같은 효과를 `advanceTimeBy(5_001)`처럼 경계 너머로 한 틱 더 진행시키거나, 남은 작업이 이것뿐이라면 `advanceUntilIdle()`로도 얻을 수 있습니다.
 - `runCurrent()`: 현재 가상 시간에 이미 예약된 작업만 실행하고 시간은 진행시키지 않습니다.
 
 ## advanceUntilIdle {#advance-until-idle}
@@ -112,7 +112,7 @@ fun fetchAndStore() = runTest {
 
 Flow를 테스트할 때 `toList()`로 전부 모으는 방법은 **무한 Flow나 Hot Flow(StateFlow/SharedFlow)에는 쓸 수 없습니다.** `toList()`는 Flow가 완료(complete)돼야 반환되는데, StateFlow는 절대 완료되지 않기 때문입니다. 수동으로 `launch`해서 수집 리스트를 만들고 마지막에 취소하는 코드는 장황하고 실수가 잦습니다.
 
-[Turbine](https://github.com/cashapp/turbine)은 이 패턴을 캡슐화한 라이브러리입니다. `test { }` 블록 안에서 방출을 **하나씩 순서대로 소비**하면서 검증하고, 검증이 끝나면 자동으로 수집을 취소합니다.
+[Turbine](https://github.com/cashapp/turbine)은 이 패턴을 캡슐화한 라이브러리입니다. `test { }` 블록 안에서 방출을 **하나씩 순서대로 소비**하면서 검증하고, 검증이 끝나면 자동으로 수집을 취소합니다. 무한·Hot Flow뿐 아니라 정상 완료되는 유한 Cold Flow에서도 방출을 순서대로 검증할 수 있어 권장됩니다.
 
 ### 기본 사용법 {#turbine-basics}
 

@@ -85,7 +85,7 @@ class SqlOrderRepository : OrderRepository {
 
 ### IoC 컨테이너 {#ioc-container}
 
-객체의 생성과 의존성 연결을 대신 맡아 주는 주체를 **IoC 컨테이너**라고 부릅니다. 컨테이너는 "어떤 타입에 어떤 구현을 연결할지"에 대한 설정을 읽어, 객체 그래프를 만들고 필요한 곳에 주입합니다. 안드로이드의 Hilt(내부적으로 Dagger)는 **컴파일타임에 코드를 생성해 이 컨테이너 역할을 수행**합니다. 리플렉션 기반 런타임 컨테이너와 달리, 빌드 시점에 연결 관계가 검증되어 런타임 오류를 줄입니다.
+객체의 생성과 의존성 연결을 대신 맡아 주는 주체를 **IoC 컨테이너**라고 부릅니다. 컨테이너는 "어떤 타입에 어떤 구현을 연결할지"에 대한 설정을 읽어, 객체 그래프를 만들고 필요한 곳에 주입합니다. 안드로이드의 Hilt는 Dagger 위에 빌드된 레이어이고, 실제 컨테이너 코드 생성은 Dagger가 담당합니다. 이 둘이 함께 **컴파일타임에 코드를 생성해 이 컨테이너 역할을 수행**합니다. 리플렉션 기반 런타임 컨테이너와 달리, 빌드 시점에 연결 관계가 검증되어 런타임 오류를 줄입니다.
 
 ## 생성자 주입 {#constructor-injection}
 
@@ -97,7 +97,8 @@ class SqlOrderRepository : OrderRepository {
 // 1) 생성자 주입 — 생성 시점에 의존성을 받는다
 class OrderService(private val repository: OrderRepository)
 
-// 2) 필드(세터) 주입 — 객체 생성 후 필드에 채운다
+// 2) 필드 주입 — 객체 생성 후 필드에 직접 채운다
+//    (세터 메서드를 통해 채우면 세터 주입으로, 엄밀히는 구분되는 개념이다)
 class OrderService {
     lateinit var repository: OrderRepository
 }
@@ -201,7 +202,7 @@ object NetworkModule {
 
 판단 기준은 단순합니다. **구현체가 `@Inject constructor`를 가질 수 있고 인터페이스에 연결만 하면 되면 `@Binds`**, **생성 과정을 우리가 코드로 기술해야 하면(외부 라이브러리·빌더 조립) `@Provides`**를 씁니다.
 
-한 가지 제약이 있습니다. `@Binds`(추상 메서드)와 `@Provides`(구체 메서드)는 메서드 형태가 서로 달라, **한 모듈 클래스 안에 섞으면 컴파일되지 않습니다.** 둘 다 필요하면 모듈을 분리하거나, `@Provides`만 모은 `object` 모듈과 `@Binds`만 모은 `abstract class` 모듈을 따로 둡니다. (companion object를 활용하는 우회법도 있지만, 모듈 분리가 더 명확합니다.)
+한 가지 제약이 있습니다. `@Binds`(추상 메서드)와 `@Provides`(구체 메서드)는 메서드 형태가 서로 달라, **한 모듈 클래스 안에 섞으면 컴파일되지 않습니다.** 둘 다 필요하면 모듈을 분리하거나, `@Provides`만 모은 `object` 모듈과 `@Binds`만 모은 `abstract class` 모듈을 따로 둡니다. (`abstract class` 모듈의 `companion object`에 `@Provides`를 넣어 static 제공으로 만드는 우회법도 있지만, 모듈 분리가 더 명확합니다.)
 
 ## 요약 {#summary}
 

@@ -99,6 +99,7 @@ suspend fun <T> retryWithBackoff(
         } catch (e: CancellationException) {
             throw e                              // 취소는 재시도하지 않는다
         } catch (e: IOException) {               // 일시적 실패만 재시도
+            // Random은 kotlin.random.Random
             delay(delayMs + Random.nextLong(0, 250))   // 백오프 + jitter
             delayMs = (delayMs * factor).toLong()
         }
@@ -142,7 +143,7 @@ suspend fun loadUser(): User =
         .getOrDefault(User.GUEST)
 ```
 
-단, 재시도에는 전제가 있습니다. **재시도하는 작업은 멱등(idempotent)해야 합니다.** GET 조회는 여러 번 실행해도 안전하지만, "결제 실행"이나 "주문 생성" 같은 쓰기 작업은 재시도가 중복 실행을 일으킬 수 있습니다. 이런 작업은 서버가 멱등성 키(idempotency key)를 받아 중복을 무시하도록 설계돼 있어야만 안전하게 재시도할 수 있습니다.
+단, 재시도에는 전제가 있습니다. **재시도하는 작업은 멱등(idempotent)해야 합니다.** GET 조회는 여러 번 실행해도 안전하지만, "결제 실행"이나 "주문 생성" 같은 쓰기 작업은 재시도가 중복 실행을 일으킬 수 있습니다. 이런 작업은 서버가 멱등성 키(idempotency key)를 받아 중복을 무시하도록 설계돼 있어야 하고, 클라이언트도 재시도 시 같은 요청에 동일한 키를 재사용해야 서버가 중복으로 인식할 수 있어야만 안전하게 재시도할 수 있습니다.
 
 ## offline 우선 설계 {#offline-first}
 
@@ -198,7 +199,7 @@ val syncWork = OneTimeWorkRequestBuilder<SyncWorker>()
             .setRequiredNetworkType(NetworkType.CONNECTED)   // 연결될 때만 실행
             .build()
     )
-    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS)
+    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.SECONDS)   // 10초는 WorkManager 최소 허용값(MIN_BACKOFF_MILLIS) — 더 작게 넣으면 10초로 클램프된다
     .build()
 
 WorkManager.getInstance(context).enqueueUniqueWork(

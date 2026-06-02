@@ -184,7 +184,7 @@ context.startActivity<DetailActivity>()
 `reified`는 만능이 아닙니다. 다음 제약을 정확히 알아야 합니다.
 
 1. **반드시 `inline` 함수여야 한다.** 일반 함수나 클래스의 타입 파라미터에는 `reified`를 붙일 수 없습니다. 인라인 펼침이 타입 치환의 전제이기 때문입니다.
-2. **`T()`로 인스턴스를 생성할 수 없다.** `reified`로 `T::class`는 얻을 수 있지만, `T`의 생성자가 무엇인지는 모르므로 `T()` 직접 호출은 불가합니다. 생성이 필요하면 `T::class.java.newInstance()`(리플렉션) 또는 팩토리 람다를 받아야 합니다.
+2. **`T()`로 인스턴스를 생성할 수 없다.** `reified`로 `T::class`는 얻을 수 있지만, `T`의 생성자가 무엇인지는 모르므로 `T()` 직접 호출은 불가합니다. 생성이 필요하면 `T::class.java.getDeclaredConstructor().newInstance()`(리플렉션) 또는 팩토리 람다를 받아야 합니다. (`Class.newInstance()`는 Java 9+에서 deprecated이므로 `getDeclaredConstructor().newInstance()`를 씁니다.)
 3. **자바에서 호출할 수 없다.** `reified`는 Kotlin 컴파일러의 인라인 메커니즘에 의존하므로, 자바 코드에서는 이 함수를 호출할 수 없습니다.
 
 ## 성능 관점 {#performance}
@@ -205,7 +205,7 @@ context.startActivity<DetailActivity>()
 1. **코드 크기 증가**: 본문이 호출 지점마다 복제되므로 바이트코드가 커집니다. 본문이 크고 호출처가 많을수록 메서드 크기가 커지고, 안드로이드에서는 메서드 크기/개수가 곧 빌드와 실행 비용에 영향을 줍니다.
 2. **JIT 최적화 저해 가능성**: 과도하게 큰 메서드는 JVM의 JIT 인라이닝 대상에서 제외될 수 있습니다.
 
-그래서 실무 기준은 **람다 파라미터를 가진, 본문이 작은 함수에만 `inline`을 쓰는 것**입니다. 람다를 받지 않는 함수에 `inline`을 붙이는 것은 거의 이득이 없습니다.
+그래서 실무 기준은 **람다 파라미터를 가진, 본문이 작은 함수에만 `inline`을 쓰는 것**입니다.
 
 ### reified의 성능 {#reified-performance}
 
@@ -254,7 +254,7 @@ context.startActivity<DetailActivity>()
 </def>
 <def title="Q) reified 함수 안에서 T()로 인스턴스를 생성할 수 있나요?">
 
-직접은 불가능합니다. `reified` 덕분에 `T::class`나 `T::class.java`는 얻을 수 있지만, 컴파일러가 `T`가 어떤 생성자를 가졌는지는 알지 못하므로 `T()` 호출은 컴파일되지 않습니다. 인스턴스 생성이 필요하면 `T::class.java.newInstance()`처럼 리플렉션을 쓰거나, 생성 방법을 람다로 받아 호출하는 방식을 써야 합니다.
+직접은 불가능합니다. `reified` 덕분에 `T::class`나 `T::class.java`는 얻을 수 있지만, 컴파일러가 `T`가 어떤 생성자를 가졌는지는 알지 못하므로 `T()` 호출은 컴파일되지 않습니다. 인스턴스 생성이 필요하면 `T::class.java.getDeclaredConstructor().newInstance()`처럼 리플렉션을 쓰거나(`Class.newInstance()`는 Java 9+에서 deprecated), 생성 방법을 람다로 받아 호출하는 방식을 써야 합니다.
 
 이와 함께 기억해야 할 `reified`의 제약이 두 가지 더 있습니다. 반드시 `inline` 함수의 타입 파라미터여야 하고(일반 함수·클래스 타입 파라미터에는 불가), 인라인 메커니즘에 의존하므로 자바 코드에서는 그 함수를 호출할 수 없습니다.
 

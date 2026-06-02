@@ -65,7 +65,7 @@ android {
 
 `BuildConfig`는 **Gradle이 빌드 시 자동 생성하는 final 클래스**입니다. 빌드 설정에 정의한 값들이 컴파일 타임 상수로 들어가, 코드에서 정적으로 읽을 수 있습니다. 기본 제공 필드는 다음과 같습니다.
 
-- `BuildConfig.DEBUG`: 디버그 빌드 여부(`Boolean`).
+- `BuildConfig.DEBUG`: 디버그 빌드 여부(`boolean`).
 - `BuildConfig.APPLICATION_ID`: 최종 applicationId.
 - `BuildConfig.BUILD_TYPE`: buildType 이름 문자열.
 - `BuildConfig.FLAVOR`: 선택된 flavor 이름(flavor가 있을 때).
@@ -207,7 +207,7 @@ R8/ProGuard는 release 빌드에서 이런 도달 불가능한 가지를 데드 
 
 권장하지 않습니다. `buildConfigField`로 넣은 값은 컴파일 타임 상수로 BuildConfig 클래스에 박혀 APK 안에 평문으로 남습니다. 디컴파일하면 그대로 노출되므로 실제 비밀 키에는 부적합합니다.
 
-API base URL이나 기능 플래그처럼 노출돼도 위험하지 않은 구성 값에는 적합합니다. 진짜 비밀은 서버 측에 두거나, NDK·암호화 저장소·런타임 발급(서버에서 토큰 발급) 같은 별도 보안 수단을 써야 합니다. BuildConfig는 비밀 보관소가 아니라 빌드 구성 주입 수단으로 봐야 합니다.
+API base URL이나 기능 플래그처럼 노출돼도 위험하지 않은 구성 값에는 적합합니다. 진짜 비밀은 서버 측에 두고 런타임에 발급(서버에서 토큰 발급)하는 것이 원칙입니다. NDK나 암호화 저장소는 추출 난이도를 높일 뿐, 디컴파일·메모리 덤프로 결국 노출될 수 있어 완전한 보관소는 아닙니다. BuildConfig는 비밀 보관소가 아니라 빌드 구성 주입 수단으로 봐야 합니다.
 
 </def>
 </deflist>

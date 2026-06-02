@@ -59,7 +59,7 @@ object Cash : Payment()
 | `when` 망라성 검사 | 지원 | 지원 |
 | `values()` / 순회 | 가능 | 불가 (직접 나열해야 함) |
 
-정리하면, **케이스마다 담을 데이터가 다르면 `sealed`, 단순히 이름 붙은 상수 목록이면 `enum`**입니다. 상수 전체를 순회(`values()`)해야 하는 상황은 `enum`이 더 적합합니다.
+정리하면, **케이스마다 담을 데이터가 다르면 `sealed`, 단순히 이름 붙은 상수 목록이면 `enum`**입니다. 상수 전체를 순회(`values()`)해야 하는 상황은 `enum`이 더 적합합니다. `sealed`는 하위 타입을 자동으로 나열하는 표준 stdlib API가 없어, 전체 순회가 필요하면 직접 나열하거나 `Result::class.sealedSubclasses`(리플렉션)에 의존해야 합니다.
 
 ## when 망라성(exhaustiveness) {#when-exhaustiveness}
 
@@ -90,7 +90,7 @@ object Empty : Result()
 
 이것이 `enum`/`sealed`가 주는 안전성의 핵심입니다. `else -> ...`로 뭉뚱그리면 컴파일러가 누락을 잡아 줄 수 없으므로, **새 케이스를 빠뜨려도 런타임까지 드러나지 않습니다.** 망라성을 활용하려면 의미 없는 `else`를 남발하지 않아야 합니다.
 
-> Kotlin 1.6부터는 **문(statement)으로 쓴 `when`** 도 sealed/enum 대상이면 망라성을 강제합니다(이전엔 경고에 그쳤습니다). 단 명시적으로 값을 반환받지 않는 statement 형태에서는 누락이 경고로만 보일 수 있으니, 의도적으로 `when`을 식으로 만드는 패턴(반환값 사용)이 가장 안전합니다.
+> **문(statement)으로 쓴 `when`** 의 망라성은 버전에 따라 다릅니다. Kotlin 1.6은 sealed/enum 대상의 비망라적 statement `when`에 대해 **경고(warning)** 를 도입했고, Kotlin 1.7부터는 이를 **에러(error)로 강제**합니다. 다만 statement 형태에서는 누락이 경고로만 보일 수 있는 구간이 있으니, 의도적으로 `when`을 식으로 만드는 패턴(반환값 사용)이 버전과 무관하게 가장 안전합니다.
 
 ## sealed로 상태 모델링 {#state-modeling}
 

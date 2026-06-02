@@ -131,7 +131,7 @@ LaunchedEffect(Unit) {
 }
 ```
 
-> `SharedFlow(replay = 0)`로도 일회성 이벤트를 표현하지만, 그 시점에 활성 구독자가 없으면 이벤트가 유실됩니다. `Channel`은 버퍼에 쌓아 두었다가 구독자가 생기면 전달하므로, 백그라운드로 갔다 돌아오는 화면에서 이벤트를 잃지 않으려면 `Channel` 쪽이 더 안전합니다.
+> `SharedFlow(replay = 0)`로도 일회성 이벤트를 표현하지만, 그 시점에 활성 구독자가 없으면 이벤트가 유실됩니다. `Channel`은 버퍼에 쌓아 두었다가 구독자가 생기면 전달하므로, 백그라운드로 갔다 돌아오는 화면에서 이벤트를 잃지 않으려면 `Channel` 쪽이 더 안전합니다. 다만 `receiveAsFlow()`로 노출한 `effect`는 **단일 소비자에서만 안전**합니다. 여러 곳에서 `collect`하면 각 이벤트가 한 소비자에게만 가서 분산되므로, 한 화면당 하나의 `LaunchedEffect`에서만 수집해야 합니다.
 
 ## MVVM vs MVI {#mvvm-vs-mvi}
 
@@ -174,9 +174,11 @@ class ProfileViewModel : ViewModel() {
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state.asStateFlow()
 
-    fun onIntent(intent: ProfileIntent) = when (intent) {   // 단일 진입점
-        ProfileIntent.Refresh -> reduce { copy(isLoading = true) }
-        is ProfileIntent.NameChanged -> reduce { copy(name = intent.value) }
+    fun onIntent(intent: ProfileIntent) {                   // 단일 진입점
+        when (intent) {
+            ProfileIntent.Refresh -> reduce { copy(isLoading = true) }
+            is ProfileIntent.NameChanged -> reduce { copy(name = intent.value) }
+        }
     }
 
     private fun reduce(block: ProfileState.() -> ProfileState) {

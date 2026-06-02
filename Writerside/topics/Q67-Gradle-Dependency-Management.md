@@ -89,7 +89,7 @@ dependencies {
 }
 ```
 
-`:network`가 `api(libs.retrofit)`로 선언하면, `:app`은 `Retrofit` 타입을 import해 직접 쓸 수 있습니다. 반면 `implementation(libs.retrofit)`로 선언하면, `:app`의 컴파일 클래스패스에서 `Retrofit` 타입이 보이지 않아 import가 컴파일 에러가 됩니다. 다만 `:network`가 내부적으로 Retrofit을 쓰는 동작 자체는 런타임에 정상이며, `:app`은 `:network`가 제공하는 자체 API만 사용하게 됩니다.
+`:network`가 `api(libs.retrofit)`로 선언하면, `:app`은 `Retrofit` 타입을 import해 직접 쓸 수 있습니다. 반면 `implementation(libs.retrofit)`로 선언하면, `:app`의 컴파일 클래스패스에서 `Retrofit` 타입이 보이지 않아 import가 컴파일 에러가 됩니다. 다만 `:network`가 내부적으로 Retrofit을 쓰는 동작 자체는 런타임에 정상이며, `:app`은 `:network`가 제공하는 자체 API만 사용하게 됩니다. 여기서 `api`와 `implementation`의 차이는 **컴파일 클래스패스 전이 여부**일 뿐이라는 점을 분명히 해 둡니다. 두 설정 모두 해당 의존성을 소비자의 **런타임 클래스패스**에는 전이시키므로, `implementation`으로 선언해도 런타임에 Retrofit 클래스는 정상적으로 로드됩니다.
 
 ### 왜 implementation을 기본으로 쓰는가 {#why-implementation-default}
 
@@ -111,7 +111,7 @@ dependencies {
  └─ :network
      └─ retrofit:2.11.0
          └─ okhttp:4.12.0
-             └─ okio:3.x
+             └─ okio:3.6.0
 ```
 
 이 그래프에서 `api`/`implementation`은 **각 간선이 다음 단계로 전파되는지**를 결정하고, 버전 카탈로그는 **각 노드의 버전 좌표**를 공급합니다. 세 핵심 개념이 여기서 만납니다.
@@ -120,7 +120,7 @@ dependencies {
 
 같은 라이브러리가 서로 다른 버전으로 그래프에 두 번 이상 등장할 수 있습니다. 라이브러리 A는 Okio 3.2를, 라이브러리 B는 Okio 3.5를 요구하는 식입니다. JVM 런타임에는 한 클래스패스에 한 버전만 존재할 수 있으므로 Gradle이 하나를 골라야 합니다.
 
-Gradle의 기본 전략은 **highest version wins(가장 높은 버전 선택)** 입니다. 위 예시에서는 Okio 3.5가 선택되고 3.2 요구는 3.5로 업그레이드됩니다. 이는 Maven의 "가까운 의존성 우선(nearest-wins)"과 다른 점으로, 면접에서 자주 확인하는 부분입니다.
+Gradle의 기본 전략은 **highest version wins(가장 높은 버전 선택)** 입니다. 위 예시에서는 Okio 3.5가 선택되고 3.2 요구는 3.5로 업그레이드됩니다. 이는 Maven의 "가까운 의존성 우선(nearest-wins)"과 다른 점으로, 면접에서 자주 확인하는 부분입니다. 단, 이것은 어디까지나 기본 동작이며, 뒤에서 다룰 `resolutionStrategy.force`나 strict version 제약을 걸면 선택을 강제할 수 있어, 더 높은 버전이 그래프에 있어도 더 낮은 버전으로 다운그레이드시킬 수 있습니다.
 
 ### 해석 강제와 확인 {#resolution-control}
 

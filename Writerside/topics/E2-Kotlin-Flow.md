@@ -1,62 +1,53 @@
 # E2) Kotlin Flow
 
-## Flow란? {#F1}
-Flow는 **코루틴 기반의 비동기 데이터 스트림**을 다루는 Kotlin의 타입이다.
+## Flow란 무엇인가 {#what-is-flow}
 
-### 주요 특징
-- **단일 값 vs 여러 값**: suspend 함수는 단일 값만 반환하지만, Flow는 여러 값을 순차적으로 내보낼 수 있다
-- **비동기적**: 코루틴 위에서 동작하며, 값을 비동기적으로 생성하고 소비한다
-- **논블로킹**: 메인 스레드를 차단하지 않고 네트워크 요청 등의 작업을 안전하게 수행할 수 있다
+`Flow`는 **코루틴 위에서 동작하는 비동기 데이터 스트림** 타입입니다. `suspend` 함수가 값을 하나만 반환하는 데 비해, Flow는 **여러 값을 시간에 걸쳐 순차적으로 방출(emit)** 할 수 있습니다.
 
-### Iterator와의 비교
-`Iterator`와 유사하게 값들의 순서를 생성하지만, Flow는 suspend 함수를 활용하여 비동기적으로 동작한다는 점이 다르다.
+핵심 성질은 세 가지입니다.
 
-## 데이터 스트림의 구성 요소
-Flow 기반 데이터 스트림은 세 가지 주요 엔티티로 구성된다:
+- **비동기·논블로킹**: 값의 생성과 소비가 코루틴 위에서 일어나므로, 네트워크 요청처럼 시간이 걸리는 작업을 메인 스레드를 막지 않고 처리할 수 있습니다.
+- **여러 값의 순차 방출**: `Iterator`처럼 값들의 시퀀스를 만들지만, 각 값 사이에서 `delay` 같은 `suspend` 호출로 일시 중단할 수 있다는 점이 다릅니다.
+- **Cold**: Flow는 기본적으로 **cold** 입니다. `flow { }` 빌더로 만든 Flow는 수집(collect)을 시작하기 전까지 아무 코드도 실행하지 않습니다. collector가 붙는 순간 비로소 생산자 블록이 실행되고, **collector마다 독립적으로 처음부터 다시** 실행됩니다.
 
-* **Producer(생산자)**: 스트림에 데이터를 생성하여 추가한다
-    - 코루틴을 활용하여 비동기적으로 데이터를 생성
-    - 예: Repository에서 네트워크/DB 데이터를 제공
+이 cold 특성이 뒤에서 다루는 Hot Flow(StateFlow·SharedFlow)와 대비되는 출발점입니다.
 
-* **Intermediaries(중개자, 선택적)**: 스트림의 데이터를 변환하거나 필터링한다
-    - 중간 연산자(map, filter, transform 등)를 사용
-    - 값을 소비하지 않고 가공만 수행
+## 데이터 스트림의 구성 요소 {#stream-components}
 
-* **Consumer(소비자)**: 최종적으로 스트림의 값을 수집하여 사용한다
-    - collect 등의 터미널 연산자를 사용
-    - 예: ViewModel에서 UI 상태를 업데이트
+Flow 기반 데이터 스트림은 세 가지 역할로 구성됩니다.
 
-![flow.png](flow.png)
+- **생산자(producer)**: 스트림에 데이터를 만들어 넣습니다. 코루틴 위에서 비동기로 값을 생성하며, 안드로이드에서는 보통 Repository가 네트워크·DB 데이터를 제공하는 역할을 맡습니다.
+- **중개자(intermediary, 선택적)**: 스트림을 흘러가는 데이터를 변환하거나 걸러냅니다. `map`·`filter`·`transform` 같은 **중간 연산자(intermediate operator)** 를 쓰며, 값을 최종 소비하지 않고 가공만 합니다.
+- **소비자(consumer)**: 스트림의 값을 최종적으로 수집해 사용합니다. `collect` 같은 **터미널 연산자(terminal operator)** 를 쓰며, 안드로이드에서는 ViewModel이 UI 상태를 갱신하는 위치입니다.
 
-### 안드로이드 아키텍처에서의 역할
+안드로이드 아키텍처에 대입하면 다음과 같습니다.
+
 | 컴포넌트 | 역할 | 예시 |
 |---------|------|------|
-| Repository | UI 데이터의 생산자 | 네트워크/DB에서 데이터 제공 |
-| UI Layer | 사용자 입력 이벤트의 생산자 | 클릭, 텍스트 입력 등 |
-| ViewModel | 중개자 + 소비자 | 데이터 변환 및 UI 상태 관리 |
+| Repository | UI 데이터의 생산자 | 네트워크·DB에서 데이터 제공 |
+| UI Layer | 사용자 입력 이벤트의 생산자 | 클릭·텍스트 입력 등 |
+| ViewModel | 중개자 + 소비자 | 데이터 변환 후 UI 상태 관리 |
 
-## Flow 생성 {#F1045}
+## Flow 빌더 {#flow-builders}
 
-### Flow Builder API
-Flow를 생성하는 가장 기본적인 방법은 `flow { }` 빌더를 사용하는 것이다.
+Flow를 만드는 빌더는 크게 세 가지입니다.
+
+- **`flow { }`**: 블록 안에서 `emit()`으로 값을 방출하는 가장 기본적인 빌더입니다. `emit`은 `suspend` 함수입니다.
+- **`flowOf(...)`**: 고정된 값 집합으로 Flow를 만듭니다. 예: `flowOf(1, 2, 3)`.
+- **`asFlow()`**: 컬렉션·시퀀스·범위 등을 Flow로 변환합니다. 예: `(1..5).asFlow()`.
 
 ```kotlin
 class NewsRemoteDataSource(
     private val newsApi: NewsApi,
     private val refreshIntervalMs: Long = 5000
 ) {
-   val latestNews: Flow<List<ArticleHeadline>> = flow {
-       while(true) {
-           // 1. 네트워크에서 최신 뉴스 가져오기 (suspend 함수)
-           val latestNews = newsApi.fetchLatestNews()
-
-           // 2. 가져온 데이터를 Flow로 방출
-           emit(latestNews)
-
-           // 3. 지정된 시간만큼 대기 (코루틴 일시 중단)
-           delay(refreshIntervalMs)
-       }
-   }
+    val latestNews: Flow<List<ArticleHeadline>> = flow {
+        while (true) {
+            val latestNews = newsApi.fetchLatestNews()  // suspend 호출
+            emit(latestNews)                             // 값 방출
+            delay(refreshIntervalMs)                     // 코루틴 일시 중단
+        }
+    }
 }
 
 interface NewsApi {
@@ -64,71 +55,49 @@ interface NewsApi {
 }
 ```
 
-### Flow 빌더의 특성
+### flow 빌더의 두 가지 제약 {#flow-builder-constraints}
 
-Flow 빌더는 코루틴 내에서 실행되므로 비동기 API의 이점을 누릴 수 있지만, 다음과 같은 제약사항이 있다:
+`flow { }` 빌더는 코루틴 안에서 실행되지만 두 가지 제약을 지켜야 합니다.
 
-#### 1. 순차적 실행
-- 생산자가 코루틴에서 실행되므로, suspend 함수 호출 시 해당 함수가 완료될 때까지 대기한다
-- 위 예제에서 `fetchLatestNews()`가 완료되어야 `emit()`이 실행된다
+1. **순차 실행**: 생산자는 단일 코루틴에서 순서대로 실행됩니다. 위 예시에서 `fetchLatestNews()`가 끝나야 `emit()`이 실행되고, 그 다음 `delay()`로 넘어갑니다. 즉 방출은 항상 순차적입니다.
+2. **컨텍스트 보존**: `flow { }` 내부에서는 `withContext`로 코루틴 컨텍스트를 직접 바꿀 수 없습니다. 방출은 반드시 빌더가 호출된 컨텍스트에서 일어나야 하며, 이를 어기면 런타임 예외가 발생합니다. 컨텍스트를 바꾸려면 뒤에서 다룰 `flowOn` 연산자를 쓰고, 다른 컨텍스트에서 값을 방출해야 한다면 `callbackFlow` 같은 다른 빌더를 씁니다.
 
-#### 2. 컨텍스트 변경 제한
-- Flow 빌더 내부에서는 `withContext`로 코루틴 컨텍스트를 직접 변경할 수 없다
-- 컨텍스트를 변경하려면 `flowOn` 연산자를 사용해야 한다
-- 다른 컨텍스트에서 값을 방출해야 한다면 `callbackFlow` 등의 다른 빌더를 사용한다
+## 중간 연산자 {#intermediate-operators}
 
-## 스트림 수정
-
-### 중간 연산자(Intermediate Operators)
-중개자는 [중간 연산자](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/)를 사용하여 값을 소비하지 않고 데이터 스트림을 변환할 수 있다.
-
-**중요 특징:**
-- 중간 연산자는 즉시 실행되지 않는다 (lazy)
-- 터미널 연산자(collect 등)가 호출될 때 비로소 실행된다
-- 여러 개를 체이닝하여 복잡한 변환 파이프라인을 구성할 수 있다
-
-### 주요 중간 연산자
+**중간 연산자(intermediate operator)** 는 값을 소비하지 않고 스트림을 변환해, 다시 Flow를 반환합니다. 중요한 성질은 **lazy** 라는 점입니다. 중간 연산자는 선언 시점에 실행되지 않고, 터미널 연산자가 collect를 시작할 때 비로소 동작합니다. 그래서 여러 개를 체이닝해 변환 파이프라인을 구성할 수 있습니다.
 
 ```kotlin
 val numbers = flowOf(1, 2, 3, 4, 5)
 
-// map: 각 값을 변환
-numbers.map { it * 2 }  // 2, 4, 6, 8, 10
+numbers.map { it * 2 }              // 2, 4, 6, 8, 10  — 각 값을 변환
+numbers.filter { it % 2 == 0 }      // 2, 4            — 조건에 맞는 값만 통과
+numbers.take(3)                     // 1, 2, 3         — 처음 N개만
 
-// filter: 조건에 맞는 값만 통과
-numbers.filter { it % 2 == 0 }  // 2, 4
-
-// transform: 복잡한 변환 수행 (0개 이상의 값 방출 가능)
+// transform: 값마다 0개 이상을 방출할 수 있는 일반화된 변환
 numbers.transform { value ->
     emit("String: $value")
     emit("Double: ${value * 2}")
 }
 
-// take: 처음 N개만 가져오기
-numbers.take(3)  // 1, 2, 3
-
-// distinctUntilChanged: 연속된 중복 값 제거
+// distinctUntilChanged: 연속으로 중복되는 값 제거
 flowOf(1, 1, 2, 2, 3, 1).distinctUntilChanged()  // 1, 2, 3, 1
 ```
 
-## Flow에서 데이터 수집 {#F14}
+`map`·`filter`는 값마다 정확히 하나(또는 0개)를 내보내지만, `transform`은 한 입력에 대해 여러 값을 방출할 수 있어 가장 일반적인 변환 연산자입니다.
 
-### 터미널 연산자(Terminal Operators)
-Flow에서 실제로 값을 수집하려면 **터미널 연산자**를 사용해야 한다. 터미널 연산자는 Flow를 실제로 시작시키는 suspend 함수다.
+## 터미널 연산자 {#terminal-operators}
 
-### collect
-가장 기본적인 터미널 연산자로, 스트림에서 방출되는 모든 값을 수집한다.
+**터미널 연산자(terminal operator)** 는 Flow를 실제로 시작시키는 `suspend` 함수입니다. 터미널 연산자를 호출하기 전까지 중간 연산자는 아무 일도 하지 않습니다.
+
+가장 기본은 `collect` 입니다. 방출되는 모든 값을 순서대로 받습니다.
 
 ```kotlin
 class LatestNewsViewModel(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
-
     init {
         viewModelScope.launch {
-            // Flow에서 값을 수집하여 처리
             newsRepository.favoriteLatestNews.collect { favoriteNews ->
-                // UI에 최신 뉴스 업데이트
                 updateUi(favoriteNews)
             }
         }
@@ -136,71 +105,32 @@ class LatestNewsViewModel(
 }
 ```
 
-### 기타 유용한 터미널 연산자
+그 밖의 터미널 연산자도 모두 값을 실제로 수집해 결과를 만들어 냅니다.
 
 ```kotlin
 val flow = flowOf(1, 2, 3, 4, 5)
 
-// first(): 첫 번째 값만 가져오기
-val first = flow.first()  // 1
-
-// single(): 단일 값 가져오기 (여러 값이 있으면 예외)
-val single = flowOf(42).single()  // 42
-
-// toList(): 모든 값을 List로 수집
-val list = flow.toList()  // [1, 2, 3, 4, 5]
-
-// reduce(): 값들을 누적하여 하나의 값으로 축약
-val sum = flow.reduce { acc, value -> acc + value }  // 15
+flow.first()                            // 1   — 첫 값만 받고 종료
+flowOf(42).single()                     // 42  — 값이 정확히 하나여야 함(아니면 예외)
+flow.toList()                           // [1, 2, 3, 4, 5]  — 모두 List로 수집
+flow.reduce { acc, value -> acc + value } // 15  — 누적해 하나의 값으로 축약
 ```
 
-## 다른 코루틴 컨텍스트에서 실행
+## flowOn: 상류 컨텍스트 변경 {#flow-on}
 
-### flowOn 연산자 개요
-기본적으로 Flow의 생산자는 `collect`를 호출하는 코루틴의 컨텍스트에서 실행된다. 하지만 Repository의 데이터 처리는 IO 스레드에서, UI 업데이트는 Main 스레드에서 실행하는 것이 일반적이다.
+기본적으로 Flow의 생산자는 **collect를 호출한 코루틴의 컨텍스트** 에서 실행됩니다. 하지만 보통 데이터 처리는 백그라운드(IO·Default)에서, UI 갱신은 Main에서 하고 싶습니다.
 
-`flowOn` 연산자를 사용하면 Flow의 코루틴 컨텍스트를 변경할 수 있다.
-
-### 동작 방식
+`flowOn` 연산자는 **자신보다 위쪽(upstream)의 생산자와 중간 연산자의 실행 컨텍스트만** 바꿉니다.
 
 ```
-Producer → Operator1 → Operator2 → flowOn(IO) → Operator3 → Collector
-     ←──────────── IO Dispatcher ──────────→   ← Collector's Context →
+생산자 → 연산자1 → 연산자2 → flowOn(IO) → 연산자3 → collect
+└──────── IO Dispatcher에서 실행 ────────┘ └─ collect 컨텍스트에서 실행 ─┘
 ```
 
-**중요:**
-- **Upstream(업스트림)**: `flowOn` 이전의 생산자와 중간 연산자 → 지정된 Dispatcher에서 실행
-- **Downstream(다운스트림)**: `flowOn` 이후의 중간 연산자와 소비자 → collect하는 컨텍스트에서 실행
-- 여러 개의 `flowOn`을 사용하면, 각각 자신의 위치에서 업스트림 컨텍스트를 변경한다
+- **상류(upstream)**: `flowOn` 이전의 생산자·중간 연산자 → `flowOn`에 지정한 Dispatcher에서 실행됩니다.
+- **하류(downstream)**: `flowOn` 이후의 연산자와 `collect` → collect를 호출한 컨텍스트에서 실행됩니다. `flowOn`은 하류에 영향을 주지 않습니다.
 
-### 사용 예제
-
-```kotlin
-class NewsRepository(
-    private val newsRemoteDataSource: NewsRemoteDataSource,
-    private val userData: UserData,
-    private val defaultDispatcher: CoroutineDispatcher
-) {
-    val favoriteLatestNews: Flow<List<ArticleHeadline>> =
-        newsRemoteDataSource.latestNews
-            // ─── Upstream (defaultDispatcher에서 실행) ───
-            .map { news ->
-                // 사용자가 즐겨찾는 주제로 필터링
-                news.filter { userData.isFavoriteTopic(it) }
-            }
-            .onEach { news ->
-                // 캐시에 저장
-                saveInCache(news)
-            }
-            // flowOn 기준으로 위/아래가 나뉨
-            .flowOn(defaultDispatcher)
-            // ─── Downstream (collect하는 컨텍스트에서 실행) ───
-            .catch { exception ->
-                // 에러 발생 시 캐시된 데이터 제공
-                emit(lastCachedNews())
-            }
-}
-```
+`flowOn`을 여러 번 쓰면, 각각 자신의 위치를 기준으로 그 위쪽 컨텍스트를 바꿉니다.
 
 ```kotlin
 class NewsRemoteDataSource(
@@ -208,221 +138,157 @@ class NewsRemoteDataSource(
     private val ioDispatcher: CoroutineDispatcher
 ) {
     val latestNews: Flow<List<ArticleHeadline>> = flow {
-        // 네트워크 요청 - IO Dispatcher에서 실행됨
         val news = newsApi.fetchLatestNews()
         emit(news)
-    }.flowOn(ioDispatcher)  // Flow 생산자를 IO Dispatcher로 이동
+    }.flowOn(ioDispatcher)   // 생산자를 IO Dispatcher로 이동
+}
+
+class NewsRepository(
+    private val newsRemoteDataSource: NewsRemoteDataSource,
+    private val userData: UserData,
+    private val defaultDispatcher: CoroutineDispatcher
+) {
+    val favoriteLatestNews: Flow<List<ArticleHeadline>> =
+        newsRemoteDataSource.latestNews
+            .map { news -> news.filter { userData.isFavoriteTopic(it) } }  // 상류
+            .onEach { news -> saveInCache(news) }                          // 상류
+            .flowOn(defaultDispatcher)   // 위 두 연산자를 Default에서 실행
+            .catch { emit(lastCachedNews()) }  // 하류 — collect 컨텍스트에서 실행
 }
 ```
 
-**베스트 프랙티스:**
-- **DataSource 레이어**: I/O 작업 → `Dispatchers.IO` 사용
-- **Repository 레이어**: 데이터 가공 → `Dispatchers.Default` 사용
-- **ViewModel 레이어**: UI 업데이트 → `Dispatchers.Main`에서 collect
+`flow { }` 내부에서 `withContext`로 직접 컨텍스트를 바꾸면 방출 컨텍스트가 어긋나 예외가 발생합니다. Flow에서 컨텍스트 변경은 반드시 `flowOn`으로 해야 합니다.
 
-## 콜백 기반 API를 Flow로 변환
+## callbackFlow: 콜백 API를 Flow로 {#callback-flow}
 
-### callbackFlow
-콜백 기반 API(Firebase, 위치 서비스 등)를 Flow로 변환할 때 사용하는 Flow 빌더다.
+`callbackFlow`는 **콜백 기반 API(Firebase·위치 서비스 등)를 Flow로 변환** 할 때 쓰는 빌더입니다. 일반 `flow { }`와 달리, 콜백이 다른 스레드·다른 컨텍스트에서 값을 던져도 안전하게 방출할 수 있습니다.
 
 ```kotlin
 class FirestoreUserEventsDataSource(
     private val firestore: FirebaseFirestore
 ) {
-    // Firestore database에서 user events를 가져오는 함수
     fun getUserEvents(): Flow<UserEvents> = callbackFlow {
-
-        // 1. Firestore 컬렉션 레퍼런스 가져오기
-        var eventsCollection: CollectionReference? = null
-        try {
-            eventsCollection = FirebaseFirestore.getInstance()
-                .collection("collection")
-                .document("app")
-        } catch (e: Throwable) {
-            // Firebase 초기화 실패 시 스트림 닫기
-            close(e)
-        }
-
-        // 2. Firestore에 콜백 리스너 등록
-        val subscription = eventsCollection?.addSnapshotListener { snapshot, _ ->
-            if (snapshot == null) { return@addSnapshotListener }
-
-            // 3. 새로운 이벤트를 Flow로 전송
-            // trySend: 코루틴 외부에서도 값을 방출 가능
-            try {
-                trySend(snapshot.getEvents()).isSuccess
-            } catch (e: Throwable) {
-                // 에러 처리
+        // 1. 콜백 리스너 등록
+        val subscription = firestore.collection("events")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot == null) return@addSnapshotListener
+                // 2. trySend: 코루틴 외부(콜백)에서도 값 방출 가능
+                trySend(snapshot.getEvents())
             }
-        }
 
-        // 4. Flow가 취소되면 리스너 제거
-        // awaitClose: Flow가 닫힐 때까지 대기하다가 정리 작업 수행
-        awaitClose { subscription?.remove() }
+        // 3. Flow가 닫히거나 취소될 때까지 대기하다가 리스너 정리
+        awaitClose { subscription.remove() }
     }
 }
 ```
 
-### callbackFlow vs flow
+핵심 요소는 두 가지입니다.
 
-| 특징      | flow                    | callbackFlow         |
-|---------|-------------------------|----------------------|
-| 컨텍스트 변경 | 불가능 (withContext 사용 불가) | 가능                   |
-| 값 방출 함수 | emit (suspend 함수)       | send/trySend (일반 함수) |
-| 사용 사례   | 일반적인 비동기 작업             | 콜백 기반 API 변환         |
-| 버퍼링     | 없음                      | 있음 (설정 가능)           |
+- **`trySend` / `send`**: `flow { }`의 `emit`이 `suspend` 함수인 것과 달리, `callbackFlow`는 코루틴 바깥의 콜백에서 호출되는 `send`(suspend)와 `trySend`(non-suspend)를 제공합니다.
+- **`awaitClose { }`**: **반드시 호출해야 하는** 마지막 구문입니다. Flow가 수집을 멈추거나 취소될 때까지 빌더를 살려 두었다가, 그 시점에 콜백 리스너를 해제하는 정리 작업을 수행합니다. `awaitClose`가 없으면 Flow가 즉시 닫혀 콜백 등록이 무의미해지고, 리스너 누수가 발생합니다.
 
-## StateFlow와 SharedFlow
+| 구분 | flow | callbackFlow |
+|------|------|--------------|
+| 값 방출 함수 | `emit` (suspend) | `send`(suspend) / `trySend`(non-suspend) |
+| 외부 컨텍스트 방출 | 불가 (컨텍스트 보존) | 가능 |
+| 버퍼링 | 없음 | 있음 (설정 가능) |
+| 용도 | 일반 비동기 스트림 | 콜백 기반 API 변환 |
 
-### StateFlow 개요 {#SF1}
-`StateFlow`는 **Hot Flow**의 한 종류로, **현재 상태를 유지하고 관찰 가능한 Flow**다.
+## Cold Flow와 Hot Flow {#cold-vs-hot}
 
-**주요 특징:**
-- 항상 **최신 값을 하나 보유**하고 있다
-- 새로운 collector가 구독하면 즉시 **현재 값을 전달**받는다
-- **동일한 값은 방출하지 않는다** (값이 실제로 변경되었을 때만 방출)
-- Android에서 UI 상태 관리에 이상적이다
+지금까지 다룬 `flow { }` 기반 Flow는 모두 **cold** 입니다. 반면 **StateFlow·SharedFlow는 hot** 입니다. 둘을 가르는 기준은 "값을 보유하는가"가 아니라 **"collector가 없어도 활성화되어 있는가"** 입니다.
 
-### Cold Flow vs Hot Flow 비교
-
-#### Cold Flow
-* `flow { ... }` 빌더로 만든 대부분의 Flow
-* `collect()`가 호출되기 전까지는 아무것도 하지 않는다
-* `collect()`가 호출되면, 그때서야 Flow가 활성화되어 값을 생성하고 방출한다
-
-#### Hot Flow
-* StateFlow와 SharedFlow가 여기 속한다
-* `collect()`하는 대상이 있든 없든, Flow 자체가 이미 활성화되어 있다
-* 값을 생성하거나 이벤트를 받을 준비가 항상 되어 있다
+- **Cold Flow**: collect하기 전까지 비활성입니다. collect하면 그때 생산자 코드가 실행되고, collector마다 독립적으로 처음부터 다시 실행됩니다.
+- **Hot Flow**: collector의 존재와 무관하게 이미 활성화되어 있습니다. 모든 collector가 같은 인스턴스를 공유하며, 같은 방출을 함께 받습니다.
 
 | 구분 | Cold Flow | Hot Flow (StateFlow) |
 |------|-----------|----------------------|
-| 생성 방식 | flow { } | MutableStateFlow() |
-| 실행 시점 | collect 시 생산자 코드 실행 | 즉시 활성화 |
-| 구독자 수 | 각 collector마다 독립적 실행 | 모든 collector가 같은 인스턴스 공유 |
+| 생성 | `flow { }` | `MutableStateFlow()` |
+| 실행 시점 | collect 시 생산자 실행 | 즉시 활성화 |
+| 구독자 | collector마다 독립 실행 | 모든 collector가 인스턴스 공유 |
 | 초기값 | 없음 | 필수 |
-| 사용 사례 | 일회성 작업, 네트워크 요청 | UI 상태, 실시간 데이터 |
+| 용도 | 일회성 작업·네트워크 요청 | UI 상태·실시간 데이터 |
 
-Hot Flow의 기준은 "값을 보유하는가"가 아니라, "Collector(수집가)가 없어도 활성화되어 있는가"이다.
+## StateFlow {#state-flow}
 
-### StateFlow 사용 예제
+`StateFlow`는 **현재 상태를 하나 보유하고 관찰 가능한 Hot Flow** 입니다. 안드로이드 UI 상태 관리에 가장 널리 쓰입니다.
+
+- **항상 최신 값 하나를 보유** 합니다. 새 collector가 구독하면 즉시 현재 값을 전달받습니다.
+- **초기값이 필수** 입니다.
+- **직전 값과 같으면 방출하지 않습니다**(`equals` 기반 conflation). 동일한 상태가 반복 emit돼도 UI가 불필요하게 갱신되지 않습니다.
 
 ```kotlin
 class LatestNewsViewModel(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
-    // private 변경 가능한 StateFlow
+    // 외부에는 읽기 전용으로만 노출 (다운캐스팅 방지)
     private val _uiState = MutableStateFlow<LatestNewsUiState>(
         LatestNewsUiState.Success(emptyList())
     )
-
-    // public 읽기 전용 StateFlow (다운캐스팅 방지)
     val uiState: StateFlow<LatestNewsUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            newsRepository.favoriteLatestNews
-                .collect { favoriteNews ->
-                    // UI 상태 업데이트
-                    _uiState.value = LatestNewsUiState.Success(favoriteNews)
-                }
+            newsRepository.favoriteLatestNews.collect { favoriteNews ->
+                _uiState.value = LatestNewsUiState.Success(favoriteNews)
+            }
         }
     }
 }
 
 sealed class LatestNewsUiState {
-    data class Success(val news: List<ArticleHeadline>): LatestNewsUiState()
-    data class Error(val exception: Throwable): LatestNewsUiState()
+    data class Success(val news: List<ArticleHeadline>) : LatestNewsUiState()
+    data class Error(val exception: Throwable) : LatestNewsUiState()
 }
 ```
 
-### Android에서 안전하게 collect하기
+### stateIn: Flow를 StateFlow로 {#state-in}
 
-**잘못된 방법:**
-```kotlin
-class NewsActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // 위험: Activity가 백그라운드에 있어도 계속 수집함
-        lifecycleScope.launch {
-            viewModel.uiState.collect { state ->
-                updateUi(state)  // 크래시 가능!
-            }
-        }
-    }
-}
-```
-
-**올바른 방법:**
-```kotlin
-class NewsActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // repeatOnLifecycle: STARTED 상태일 때만 수집
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    updateUi(state)  // 안전!
-                }
-            }
-        }
-    }
-}
-```
-
-### Flow를 StateFlow로 변환: stateIn
+`stateIn` 연산자는 **cold Flow를 hot StateFlow로 변환** 합니다. 여러 collector가 하나의 상류 Flow를 공유하도록 만들 때 씁니다.
 
 ```kotlin
-class NewsRepository(
-    private val newsRemoteDataSource: NewsRemoteDataSource
-) {
-    // Cold Flow를 Hot StateFlow로 변환
-    val latestNews: StateFlow<List<ArticleHeadline>> =
-        newsRemoteDataSource.latestNews
-            .stateIn(
-                scope = CoroutineScope(Dispatchers.Default),
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList()
-            )
-}
+val latestNews: StateFlow<List<ArticleHeadline>> =
+    newsRemoteDataSource.latestNews
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 ```
 
-**stateIn 파라미터:**
-- `scope`: StateFlow가 활성화될 코루틴 스코프
-- `started`: 구독 시작/중지 전략
-    - `Eagerly`: 즉시 시작, 스코프가 취소될 때까지 유지
-    - `Lazily`: 첫 구독자가 나타나면 시작, 영구 유지
-    - `WhileSubscribed(timeout)`: 구독자가 있을 때만 활성, timeout 후 중지
-- `initialValue`: 초기 상태 값
+세 파라미터의 의미는 다음과 같습니다.
 
-### SharedFlow란?
-`SharedFlow`는 StateFlow와 유사한 Hot Flow지만, **상태를 보유하지 않고 이벤트를 브로드캐스트**한다.
+- **`scope`**: StateFlow가 활성화될 코루틴 스코프입니다.
+- **`started`**: 공유 시작·중지 전략입니다.
+  - `Eagerly`: 즉시 시작하고 스코프가 취소될 때까지 유지합니다.
+  - `Lazily`: 첫 구독자가 나타나면 시작하고 이후 계속 유지합니다.
+  - `WhileSubscribed(timeout)`: 구독자가 있을 때만 활성이고, 마지막 구독자가 사라진 뒤 `timeout`이 지나면 상류를 중지합니다. 화면 회전 같은 짧은 구독 단절에 상류를 불필요하게 재시작하지 않으려고 보통 `5000`ms를 줍니다.
+- **`initialValue`**: 상류가 첫 값을 내기 전에 사용할 초기 상태입니다.
 
-**StateFlow vs SharedFlow:**
+## SharedFlow {#shared-flow}
 
-| 특징 | StateFlow | SharedFlow |
-|------|----------|---------|
+`SharedFlow`는 StateFlow와 같은 Hot Flow지만, **상태를 보유하지 않고 이벤트를 브로드캐스트** 합니다. 토스트·네비게이션처럼 한 번만 처리돼야 하는 일회성 이벤트에 적합합니다.
+
+| 구분 | StateFlow | SharedFlow |
+|------|-----------|------------|
 | 초기값 | 필수 | 선택적 |
-| 현재 값 보유 | 항상 최신 값 유지 | 값 보유하지 않음 |
-| 중복 값 방출 | 동일한 값 무시 | 모든 값 방출 |
-| Replay | 1 (최신 값만) | 0~N (설정 가능) |
-| 사용 사례 | UI 상태 | 일회성 이벤트 (토스트, 네비게이션) |
+| 현재 값 보유 | 항상 최신 값 유지 | 보유하지 않음 |
+| 중복 값 | 같은 값은 무시(conflation) | 모든 값 방출 |
+| replay | 1 (최신 값) | 0~N (설정 가능) |
+| 용도 | UI 상태 | 일회성 이벤트 |
 
 ```kotlin
 class NewsViewModel : ViewModel() {
-    // StateFlow: UI 상태
+    // UI 상태 — StateFlow
     private val _newsState = MutableStateFlow<NewsState>(NewsState.Loading)
     val newsState: StateFlow<NewsState> = _newsState.asStateFlow()
 
-    // SharedFlow: 일회성 이벤트
+    // 일회성 이벤트 — SharedFlow
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
 
     fun onArticleClick(articleId: String) {
         viewModelScope.launch {
-            // 네비게이션 이벤트 발생 (한 번만 처리되어야 함)
             _navigationEvent.emit(NavigationEvent.ToArticleDetail(articleId))
         }
     }
@@ -433,211 +299,159 @@ sealed class NavigationEvent {
 }
 ```
 
-### UI 이벤트: Channel vs SharedFlow
+## 안드로이드에서 안전하게 수집하기 {#safe-collection-android}
 
-ViewModel에서 일회성 UI 이벤트(토스트, 네비게이션, 스낵바 등)를 처리할 때 `Channel`과 `SharedFlow` 중 어떤 것을 사용해야 할까?
-
-#### Channel 방식 {#channel-approach}
+Hot Flow를 안드로이드에서 그대로 collect하면 위험합니다. `lifecycleScope.launch { collect }`는 Activity가 백그라운드로 가도 수집을 계속하므로, 보이지 않는 화면을 갱신하며 리소스를 낭비하거나 크래시를 유발할 수 있습니다.
 
 ```kotlin
-class NewsViewModel : ViewModel() {
+// 위험 — Activity가 백그라운드에 있어도 계속 수집
+lifecycleScope.launch {
+    viewModel.uiState.collect { state -> updateUi(state) }
+}
+```
+
+### repeatOnLifecycle (View 시스템) {#repeat-on-lifecycle}
+
+`repeatOnLifecycle(Lifecycle.State.STARTED)`는 **지정한 생명주기 상태일 때만 수집** 하고, 그 아래로 내려가면 수집 코루틴을 취소했다가 다시 올라오면 재시작합니다.
+
+```kotlin
+class NewsActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state -> updateUi(state) }
+            }
+        }
+    }
+}
+```
+
+### collectAsStateWithLifecycle (Compose) {#collect-as-state-with-lifecycle}
+
+Compose에서는 `collectAsStateWithLifecycle()`이 같은 일을 해 줍니다. Flow를 `State`로 변환하면서, 내부적으로 `repeatOnLifecycle`을 적용해 생명주기를 인식하며 수집합니다. 단순 `collectAsState()`는 생명주기를 인식하지 않으므로, 안드로이드에서는 `collectAsStateWithLifecycle()`을 기본으로 씁니다.
+
+```kotlin
+@Composable
+fun NewsScreen(viewModel: NewsViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    // uiState 사용 — STARTED 이상일 때만 갱신
+}
+```
+
+## UI 이벤트: Channel vs SharedFlow {#channel-vs-sharedflow}
+
+ViewModel에서 토스트·네비게이션 같은 일회성 UI 이벤트를 보낼 때 `Channel`과 `SharedFlow` 중 무엇을 쓸지가 자주 논의됩니다. 갈림길은 **"구독자가 없을 때 이벤트가 어떻게 되는가"** 입니다.
+
+```kotlin
+// Channel 방식 — 단일 구독자, 전달 보장
+class ProfileViewModel : ViewModel() {
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun onSaveClick() {
-        viewModelScope.launch {
-            try {
-                saveNews()
-                _uiEvent.send(UiEvent.ShowToast("저장 완료"))
-            } catch (e: Exception) {
-                _uiEvent.send(UiEvent.ShowError(e.message))
-            }
-        }
+    fun onSave() = viewModelScope.launch {
+        _uiEvent.send(UiEvent.ShowToast("저장 완료"))
     }
 }
 
-// UI에서 수집
-lifecycleScope.launch {
-    repeatOnLifecycle(Lifecycle.State.STARTED) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowToast -> showToast(event.message)
-                is UiEvent.ShowError -> showError(event.message)
-            }
-        }
-    }
-}
-```
-
-#### SharedFlow 방식 {#sharedflow-approach}
-
-```kotlin
-class NewsViewModel : ViewModel() {
-    private val _uiEvent = MutableSharedFlow<UiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
-
-    fun onSaveClick() {
-        viewModelScope.launch {
-            try {
-                saveNews()
-                _uiEvent.emit(UiEvent.ShowToast("저장 완료"))
-            } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.ShowError(e.message))
-            }
-        }
-    }
-}
-
-// UI에서 수집 (동일한 방식)
-lifecycleScope.launch {
-    repeatOnLifecycle(Lifecycle.State.STARTED) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowToast -> showToast(event.message)
-                is UiEvent.ShowError -> showError(event.message)
-            }
-        }
-    }
-}
-```
-
-#### Channel vs SharedFlow 비교 {#channel-vs-sharedflow}
-
-| 특징 | Channel | SharedFlow |
-|------|---------|-----------|
-| 구독자 수 | 단일 구독자 (먼저 수집하는 쪽이 소비) | 여러 구독자 가능 (모두에게 브로드캐스트) |
-| 이벤트 손실 | 구독자 없으면 send가 일시 중단되어 보존 (전달 보장) | 구독자 없으면 손실 (replay=0) |
-| 이벤트 소비 | 한 번만 소비됨 (큐 방식) | 모든 구독자가 받음 (브로드캐스트) |
-| 버퍼 전략 | 다양한 버퍼 전략 지원 | extraBufferCapacity로 설정 |
-| 타입 | Flow가 아님 (Channel) | Flow 타입 |
-| 사용 난이도 | 간단 | 약간 복잡 (replay, extraBufferCapacity 설정 필요) |
-
-#### 어떤 것을 사용해야 할까? {#which-to-use}
-
-**Channel을 사용하는 경우:**
-```kotlin
-// 단일 화면에서만 이벤트를 처리하는 경우
-class ProfileViewModel : ViewModel() {
-    private val _events = Channel<ProfileEvent>()
-    val events = _events.receiveAsFlow()
-
-    // 장점: 간단하고 직관적, 구독자가 없을 때도 이벤트가 보존됨(전달 보장)
-    // 단점: 단일 구독자만 가능 (여러 곳에서 동시에 수집 불가)
-}
-```
-
-**SharedFlow를 사용하는 경우:**
-```kotlin
-// 여러 구독자가 있거나 더 세밀한 제어가 필요한 경우
-class ProfileViewModel : ViewModel() {
-    private val _events = MutableSharedFlow<ProfileEvent>(
-        replay = 0,              // 새 구독자에게 재방출하지 않음
-        extraBufferCapacity = 1, // 구독자가 없어도 1개 이벤트 버퍼링
+// SharedFlow 방식 — 다중 구독자, 세밀한 버퍼 제어
+class ProfileViewModel2 : ViewModel() {
+    private val _uiEvent = MutableSharedFlow<UiEvent>(
+        replay = 0,
+        extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val events = _events.asSharedFlow()
-
-    // 장점: 여러 구독자 지원, 세밀한 제어 가능
-    // 단점: 설정이 복잡함
+    val uiEvent = _uiEvent.asSharedFlow()
 }
-```
 
-#### 권장 사항 {#recommendations}
-
-| 시나리오 | 권장 방식 | 이유 |
-|---------|---------|-----|
-| 단일 Activity/Fragment | Channel | 간단하고 충분함 |
-| 여러 구독자 필요 | SharedFlow | 브로드캐스트 지원 |
-| 화면 회전 시 이벤트 보존 | SharedFlow (replay=1) | 최근 이벤트 재전달 |
-| 간단한 일회성 이벤트 | Channel | 코드가 더 간결함 |
-
-**일반적인 베스트 프랙티스:**
-- **간단한 경우**: Channel 사용 (대부분의 경우)
-- **복잡한 요구사항**: SharedFlow 사용 (여러 구독자, 이벤트 버퍼링 등)
-
-```kotlin
 sealed class UiEvent {
     data class ShowToast(val message: String) : UiEvent()
     data class ShowError(val message: String?) : UiEvent()
-    data class Navigate(val route: String) : UiEvent()
 }
 ```
 
-## 정리
+| 구분 | Channel | SharedFlow |
+|------|---------|------------|
+| 구독자 수 | 단일 (먼저 받는 쪽이 소비) | 다중 (모두에게 브로드캐스트) |
+| 구독자 없을 때 | `send`가 일시 중단되어 보존 (전달 보장) | replay=0이면 손실 |
+| 이벤트 소비 | 한 번만 소비 (큐) | 모든 구독자가 받음 |
+| 타입 | Flow 아님 (Channel) | Flow |
+| 난이도 | 간단 | replay·버퍼 설정 필요 |
 
-### 선택 가이드 {#selection-guide}
+기본 `Channel()`은 capacity 0(RENDEZVOUS)이라, collector가 없으면 `send`가 일시 중단되어 이벤트가 보존됩니다. `repeatOnLifecycle`로 화면 회전 중 수집이 잠깐 끊겨도, 재구독 시 그 사이 보낸 이벤트를 받습니다. 그래서 **단일 화면의 일회성 이벤트에는 Channel이 간단하면서도 안전** 합니다.
 
-**어떤 방식을 사용해야 할까?**
+반면 `SharedFlow(replay=0)`는 구독자가 없을 때 emit하면 이벤트가 손실됩니다. 대신 **여러 구독자에게 동시에 브로드캐스트** 할 수 있고 버퍼 정책을 세밀하게 조절할 수 있습니다. 다만 일회성 이벤트에 `replay=1`을 주면 화면 회전 후 마지막 이벤트가 다시 전달되어 토스트·네비게이션이 중복 처리될 수 있으니 주의해야 합니다.
 
-```
-단일 값만 필요한가?
-    ↓ YES
-suspend 함수 사용
+## 선택 가이드 {#selection-guide}
 
-    ↓ NO
-여러 값을 비동기로 방출해야 하는가?
-    ↓ YES
+상황별로 무엇을 쓸지는 다음 기준으로 정리됩니다.
 
-현재 상태를 유지해야 하는가?
-    ↓ YES → StateFlow 사용 (UI 상태)
-    ↓ NO
+| 요구 | 선택 |
+|------|------|
+| 단일 값만 필요 | `suspend` 함수 |
+| 여러 값을 비동기로 방출 (cold) | `Flow` |
+| 현재 상태를 유지·관찰 (UI 상태) | `StateFlow` |
+| 일회성 이벤트 · 단일 구독자 | `Channel` |
+| 일회성 이벤트 · 다중 구독자 | `SharedFlow` |
+| 여러 구독자에게 브로드캐스트 | `SharedFlow` |
 
-일회성 UI 이벤트인가?
-    ↓ YES
-    여러 구독자가 필요한가?
-        ↓ YES → SharedFlow 사용
-        ↓ NO  → Channel 사용 (더 간단)
+## 요약 {#summary}
 
-    ↓ NO
-여러 구독자에게 브로드캐스트해야 하는가?
-    ↓ YES → SharedFlow 사용
-    ↓ NO  → Flow 사용 (일반 스트림)
-```
+> **TL;DR** — Flow는 코루틴 위의 비동기 데이터 스트림으로, 기본은 cold라 collect할 때 비로소 생산자가 실행됩니다. `flow`·`flowOf`·`asFlow`로 만들고(순차 실행·컨텍스트 보존 제약), `map`·`filter`·`transform` 같은 중간 연산자로 변환한 뒤 `collect` 같은 터미널 연산자로 수집합니다. 상류 컨텍스트는 `flowOn`으로 바꾸고, 콜백 API는 `callbackFlow`(+`awaitClose`)로 변환합니다. StateFlow·SharedFlow는 hot이며, 각각 UI 상태와 일회성 이벤트에 쓰입니다. 안드로이드에서는 `repeatOnLifecycle`·`collectAsStateWithLifecycle`로 생명주기를 인식하며 수집해야 합니다.
 
-### 핵심 개념 요약
-
-1. **Flow 생성**: `flow { emit() }` 빌더 사용
-2. **중간 연산자**: map, filter, transform 등으로 데이터 변환
-3. **터미널 연산자**: collect, first, toList 등으로 값 수집
-4. **컨텍스트 변경**: flowOn으로 업스트림 Dispatcher 변경
-5. **콜백 변환**: callbackFlow로 콜백 기반 API를 Flow로 변환
-6. **상태 관리**: StateFlow로 UI 상태 관리
-7. **일회성 이벤트**:
-   - 단일 구독자 → Channel 사용
-   - 여러 구독자 → SharedFlow 사용
-8. **안전한 수집**: repeatOnLifecycle로 생명주기 인식 수집
-
-## 자가 점검
+1. **Flow와 cold 특성**: 코루틴 위의 비동기 스트림. cold라 collect 전엔 비활성이고, collector마다 독립 실행된다.
+2. **구성 요소**: 생산자(Repository) → 중개자(중간 연산자) → 소비자(ViewModel).
+3. **빌더**: `flow`·`flowOf`·`asFlow`. `flow { }`는 순차 실행되고 컨텍스트를 보존한다.
+4. **연산자**: 중간 연산자(`map`·`filter`·`transform`)는 lazy하게 변환하고, 터미널 연산자(`collect`·`first`·`toList`·`reduce`)가 스트림을 시작시킨다.
+5. **flowOn**: 자신보다 위쪽(상류)의 실행 컨텍스트만 바꾼다. 하류는 collect 컨텍스트 그대로.
+6. **callbackFlow**: 콜백 API를 Flow로 변환. `trySend`로 외부에서 방출하고 `awaitClose`로 정리한다.
+7. **Cold vs Hot**: 기준은 "collector 없이도 활성인가". StateFlow·SharedFlow가 hot.
+8. **StateFlow / stateIn**: 최신 값 하나 보유, conflation. `stateIn`으로 cold Flow를 StateFlow로 변환.
+9. **SharedFlow**: 상태 없이 이벤트 브로드캐스트. replay·버퍼 설정 가능.
+10. **안전 수집**: View는 `repeatOnLifecycle`, Compose는 `collectAsStateWithLifecycle`.
+11. **UI 이벤트**: 단일 구독자·전달 보장이면 Channel, 다중 구독자·버퍼 제어면 SharedFlow.
 
 <deflist collapsible="true" default-state="collapsed">
-<def title="Q) Cold Flow와 Hot Flow의 차이를 설명하고, StateFlow와 SharedFlow가 각각 어떤 상황에 적합한지 말씀해 주시겠어요?">
+<def title="Q) Flow가 cold라는 말은 무슨 뜻인가요? Hot Flow와는 무엇이 다른가요?">
 
-Cold Flow는 `flow { ... }` 빌더로 만든 대부분의 Flow처럼, collector가 `collect()`를 호출하기 전까지는 아무 동작도 하지 않습니다. collector가 붙는 순간 비로소 생산자 블록이 실행되며, collector마다 독립적으로 스트림이 처음부터 다시 실행됩니다. 그래서 네트워크 요청이나 일회성 데이터 로드처럼 "필요할 때 한 번 흐르는" 작업에 적합합니다.
+Cold Flow는 `flow { }` 빌더로 만든 대부분의 Flow처럼, collector가 `collect()`를 호출하기 전까지 아무 동작도 하지 않습니다. collector가 붙는 순간 비로소 생산자 블록이 실행되며, collector마다 독립적으로 스트림이 처음부터 다시 실행됩니다. 그래서 네트워크 요청이나 일회성 데이터 로드처럼 "필요할 때 한 번 흐르는" 작업에 적합합니다.
 
-Hot Flow는 collector의 존재 여부와 무관하게 항상 활성화되어 있고, 모든 collector가 같은 인스턴스를 공유합니다. StateFlow와 SharedFlow가 여기에 속합니다. 중요한 기준은 "값을 보유하는가"가 아니라 "collector가 없어도 활성화되어 있는가"입니다.
-
-- StateFlow: 현재 상태를 항상 하나 보유하고, 초기값이 필수이며, 새 구독자에게 즉시 최신 값을 전달합니다. 또한 직전 값과 동일하면 방출하지 않습니다(equals 기반 conflation). 그래서 UI 상태 관리에 이상적입니다.
-- SharedFlow: 상태를 보유하지 않고 이벤트를 브로드캐스트하며, `replay`·`extraBufferCapacity` 등으로 동작을 세밀하게 제어할 수 있습니다. 토스트·네비게이션 같은 일회성 이벤트를 여러 구독자에게 전달할 때 적합합니다.
+Hot Flow는 collector의 존재 여부와 무관하게 항상 활성화되어 있고, 모든 collector가 같은 인스턴스를 공유합니다. StateFlow와 SharedFlow가 여기에 속합니다. 둘을 가르는 기준은 "값을 보유하는가"가 아니라 "collector가 없어도 활성화되어 있는가"입니다.
 
 </def>
-<def title="Q) ViewModel에서 토스트나 네비게이션 같은 일회성 UI 이벤트를 전달할 때 Channel과 SharedFlow 중 무엇을 선택하시겠어요? 그 이유는 무엇인가요?">
+<def title="Q) flow 빌더의 두 가지 제약(순차 실행, 컨텍스트 보존)은 각각 무엇이고 왜 그런가요?">
 
-핵심은 "구독자가 없을 때 이벤트가 어떻게 되는가"입니다.
+첫째는 순차 실행입니다. `flow { }`의 생산자는 단일 코루틴에서 순서대로 실행되므로, `suspend` 호출이 끝나야 다음 `emit`이 일어납니다. 방출은 항상 순차적입니다.
 
-기본 `Channel()`은 RENDEZVOUS(capacity 0)이므로, collector가 없을 때 `send()`가 일시 중단(suspend)되어 이벤트가 손실되지 않고 보존됩니다. 즉 전달이 보장되며, 한 번 보낸 이벤트는 정확히 한 collector가 한 번만 소비합니다. `repeatOnLifecycle`로 화면 회전 중 collect가 잠시 끊겨도, 다시 구독이 시작되면 그 사이 보낸 이벤트를 받습니다. 그래서 단일 화면에서 일회성 이벤트를 다룰 때는 Channel이 간단하면서도 안전합니다.
-
-반면 `SharedFlow(replay=0)`는 구독자가 없을 때 emit하면 이벤트가 그대로 손실됩니다. 대신 여러 구독자에게 동시에 브로드캐스트할 수 있고, `replay`·`extraBufferCapacity`·`onBufferOverflow`로 버퍼링 정책을 세밀하게 조정할 수 있습니다.
-
-따라서 저는 단일 구독자가 전제인 일반적인 화면 이벤트에는 Channel을, 여러 구독자에게 전달하거나 버퍼링 정책을 직접 제어해야 하는 경우에는 SharedFlow를 선택하겠습니다. 참고로 일회성 이벤트에 `SharedFlow(replay=1)`를 쓰면 화면 회전 후 마지막 이벤트가 다시 전달되어 토스트나 네비게이션이 중복 처리될 수 있으므로 주의해야 합니다.
+둘째는 컨텍스트 보존입니다. `flow { }` 내부에서는 `withContext`로 컨텍스트를 직접 바꿀 수 없습니다. 방출은 반드시 빌더가 호출된 컨텍스트에서 일어나야 하며, 다른 컨텍스트에서 emit하면 런타임 예외가 납니다. 컨텍스트를 바꾸고 싶다면 `flowOn` 연산자를 써서 상류의 실행 컨텍스트를 옮겨야 하고, 콜백이 다른 스레드에서 값을 던지는 경우라면 `callbackFlow`를 써야 합니다.
 
 </def>
-<def title="Q) flowOn 연산자는 어떤 코드의 실행 컨텍스트를 바꾸나요? upstream과 downstream을 구분해서 설명해 주시겠어요?">
+<def title="Q) flowOn 연산자는 어떤 코드의 실행 컨텍스트를 바꾸나요? 상류와 하류를 구분해서 설명해 주시겠어요?">
 
-`flowOn`은 자신을 기준으로 **upstream**(자신보다 위쪽에 선언된 생산자와 중간 연산자)의 실행 컨텍스트만 바꿉니다. `flowOn` 아래쪽의 연산자와 최종 `collect`(downstream)는 영향을 받지 않고, collect를 호출한 코루틴의 컨텍스트에서 실행됩니다.
+`flowOn`은 자신을 기준으로 상류(자신보다 위쪽에 선언된 생산자와 중간 연산자)의 실행 컨텍스트만 바꿉니다. `flowOn` 아래쪽의 연산자와 최종 `collect`(하류)는 영향을 받지 않고, collect를 호출한 코루틴의 컨텍스트에서 실행됩니다.
 
-기본적으로 Flow의 생산자는 collect를 호출하는 컨텍스트에서 실행되는데, 보통 데이터 처리는 백그라운드(IO/Default)에서 하고 UI 업데이트는 Main에서 하고 싶습니다. 이때 무거운 작업이 있는 upstream에 `flowOn(Dispatchers.IO)` 또는 `flowOn(Dispatchers.Default)`를 걸면, 생산자만 백그라운드로 옮기고 collect 측은 그대로 Main에 둘 수 있습니다.
+기본적으로 Flow의 생산자는 collect를 호출한 컨텍스트에서 실행되는데, 보통 데이터 처리는 백그라운드(IO·Default)에서 하고 UI 갱신은 Main에서 하고 싶습니다. 이때 무거운 작업이 있는 상류에 `flowOn(Dispatchers.IO)`나 `flowOn(Dispatchers.Default)`를 걸면 생산자만 백그라운드로 옮기고 collect 측은 그대로 Main에 둘 수 있습니다. `flow { }` 안에서 `withContext`로 직접 바꾸면 방출 컨텍스트가 어긋나 예외가 나므로, 컨텍스트 변경은 반드시 `flowOn`으로 합니다.
 
-`withContext`로 Flow 빌더 내부에서 직접 컨텍스트를 바꾸면 방출 컨텍스트가 어긋나 예외가 발생할 수 있으므로, Flow에서는 컨텍스트 변경에 반드시 `flowOn`을 사용해야 합니다. 또한 `flowOn`을 여러 번 쓰면 각각 자신의 위치 기준으로 upstream 컨텍스트를 바꿉니다.
+</def>
+<def title="Q) callbackFlow는 언제 쓰고, awaitClose를 빠뜨리면 어떤 문제가 생기나요?">
+
+`callbackFlow`는 Firebase 리스너나 위치 서비스처럼 콜백으로 값을 던지는 API를 Flow로 변환할 때 씁니다. 일반 `flow { }`는 컨텍스트 보존 제약 때문에 다른 스레드의 콜백에서 emit할 수 없지만, `callbackFlow`는 `send`·`trySend`로 코루틴 외부의 콜백에서도 안전하게 값을 방출할 수 있습니다.
+
+`awaitClose { }`는 반드시 호출해야 하는 마지막 구문입니다. Flow가 수집을 멈추거나 취소될 때까지 빌더를 살려 두었다가, 그 시점에 등록한 콜백 리스너를 해제하는 정리 작업을 합니다. `awaitClose`를 빠뜨리면 빌더 블록이 끝나는 즉시 Flow가 닫혀 버려 콜백 등록이 무의미해지고, 리스너가 해제되지 않아 누수가 발생합니다.
+
+</def>
+<def title="Q) ViewModel에서 일회성 UI 이벤트를 보낼 때 Channel과 SharedFlow 중 무엇을 고르시겠어요?">
+
+핵심은 "구독자가 없을 때 이벤트가 어떻게 되는가"입니다. 기본 `Channel()`은 capacity 0(RENDEZVOUS)이라 collector가 없으면 `send`가 일시 중단되어 이벤트가 보존됩니다. 전달이 보장되고 한 collector가 정확히 한 번만 소비하며, `repeatOnLifecycle`로 화면 회전 중 수집이 잠깐 끊겨도 재구독 시 그 사이 이벤트를 받습니다. 그래서 단일 화면의 일회성 이벤트에는 Channel이 간단하면서 안전합니다.
+
+`SharedFlow(replay=0)`는 구독자가 없을 때 emit하면 이벤트가 손실됩니다. 대신 여러 구독자에게 동시에 브로드캐스트할 수 있고 `extraBufferCapacity`·`onBufferOverflow`로 버퍼 정책을 제어할 수 있습니다. 그래서 다중 구독자나 세밀한 버퍼 제어가 필요하면 SharedFlow를 씁니다. 다만 일회성 이벤트에 `replay=1`을 주면 화면 회전 후 마지막 이벤트가 재전달되어 중복 처리될 수 있으니 주의합니다.
+
+</def>
+<def title="Q) 안드로이드에서 StateFlow를 그냥 lifecycleScope.launch로 수집하면 무엇이 문제이고, 어떻게 고치나요?">
+
+`lifecycleScope.launch { collect }`는 Activity가 백그라운드로 내려가도 수집을 멈추지 않습니다. 보이지 않는 화면을 계속 갱신해 리소스를 낭비하고, 경우에 따라 죽은 뷰를 건드려 크래시로 이어질 수 있습니다.
+
+View 시스템에서는 `repeatOnLifecycle(Lifecycle.State.STARTED) { collect }`로 감싸야 합니다. STARTED 이상일 때만 수집하고, 그 아래로 내려가면 수집 코루틴을 취소했다가 다시 올라오면 재시작합니다. Compose에서는 `collectAsStateWithLifecycle()`을 쓰면 같은 효과를 얻습니다. 내부적으로 `repeatOnLifecycle`을 적용해 생명주기를 인식하며 수집하므로, 생명주기를 모르는 `collectAsState()` 대신 이쪽을 기본으로 써야 합니다.
 
 </def>
 </deflist>

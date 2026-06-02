@@ -72,7 +72,7 @@ class UserViewModel(
 
     fun load(id: Long) = viewModelScope.launch {
         _uiState.value = runCatching { getUser(id) }
-            .fold({ UiState.Success(it) }, { UiState.Error })
+            .fold({ UiState.Success(it) }, { UiState.Error(it.message) })  // Error는 보통 메시지를 담는다
     }
 }
 ```
@@ -109,6 +109,8 @@ dependencies {
 }
 ```
 
+여기서 `kotlin("jvm")` 순수 JVM 모듈은 안드로이드 프레임워크 의존을 배제하는 가장 엄격한 버전입니다. 실무에서는 도메인이 androidx 일부(예: Paging, annotation)를 쓰기도 하는데, 그 경우에도 핵심은 `Context`·Retrofit·Room 같은 **프레임워크/구현 세부사항**을 도메인에 들이지 않는다는 원칙 자체입니다.
+
 ## 경계와 추상화: 의존성 역전 {#boundary-and-abstraction}
 
 도메인이 데이터를 알면 안 되는데, 동시에 데이터를 가져와야 한다는 요구는 모순처럼 보입니다. 이 모순을 푸는 장치가 **경계에서의 추상화**, 구체적으로 **의존성 역전 원칙(DIP, Dependency Inversion Principle)**입니다.
@@ -130,7 +132,7 @@ dependencies {
 
 ### 경계에서 의존성을 주입하기 {#di-at-boundary}
 
-추상과 구현을 런타임에 연결하는 일은 **의존성 주입(DI)**이 맡습니다. 안드로이드에서는 보통 Hilt를 쓰며, **인터페이스와 구현의 연결을 가장 바깥(앱 조립 지점)에서** 선언합니다. 도메인·데이터 어느 쪽도 서로를 직접 `new` 하지 않습니다.
+추상과 구현을 런타임에 연결하는 일은 **의존성 주입(DI)**이 맡습니다. 안드로이드에서는 보통 Hilt를 씁니다. 여기서 두 가지를 구분하면 혼동이 줄어듭니다. 바인딩을 **선언하는 위치**는 구현 옆인 데이터 계층의 `@Binds` 모듈이고, 그 바인딩이 **실제로 조립되는 시점·장소**는 앱의 Hilt 컴포넌트 그래프(`SingletonComponent`)입니다. 즉 선언은 데이터에 두되 그래프 구성은 앱 조립 지점에서 일어납니다. 도메인·데이터 어느 쪽도 서로를 직접 `new` 하지 않습니다.
 
 ```kotlin
 // data 계층의 Hilt 모듈 — 추상(UserRepository)과 구현(UserRepositoryImpl)을 바인딩

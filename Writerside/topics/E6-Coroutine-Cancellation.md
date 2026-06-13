@@ -92,12 +92,12 @@ launch {
         }
     } catch (e: Exception) {
         // CancellationException까지 여기서 흡수됩니다
-        log("실패", e)   // 취소가 "처리됨"이 되어 코루틴이 계속 살아남습니다
+        log("실패", e)   // 취소가 "처리됨"이 되어 코루틴이 취소가 아닌 정상 완료로 끝납니다
     }
 }
 ```
 
-`catch (e: Exception)`은 `CancellationException`도 함께 잡습니다(상속 계층상 `CancellationException`은 `IllegalStateException` → `RuntimeException` → `Exception`의 하위입니다). 이를 삼키면 부모가 보낸 취소가 무시되어 코루틴이 멈추지 않고, 구조적 동시성의 취소 보장이 깨집니다.
+`catch (e: Exception)`은 `CancellationException`도 함께 잡습니다(상속 계층상 `CancellationException`은 `IllegalStateException` → `RuntimeException` → `Exception`의 하위입니다). 이를 삼키면 부모가 보낸 취소가 무시되어, 이 코루틴은 취소(cancelled)가 아니라 정상 완료(completed)로 끝납니다(`job.isCancelled`가 `false`가 됩니다). 위 예제는 루프가 본문의 전부라 취소 예외가 잡히는 즉시 루프가 멈추고 코루틴도 곧장 끝나지만, try-catch 뒤에 코드가 더 있다면 취소가 요청됐는데도 그 코드가 계속 실행되어 구조적 동시성의 취소 보장이 깨집니다.
 
 올바른 처리는 **취소 예외만 다시 던지는 것**입니다.
 

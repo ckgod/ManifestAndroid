@@ -170,6 +170,26 @@ class MyViewModel : ViewModel() {
 }
 ```
 
+### 참고: Dispatchers.Main vs Main.immediate
+
+`viewModelScope`의 기본 디스패처는 `Dispatchers.Main`이 아니라 **`Dispatchers.Main.immediate`**입니다. 둘 다 메인 스레드에서 코루틴을 실행하지만, **이미 메인 스레드에 있을 때**의 동작이 다릅니다.
+
+- **`Dispatchers.Main`**: 본문을 항상 메인 루퍼 큐에 **post**합니다. `launch`는 즉시 반환하고, 본문은 **다음 루프 틱**에 실행됩니다.
+- **`Dispatchers.Main.immediate`**: 이미 메인 스레드라면 post를 건너뛰고 본문을 **그 자리에서 동기로 즉시 실행**합니다. (메인 스레드가 아니면 일반 `Main`처럼 post)
+
+```kotlin
+// 이미 메인 스레드에서 실행 중이라고 가정
+launch(Dispatchers.Main) { doA() }
+doB()
+// 실행 순서: doB → (다음 틱) doA
+
+launch(Dispatchers.Main.immediate) { doA() }
+doB()
+// 실행 순서: doA → doB   (post 없이 즉시 실행)
+```
+
+`immediate`는 불필요한 한 틱 지연과 그로 인한 UI 깜빡임·리오더링을 없애기 위한 최적화입니다. 주의할 점은, 이것이 스레드를 붙잡는 **블로킹이 아니라 재dispatch(post)를 생략한 동기 실행**이라는 것입니다. 본문 안에서 실제로 `suspend`가 걸리면 그 지점에서 호출부로 제어가 돌아갑니다. 따라서 `launch(Main.immediate)`가 "당연히 나중에 비동기로 실행되겠지"라고 가정하면, 같은 메인 스레드에서는 본문이 먼저 동기로 실행돼 코드 순서가 어긋날 수 있습니다.
+
 ### 협력적 취소(cooperative cancellation)
 
 구조적 동시성의 취소는 **강제 종료가 아니라 협력적**입니다. 취소는 코루틴의 `Job`에 "취소됨" 플래그를 세우고, 코루틴이 다음 **suspend 지점**에 도달할 때 `CancellationException`을 던지는 방식으로 동작합니다. 따라서 suspend 호출 없이 도는 무거운 연산은 취소 요청을 받아도 멈추지 않습니다.

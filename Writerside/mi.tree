@@ -4,235 +4,247 @@
 
 <instance-profile id="mi"
                  name="ckgod.github"
-                 start-page="1-Android.md">
+                 start-page="overview.md">
 
-    <toc-element topic="1-Android.md">
-        <toc-element topic="1-1-android-framework.md">
-            <toc-element topic="Q1-Android.md"/>
-            <toc-element topic="Q2-Intent.md"/>
-            <toc-element topic="Q3-Pending-Intent.md"/>
-            <toc-element topic="Q4-Serializable-Parcelable.md">
-                <toc-element topic="Details-Parcel-and-Parcelable.md"/>
+    <toc-element topic="overview.md">
+        <toc-element topic="1-Android.md">
+            <toc-element topic="1-1-android-framework.md">
+                <toc-element topic="Q1-Android.md"/>
+                <toc-element topic="Q2-Intent.md"/>
+                <toc-element topic="Q3-Pending-Intent.md"/>
+                <toc-element topic="Q4-Serializable-Parcelable.md">
+                    <toc-element topic="Details-Parcel-and-Parcelable.md"/>
+                </toc-element>
+                <toc-element topic="Q5-Context.md">
+                    <toc-element topic="Details-올바른-Context-사용법.md"/>
+                    <toc-element topic="Details-ContextWrapper.md"/>
+                    <toc-element topic="Details-This-vs-BaseContext.md"/>
+                </toc-element>
+                <toc-element topic="Q6-Application-Class.md"/>
+                <toc-element topic="Q7-AndroidManifest.md"/>
+                <toc-element topic="Q8-Activity-LifeCycle.md">
+                    <toc-element topic="Details-Lifecycle-인스턴스란.md"/>
+                    <toc-element topic="Details-여러-Activity-간-수명-주기-변화.md"/>
+                </toc-element>
+                <toc-element topic="Q9-Fragment-생명주기.md">
+                    <toc-element topic="Details-Fragment의-viewLifecycleOwner-인스턴스.md"/>
+                    <toc-element topic="Details-fragmentManager와-childFragmentManager의-차이점.md"/>
+                </toc-element>
+                <toc-element topic="Q10-Service.md">
+                    <toc-element topic="Details-Service의-생명주기.md"/>
+                    <toc-element topic="Details-Forground-Service.md"/>
+                </toc-element>
+                <toc-element topic="Q11-BroadcastReceiver.md"/>
+                <toc-element topic="Q12-ContentProvider.md">
+                    <toc-element topic="Details-앱-시작-시-ContentProvider-사용하여-구성을-초기화하기.md"/>
+                </toc-element>
+                <toc-element topic="Q13-Configuration-Change.md">
+                    <toc-element topic="Details-구성-변경-시-Activity는-어떻게-될까.md"/>
+                </toc-element>
+                <toc-element topic="Q14-Memory-Management.md"/>
+                <toc-element topic="Q15-ANR.md" />
+                <toc-element topic="Q16-Deep-Link.md"/>
+                <toc-element topic="Q17-Task와-back-stack.md"/>
+                <toc-element topic="Q18-Bundle.md"/>
+                <toc-element topic="Q19-Activity-Fragment-데이터-전달.md">
+                    <toc-element topic="Details-Fragment-Result-API.md"/>
+                </toc-element>
+                <toc-element topic="Q20-ActivityManager.md"/>
+                <toc-element topic="Q21-SparseArray.md"/>
+                <toc-element topic="Q22-Runtime-Permission.md"/>
+                <toc-element topic="Q23-Looper-Handler-HandlerThread.md"/>
+                <toc-element topic="Q24-Exception-Tracing.md"/>
+                <toc-element topic="Q25-Build-Variants-Flavors.md"/>
+                <toc-element topic="Q26-Accessibility.md"/>
+                <toc-element topic="Q27-File-System.md"/>
+                <toc-element topic="Q28-ART-Dalvik-Dex-Compiler.md"/>
+                <toc-element topic="Q29-APK-AAB.md"/>
+                <toc-element topic="Q30-R8-최적화.md"/>
+                <toc-element topic="Q31-App-크기-줄이기.md"/>
+                <toc-element topic="Q32-Android의-프로세스.md">
+                    <toc-element topic="Details-Android-4대-구성요소.md"/>
+                </toc-element>
+                <toc-element topic="Q67-Gradle-Dependency-Management.md"/>
+                <toc-element topic="Q68-KSP-Annotation-Processing.md"/>
+                <toc-element topic="Q69-Build-Variants-BuildConfig.md"/>
+                <toc-element topic="Q70-App-Security-Secrets.md"/>
             </toc-element>
-            <toc-element topic="Q5-Context.md">
-                <toc-element topic="Details-올바른-Context-사용법.md"/>
-                <toc-element topic="Details-ContextWrapper.md"/>
-                <toc-element topic="Details-This-vs-BaseContext.md"/>
+            <toc-element topic="1-2-Android-UI-Views.md">
+                <toc-element topic="Q33-View-Lifecycle.md">
+                    <toc-element topic="Details-findViewTreeLifecycleOwner.md"/>
+                </toc-element>
+                <toc-element topic="Q34-View-ViewGroup.md"/>
+                <toc-element topic="Q35-ViewStub.md"/>
+                <toc-element topic="Q36-Custom-View.md">
+                    <toc-element topic="Details-생성자-JvmOverloads.md"/>
+                </toc-element>
+                <toc-element topic="Q37-Canvas.md"/>
+                <toc-element topic="Q38-invalidate.md"/>
+                <toc-element topic="Q39-ConstraintLayout.md"/>
+                <toc-element topic="Q40-SurfaceView-TextureView.md"/>
+                <toc-element topic="Q41-RecyclerView.md">
+                    <toc-element topic="Details-Multiple-Item-Types.md"/>
+                    <toc-element topic="Details-DiffUtil.md"/>
+                </toc-element>
+                <toc-element topic="Q42-Dp-Sp.md">
+                    <toc-element topic="Details-Sp-사용-시-화면-깨짐-처리.md"/>
+                </toc-element>
+                <toc-element topic="Q43-nine-patch-이미지.md"/>
+                <toc-element topic="Q44-Drawable.md"/>
+                <toc-element topic="Q45-Bitmap.md">
+                    <toc-element topic="Details-대용량-Bitmap-캐싱.md"/>
+                </toc-element>
+                <toc-element topic="Q46-애니메이션.md">
+                    <toc-element topic="Details-애니메이션-Interpolator.md"/>
+                </toc-element>
+                <toc-element topic="Q47-Window.md">
+                    <toc-element topic="Details-WindowManager.md"/>
+                    <toc-element topic="Details-PopupWindow.md"/>
+                </toc-element>
+                <toc-element topic="Q48-WebView.md"/>
             </toc-element>
-            <toc-element topic="Q6-Application-Class.md"/>
-            <toc-element topic="Q7-AndroidManifest.md"/>
-            <toc-element topic="Q8-Activity-LifeCycle.md">
-                <toc-element topic="Details-Lifecycle-인스턴스란.md"/>
-                <toc-element topic="Details-여러-Activity-간-수명-주기-변화.md"/>
+            <toc-element topic="1-3-Jetpack-Library.md">
+                <toc-element topic="Q49-AppCompat.md"/>
+                <toc-element topic="Q50-Material-Design-Components.md"/>
+                <toc-element topic="Q51-ViewBinding.md"/>
+                <toc-element topic="Q52-DataBinding.md">
+                    <toc-element topic="Details-ViewBinding-vs-DataBinding.md"/>
+                </toc-element>
+                <toc-element topic="Q53-LiveData.md">
+                    <toc-element topic="Details-setValue-vs-postValue.md"/>
+                </toc-element>
+                <toc-element topic="Q54-JetPack-ViewModel.md"/>
+                <toc-element topic="Q55-Jetpack-Navigation-Library.md"/>
+                <toc-element topic="Q56-Dagger-2-Hilt.md"/>
+                <toc-element topic="Q57-Jetpack-Paging-Library.md"/>
+                <toc-element topic="Q58-Baseline-Profile.md"/>
             </toc-element>
-            <toc-element topic="Q9-Fragment-생명주기.md">
-                <toc-element topic="Details-Fragment의-viewLifecycleOwner-인스턴스.md"/>
-                <toc-element topic="Details-fragmentManager와-childFragmentManager의-차이점.md"/>
+            <toc-element topic="1-4-Business-Logic.md">
+                <toc-element topic="Q59-Long-running-Background-Tasks.md"/>
+                <toc-element topic="Q60-JSON-Serialization.md"/>
+                <toc-element topic="Q61-Network-Requests.md">
+                    <toc-element topic="Details-OkHttp-Authenticator-vs-Interceptor.md"/>
+                    <toc-element topic="Details-Retrofit-CallAdapter.md"/>
+                </toc-element>
+                <toc-element topic="Q62-Paging-System-RecyclerView.md"/>
+                <toc-element topic="Q63-Network-Image-Loading.md"/>
+                <toc-element topic="Q64-Local-Data-Persistence.md"/>
+                <toc-element topic="Q65-Offline-First.md"/>
+                <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>
+                <toc-element topic="Q71-HTTP-Status-Codes.md"/>
+                <toc-element topic="Q72-REST-API-Networking.md"/>
+                <toc-element topic="Q73-Error-Handling-Patterns.md"/>
+                <toc-element topic="Q74-Resilience-Design.md"/>
             </toc-element>
-            <toc-element topic="Q10-Service.md">
-                <toc-element topic="Details-Service의-생명주기.md"/>
-                <toc-element topic="Details-Forground-Service.md"/>
+            <toc-element topic="2-1-Jetpack-Compose.md">
+                <toc-element topic="Q0-Jetpack-Compose-구조.md">
+                    <toc-element topic="Details-SlotTable-Link-Table.md"/>
+                </toc-element>
+                <toc-element topic="Q1-Compose-Phase.md"/>
+                <toc-element topic="Q2-Declarative-UI.md"/>
+                <toc-element topic="Q3-Recomposition.md"/>
+                <toc-element topic="Q4-Composable-Function-Internals.md">
+                    <toc-element topic="Details-Compose-Compiler-Composer.md"/>
+                    <toc-element topic="Details-Composable-Side-Effect-Free.md"/>
+                </toc-element>
+                <toc-element topic="Q5-Stability.md">
+                    <toc-element topic="Details-Smart-Recomposition.md"/>
+                    <toc-element topic="Details-Stability-Annotations.md"/>
+                    <toc-element topic="Details-Stable-vs-Immutable-Misuse.md"/>
+                </toc-element>
+                <toc-element topic="Q6-Compose-Stability-Optimization.md"/>
+                <toc-element topic="Q7-Composition.md"/>
+                <toc-element topic="Q8-XML-Compose-Migration.md">
+                    <toc-element topic="Details-Compose-XML-App-Size.md"/>
+                </toc-element>
+                <toc-element topic="Q9-Release-Mode-Performance.md"/>
+                <toc-element topic="Q10-Kotlin-Idioms.md"/>
             </toc-element>
-            <toc-element topic="Q11-BroadcastReceiver.md"/>
-            <toc-element topic="Q12-ContentProvider.md">
-                <toc-element topic="Details-앱-시작-시-ContentProvider-사용하여-구성을-초기화하기.md"/>
+            <toc-element topic="2-2-Compose-Runtime.md">
+                <toc-element topic="Q11-State.md"/>
+                <toc-element topic="Q12-State-hoisting.md">
+                    <toc-element topic="Details-Stateful-vs-Stateless.md"/>
+                </toc-element>
+                <toc-element topic="Q13-remember-rememberSaveable.md"/>
+                <toc-element topic="Q14-rememberCoroutineScope.md"/>
+                <toc-element topic="Q15-Side-Effects.md"/>
+                <toc-element topic="Q16-rememberUpdatedState.md">
+                    <toc-element topic="Details-rememberUpdatedState-내부-구현.md"/>
+                </toc-element>
+                <toc-element topic="Q17-produceState.md">
+                    <toc-element topic="Details-produceState-내부-구현.md"/>
+                </toc-element>
+                <toc-element topic="Q18-snapshotFlow.md"/>
+                <toc-element topic="Q19-derivedStateOf.md"/>
+                <toc-element topic="Q20-Composable-Lifecycle.md"/>
+                <toc-element topic="Q21-SaveableStateHolder.md"/>
+                <toc-element topic="Q22-Snapshot-System.md">
+                    <toc-element topic="Details-Mutable-Snapshot.md"/>
+                </toc-element>
+                <toc-element topic="Q23-mutableStateListOf-mutableStateMapOf.md"/>
+                <toc-element topic="Q24-Flow-Safe-Collection.md"/>
+                <toc-element topic="Q25-CompositionLocals.md">
+                    <toc-element topic="Details-CompositionLocal-Caution.md"/>
+                </toc-element>
             </toc-element>
-            <toc-element topic="Q13-Configuration-Change.md">
-                <toc-element topic="Details-구성-변경-시-Activity는-어떻게-될까.md"/>
+            <toc-element topic="2-3-Compose-UI.md">
+                <toc-element topic="Q26-Modifier.md"/>
+                <toc-element topic="Q27-Layout.md">
+                    <toc-element topic="Details-SubcomposeLayout.md"/>
+                </toc-element>
+                <toc-element topic="Q28-Box.md">
+                    <toc-element topic="Details-BoxWithConstraints.md"/>
+                </toc-element>
+                <toc-element topic="Q29-Arragement-Alignment.md"/>
+                <toc-element topic="Q30-Painter.md"/>
+                <toc-element topic="Q31-Compose-Network-Image-Loading.md"/>
+                <toc-element topic="Q32-Lazy-List-Rendering.md"/>
+                <toc-element topic="Q33-Lazy-List-Pagination.md"/>
+                <toc-element topic="Q34-Compose-Canvas.md"/>
+                <toc-element topic="Q35-graphicsLayer.md"/>
+                <toc-element topic="Q36-Compose-Animations.md"/>
+                <toc-element topic="Q37-Compose-Navigation.md"/>
+                <toc-element topic="Q38-Compose-Preview.md"/>
+                <toc-element topic="Q39-Compose-UI-Testing.md"/>
+                <toc-element topic="Q40-Screenshot-Testing.md"/>
+                <toc-element topic="Q41-Compose-Accessibility.md"/>
             </toc-element>
-            <toc-element topic="Q14-Memory-Management.md"/>
-            <toc-element topic="Q15-ANR.md" />
-            <toc-element topic="Q16-Deep-Link.md"/>
-            <toc-element topic="Q17-Task와-back-stack.md"/>
-            <toc-element topic="Q18-Bundle.md"/>
-            <toc-element topic="Q19-Activity-Fragment-데이터-전달.md">
-                <toc-element topic="Details-Fragment-Result-API.md"/>
+            <toc-element topic="3-1-Architecture.md">
+                <toc-element topic="Q75-SOLID-Principles.md"/>
+                <toc-element topic="Q76-Dependency-Inversion-DI.md"/>
+                <toc-element topic="Q77-Clean-Architecture.md"/>
+                <toc-element topic="Q78-Repository-Pattern.md"/>
+                <toc-element topic="Q79-Multi-Module-Architecture.md"/>
+                <toc-element topic="Q80-UDF-MVVM-MVI.md"/>
+                <toc-element topic="3-1-Testing.md">
+                    <toc-element topic="Q81-Test-Pyramid-Strategy.md"/>
+                    <toc-element topic="Q82-Test-Doubles.md"/>
+                    <toc-element topic="Q83-Coroutine-Flow-Testing.md"/>
+                </toc-element>
             </toc-element>
-            <toc-element topic="Q20-ActivityManager.md"/>
-            <toc-element topic="Q21-SparseArray.md"/>
-            <toc-element topic="Q22-Runtime-Permission.md"/>
-            <toc-element topic="Q23-Looper-Handler-HandlerThread.md"/>
-            <toc-element topic="Q24-Exception-Tracing.md"/>
-            <toc-element topic="Q25-Build-Variants-Flavors.md"/>
-            <toc-element topic="Q26-Accessibility.md"/>
-            <toc-element topic="Q27-File-System.md"/>
-            <toc-element topic="Q28-ART-Dalvik-Dex-Compiler.md"/>
-            <toc-element topic="Q29-APK-AAB.md"/>
-            <toc-element topic="Q30-R8-최적화.md"/>
-            <toc-element topic="Q31-App-크기-줄이기.md"/>
-            <toc-element topic="Q32-Android의-프로세스.md">
-                <toc-element topic="Details-Android-4대-구성요소.md"/>
+            <toc-element topic="1-2-ETC.md">
+                <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>
             </toc-element>
-            <toc-element topic="Q67-Gradle-Dependency-Management.md"/>
-            <toc-element topic="Q68-KSP-Annotation-Processing.md"/>
-            <toc-element topic="Q69-Build-Variants-BuildConfig.md"/>
-            <toc-element topic="Q70-App-Security-Secrets.md"/>
         </toc-element>
-        <toc-element topic="1-2-Android-UI-Views.md">
-            <toc-element topic="Q33-View-Lifecycle.md">
-                <toc-element topic="Details-findViewTreeLifecycleOwner.md"/>
+        <toc-element topic="4-Kotlin.md">
+            <toc-element topic="4-1-Kotlin-Language.md"/>
+            <toc-element topic="4-2-Standard-Library.md"/>
+            <toc-element topic="4-3-Coroutines.md"/>
+            <toc-element topic="4-4-KotlinX.md"/>
+            <toc-element topic="4-5-Compiler-Plugins.md"/>
+            <toc-element topic="4-6-Multiplatform.md"/>
+            <toc-element topic="e-ETC.md">
+                <toc-element topic="E2-Kotlin-Flow.md"/>
+                <toc-element topic="E3-Kotlin-Delegation.md"/>
+                <toc-element topic="E4-Thread-Safe.md"/>
+                <toc-element topic="E5-Coroutine-Structured-Concurrency.md"/>
+                <toc-element topic="E6-Coroutine-Cancellation.md"/>
+                <toc-element topic="E7-Dispatcher-Thread-Model.md"/>
+                <toc-element topic="E8-Concurrency-Thread-Safety.md"/>
+                <toc-element topic="E9-Sealed-Class-Type-Safety.md"/>
+                <toc-element topic="E10-Reified-Generics-Inline.md"/>
+                <toc-element topic="E11-Scope-Functions-Extensions.md"/>
             </toc-element>
-            <toc-element topic="Q34-View-ViewGroup.md"/>
-            <toc-element topic="Q35-ViewStub.md"/>
-            <toc-element topic="Q36-Custom-View.md">
-                <toc-element topic="Details-생성자-JvmOverloads.md"/>
-            </toc-element>
-            <toc-element topic="Q37-Canvas.md"/>
-            <toc-element topic="Q38-invalidate.md"/>
-            <toc-element topic="Q39-ConstraintLayout.md"/>
-            <toc-element topic="Q40-SurfaceView-TextureView.md"/>
-            <toc-element topic="Q41-RecyclerView.md">
-                <toc-element topic="Details-Multiple-Item-Types.md"/>
-                <toc-element topic="Details-DiffUtil.md"/>
-            </toc-element>
-            <toc-element topic="Q42-Dp-Sp.md">
-                <toc-element topic="Details-Sp-사용-시-화면-깨짐-처리.md"/>
-            </toc-element>
-            <toc-element topic="Q43-nine-patch-이미지.md"/>
-            <toc-element topic="Q44-Drawable.md"/>
-            <toc-element topic="Q45-Bitmap.md">
-                <toc-element topic="Details-대용량-Bitmap-캐싱.md"/>
-            </toc-element>
-            <toc-element topic="Q46-애니메이션.md">
-                <toc-element topic="Details-애니메이션-Interpolator.md"/>
-            </toc-element>
-            <toc-element topic="Q47-Window.md">
-                <toc-element topic="Details-WindowManager.md"/>
-                <toc-element topic="Details-PopupWindow.md"/>
-            </toc-element>
-            <toc-element topic="Q48-WebView.md"/>
-        </toc-element>
-        <toc-element topic="1-3-Jetpack-Library.md">
-            <toc-element topic="Q49-AppCompat.md"/>
-            <toc-element topic="Q50-Material-Design-Components.md"/>
-            <toc-element topic="Q51-ViewBinding.md"/>
-            <toc-element topic="Q52-DataBinding.md">
-                <toc-element topic="Details-ViewBinding-vs-DataBinding.md"/>
-            </toc-element>
-            <toc-element topic="Q53-LiveData.md">
-                <toc-element topic="Details-setValue-vs-postValue.md"/>
-            </toc-element>
-            <toc-element topic="Q54-JetPack-ViewModel.md"/>
-            <toc-element topic="Q55-Jetpack-Navigation-Library.md"/>
-            <toc-element topic="Q56-Dagger-2-Hilt.md"/>
-            <toc-element topic="Q57-Jetpack-Paging-Library.md"/>
-            <toc-element topic="Q58-Baseline-Profile.md"/>
-        </toc-element>
-        <toc-element topic="1-4-Business-Logic.md">
-            <toc-element topic="Q59-Long-running-Background-Tasks.md"/>
-            <toc-element topic="Q60-JSON-Serialization.md"/>
-            <toc-element topic="Q61-Network-Requests.md">
-                <toc-element topic="Details-OkHttp-Authenticator-vs-Interceptor.md"/>
-                <toc-element topic="Details-Retrofit-CallAdapter.md"/>
-            </toc-element>
-            <toc-element topic="Q62-Paging-System-RecyclerView.md"/>
-            <toc-element topic="Q63-Network-Image-Loading.md"/>
-            <toc-element topic="Q64-Local-Data-Persistence.md"/>
-            <toc-element topic="Q65-Offline-First.md"/>
-            <toc-element topic="Q66-초기-데이터-LaunchedEffect-vs-ViewModel-init.md"/>
-            <toc-element topic="Q71-HTTP-Status-Codes.md"/>
-            <toc-element topic="Q72-REST-API-Networking.md"/>
-            <toc-element topic="Q73-Error-Handling-Patterns.md"/>
-            <toc-element topic="Q74-Resilience-Design.md"/>
-        </toc-element>
-        <toc-element topic="2-1-Jetpack-Compose.md">
-            <toc-element topic="Q0-Jetpack-Compose-구조.md">
-                <toc-element topic="Details-SlotTable-Link-Table.md"/>
-            </toc-element>
-            <toc-element topic="Q1-Compose-Phase.md"/>
-            <toc-element topic="Q2-Declarative-UI.md"/>
-            <toc-element topic="Q3-Recomposition.md"/>
-            <toc-element topic="Q4-Composable-Function-Internals.md">
-                <toc-element topic="Details-Compose-Compiler-Composer.md"/>
-                <toc-element topic="Details-Composable-Side-Effect-Free.md"/>
-            </toc-element>
-            <toc-element topic="Q5-Stability.md">
-                <toc-element topic="Details-Smart-Recomposition.md"/>
-                <toc-element topic="Details-Stability-Annotations.md"/>
-                <toc-element topic="Details-Stable-vs-Immutable-Misuse.md"/>
-            </toc-element>
-            <toc-element topic="Q6-Compose-Stability-Optimization.md"/>
-            <toc-element topic="Q7-Composition.md"/>
-            <toc-element topic="Q8-XML-Compose-Migration.md">
-                <toc-element topic="Details-Compose-XML-App-Size.md"/>
-            </toc-element>
-            <toc-element topic="Q9-Release-Mode-Performance.md"/>
-            <toc-element topic="Q10-Kotlin-Idioms.md"/>
-        </toc-element>
-        <toc-element topic="2-2-Compose-Runtime.md">
-            <toc-element topic="Q11-State.md"/>
-            <toc-element topic="Q12-State-hoisting.md">
-                <toc-element topic="Details-Stateful-vs-Stateless.md"/>
-            </toc-element>
-            <toc-element topic="Q13-remember-rememberSaveable.md"/>
-            <toc-element topic="Q14-rememberCoroutineScope.md"/>
-            <toc-element topic="Q15-Side-Effects.md"/>
-            <toc-element topic="Q16-rememberUpdatedState.md">
-                <toc-element topic="Details-rememberUpdatedState-내부-구현.md"/>
-            </toc-element>
-            <toc-element topic="Q17-produceState.md">
-                <toc-element topic="Details-produceState-내부-구현.md"/>
-            </toc-element>
-            <toc-element topic="Q18-snapshotFlow.md"/>
-            <toc-element topic="Q19-derivedStateOf.md"/>
-            <toc-element topic="Q20-Composable-Lifecycle.md"/>
-            <toc-element topic="Q21-SaveableStateHolder.md"/>
-            <toc-element topic="Q22-Snapshot-System.md">
-                <toc-element topic="Details-Mutable-Snapshot.md"/>
-            </toc-element>
-            <toc-element topic="Q23-mutableStateListOf-mutableStateMapOf.md"/>
-            <toc-element topic="Q24-Flow-Safe-Collection.md"/>
-            <toc-element topic="Q25-CompositionLocals.md">
-                <toc-element topic="Details-CompositionLocal-Caution.md"/>
-            </toc-element>
-        </toc-element>
-        <toc-element topic="2-3-Compose-UI.md">
-            <toc-element topic="Q26-Modifier.md"/>
-            <toc-element topic="Q27-Layout.md">
-                <toc-element topic="Details-SubcomposeLayout.md"/>
-            </toc-element>
-            <toc-element topic="Q28-Box.md">
-                <toc-element topic="Details-BoxWithConstraints.md"/>
-            </toc-element>
-            <toc-element topic="Q29-Arragement-Alignment.md"/>
-            <toc-element topic="Q30-Painter.md"/>
-            <toc-element topic="Q31-Compose-Network-Image-Loading.md"/>
-            <toc-element topic="Q32-Lazy-List-Rendering.md"/>
-            <toc-element topic="Q33-Lazy-List-Pagination.md"/>
-            <toc-element topic="Q34-Compose-Canvas.md"/>
-            <toc-element topic="Q35-graphicsLayer.md"/>
-            <toc-element topic="Q36-Compose-Animations.md"/>
-            <toc-element topic="Q37-Compose-Navigation.md"/>
-            <toc-element topic="Q38-Compose-Preview.md"/>
-            <toc-element topic="Q39-Compose-UI-Testing.md"/>
-            <toc-element topic="Q40-Screenshot-Testing.md"/>
-            <toc-element topic="Q41-Compose-Accessibility.md"/>
-        </toc-element>
-        <toc-element topic="3-1-Architecture.md">
-            <toc-element topic="Q75-SOLID-Principles.md"/>
-            <toc-element topic="Q76-Dependency-Inversion-DI.md"/>
-            <toc-element topic="Q77-Clean-Architecture.md"/>
-            <toc-element topic="Q78-Repository-Pattern.md"/>
-            <toc-element topic="Q79-Multi-Module-Architecture.md"/>
-            <toc-element topic="Q80-UDF-MVVM-MVI.md"/>
-            <toc-element topic="3-1-Testing.md">
-                <toc-element topic="Q81-Test-Pyramid-Strategy.md"/>
-                <toc-element topic="Q82-Test-Doubles.md"/>
-                <toc-element topic="Q83-Coroutine-Flow-Testing.md"/>
-            </toc-element>
-        </toc-element>
-        <toc-element topic="1-2-ETC.md">
-            <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>
-            <toc-element topic="E2-Kotlin-Flow.md"/>
-            <toc-element topic="E3-Kotlin-Delegation.md"/>
-            <toc-element topic="E4-Thread-Safe.md"/>
-            <toc-element topic="E5-Coroutine-Structured-Concurrency.md"/>
-            <toc-element topic="E6-Coroutine-Cancellation.md"/>
-            <toc-element topic="E7-Dispatcher-Thread-Model.md"/>
-            <toc-element topic="E8-Concurrency-Thread-Safety.md"/>
-            <toc-element topic="E9-Sealed-Class-Type-Safety.md"/>
-            <toc-element topic="E10-Reified-Generics-Inline.md"/>
-            <toc-element topic="E11-Scope-Functions-Extensions.md"/>
         </toc-element>
     </toc-element>
 </instance-profile>

@@ -17,34 +17,34 @@
     </rule>
     <rule id="rn-1-android">
         <description>Renamed 1-Android.md -> Android.md</description>
-        <accepts>1-android.html</accepts>
+        <accepts>1-Android.html</accepts>
     </rule>
     <rule id="rn-4-kotlin">
         <description>Renamed 4-Kotlin.md -> Kotlin.md</description>
-        <accepts>4-kotlin.html</accepts>
+        <accepts>4-Kotlin.html</accepts>
     </rule>
     <rule id="rn-4-1-kotlin-language">
         <description>Renamed 4-1-Kotlin-Language.md -> 1-1-Kotlin-Language.md</description>
-        <accepts>4-1-kotlin-language.html</accepts>
+        <accepts>4-1-Kotlin-Language.html</accepts>
     </rule>
     <rule id="rn-4-2-standard-library">
         <description>Renamed 4-2-Standard-Library.md -> 1-2-Standard-Library.md</description>
-        <accepts>4-2-standard-library.html</accepts>
+        <accepts>4-2-Standard-Library.html</accepts>
     </rule>
     <rule id="rn-4-3-coroutines">
         <description>Renamed 4-3-Coroutines.md -> 1-3-Coroutines.md</description>
-        <accepts>4-3-coroutines.html</accepts>
+        <accepts>4-3-Coroutines.html</accepts>
     </rule>
     <rule id="rn-4-4-kotlinx">
         <description>Renamed 4-4-KotlinX.md -> 1-4-KotlinX.md</description>
-        <accepts>4-4-kotlinx.html</accepts>
+        <accepts>4-4-KotlinX.html</accepts>
     </rule>
     <rule id="rn-4-5-compiler-plugins">
         <description>Renamed 4-5-Compiler-Plugins.md -> 1-5-Compiler-Plugins.md</description>
-        <accepts>4-5-compiler-plugins.html</accepts>
+        <accepts>4-5-Compiler-Plugins.html</accepts>
     </rule>
     <rule id="rn-4-6-multiplatform">
         <description>Renamed 4-6-Multiplatform.md -> 1-6-Multiplatform.md</description>
-        <accepts>4-6-multiplatform.html</accepts>
+        <accepts>4-6-Multiplatform.html</accepts>
     </rule>
 </rules>

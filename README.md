@@ -195,6 +195,7 @@
   * [Kotlin](https://ckgod.github.io/ManifestAndroid/kotlin.html)
     * [1 1 Kotlin Language](https://ckgod.github.io/ManifestAndroid/1-1-kotlin-language.html)
       * [Q0 Null 안정성](https://ckgod.github.io/ManifestAndroid/q0-null-안정성.html)
+        * [Details Null과 참조](https://ckgod.github.io/ManifestAndroid/details-null과-참조.html)
     * [1 2 Standard Library](https://ckgod.github.io/ManifestAndroid/1-2-standard-library.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)

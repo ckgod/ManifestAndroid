@@ -7,7 +7,7 @@
                  start-page="overview.md">
 
     <toc-element topic="overview.md">
-        <toc-element topic="1-Android.md">
+        <toc-element topic="Android.md">
             <toc-element topic="1-1-android-framework.md">
                 <toc-element topic="Q1-Android.md"/>
                 <toc-element topic="Q2-Intent.md"/>
@@ -226,15 +226,15 @@
                 <toc-element topic="E1-RecyclerView-렌더링-과정.md"/>
             </toc-element>
         </toc-element>
-        <toc-element topic="4-Kotlin.md">
-            <toc-element topic="4-1-Kotlin-Language.md">
+        <toc-element topic="Kotlin.md">
+            <toc-element topic="1-1-Kotlin-Language.md">
                 <toc-element topic="Q0-null-안정성.md"/>
             </toc-element>
-            <toc-element topic="4-2-Standard-Library.md"/>
-            <toc-element topic="4-3-Coroutines.md"/>
-            <toc-element topic="4-4-KotlinX.md"/>
-            <toc-element topic="4-5-Compiler-Plugins.md"/>
-            <toc-element topic="4-6-Multiplatform.md"/>
+            <toc-element topic="1-2-Standard-Library.md"/>
+            <toc-element topic="1-3-Coroutines.md"/>
+            <toc-element topic="1-4-KotlinX.md"/>
+            <toc-element topic="1-5-Compiler-Plugins.md"/>
+            <toc-element topic="1-6-Multiplatform.md"/>
             <toc-element topic="e-ETC.md">
                 <toc-element topic="E2-Kotlin-Flow.md"/>
                 <toc-element topic="E3-Kotlin-Delegation.md"/>

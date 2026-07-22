@@ -1,19 +1,19 @@
 # Q4) inner class와 nested class의 차이
 
-Kotlin에서는 클래스 안에 또 다른 클래스를 선언할 수 있습니다. 이때 **바깥 클래스 인스턴스와 어떤 관계를 맺느냐**에 따라 두 종류로 갈립니다. `inner` 키워드 없이 선언하면 **nested class**, `inner`를 붙이면 **inner class**입니다. 이 한 단어 차이가 메모리 동작까지 바꾸는 중요한 구분입니다.
+Kotlin에서는 클래스 내부에 다른 클래스를 정의할 수 있습니다. 이때 바깥 클래스 인스턴스와 어떤 관계를 맺느냐에 따라 두 종류로 나뉩니다. `inner` 키워드 없이 선언하면 **nested class**로 바깥 인스턴스에 대한 참조를 가지지 않고, `inner` 키워드를 붙이면 **inner class**로 바깥 인스턴스에 대한 참조를 유지합니다. 이 한 단어 차이가 캡슐화·인스턴스화·메모리 동작까지 바꾸는 중요한 구분입니다.
 
-> **Java와 정반대라 헷갈린다** — Java는 중첩 클래스가 **기본적으로 바깥 인스턴스를 참조(non-static)** 하고, `static`을 붙여야 분리됩니다. Kotlin은 **정반대로 기본이 분리(nested = static 상당)** 이고, `inner`를 붙여야 바깥을 참조합니다. Java에서 넘어온 사람이 가장 자주 걸려 넘어지는 지점입니다. Kotlin은 "더 안전한 쪽(분리)"을 기본값으로 둔 것입니다.
+> **Java와 기본값이 정반대다** — Java는 중첩 클래스가 기본적으로 바깥 인스턴스를 참조(non-static)하고, `static`을 붙여야 분리됩니다. Kotlin은 정반대로 기본이 분리(nested)이고, `inner`를 붙여야 바깥을 참조합니다. Java에서 넘어온 개발자가 가장 자주 혼동하는 지점입니다. Kotlin은 더 안전한 쪽(분리)을 기본값으로 두었습니다.
 
-## 기본값: nested class {#nested}
+## nested class (기본값) {#nested}
 
-`inner` 없이 선언한 중첩 클래스는 바깥 클래스 인스턴스에 대한 참조를 **가지지 않습니다**. Java의 `static` 중첩 클래스처럼 독립적인 존재라, 바깥 클래스의 프로퍼티나 함수에 (명시적으로 넘겨받지 않는 한) 접근할 수 없습니다.
+`inner` 없이 선언한 중첩 클래스는 바깥 클래스 인스턴스에 대한 참조를 가지지 않습니다. Java의 `static` 중첩 클래스처럼 독립적인 존재이므로, 명시적으로 전달받지 않는 한 바깥 클래스의 프로퍼티나 함수에 접근할 수 없습니다.
 
 ```kotlin
 class OuterClass {
     val outerValue = "Outer Value"
 
     class NestedClass {
-        fun show() = "outerValue에 접근 불가"   // outerValue 참조 시 컴파일 오류
+        fun show() = "outerValue에 접근할 수 없다"   // outerValue 참조 시 컴파일 오류
     }
 }
 
@@ -23,14 +23,14 @@ val nested = OuterClass.NestedClass()
 
 ## inner class {#inner}
 
-`inner` 키워드를 붙이면, 이 클래스는 **자신을 만든 바깥 클래스 인스턴스에 대한 참조를 유지**합니다. 그래서 `private` 멤버까지 포함해 바깥 클래스의 모든 멤버에 자유롭게 접근할 수 있습니다.
+`inner` 키워드를 붙이면 이 클래스는 자신을 생성한 바깥 클래스 인스턴스에 대한 참조를 유지합니다. 그래서 `private` 멤버를 포함해 바깥 클래스의 모든 멤버에 자유롭게 접근할 수 있습니다. 클래스의 동작이 바깥 클래스의 상태와 밀접하게 결합되어 있을 때 유용합니다.
 
 ```kotlin
 class OuterClass(val name: String) {
     private val secret = "Secret Code"
 
     inner class InnerClass {
-        fun reveal() = "Outer name: $name, Secret: $secret"   // 바깥 멤버 접근 OK
+        fun reveal() = "Outer name: $name, Secret: $secret"   // 바깥 멤버 접근 가능
     }
 }
 
@@ -41,7 +41,7 @@ fun main() {
 }
 ```
 
-바깥 인스턴스를 명시적으로 가리켜야 할 때는 `this@OuterClass` 문법을 씁니다(이름이 겹칠 때 특히 유용).
+바깥 클래스 인스턴스를 명시적으로 참조해야 할 때는 `this@OuterClass` 문법을 사용합니다. inner 안에서 `this`는 inner 자신을 가리키므로, 이름이 겹치거나 바깥 인스턴스를 직접 가리켜야 할 때 필요합니다.
 
 ```kotlin
 class OuterClass(val name: String) {
@@ -51,30 +51,34 @@ class OuterClass(val name: String) {
 }
 ```
 
-## 차이 정리 {#difference}
+## nested와 inner의 차이 {#difference}
 
 | | nested class (기본) | inner class (`inner`) |
 |---|---|---|
-| 바깥 인스턴스 참조 | 없음 | 있음(숨은 참조 유지) |
+| 바깥 인스턴스 참조 | 없음 | 있음(참조 유지) |
 | 바깥 멤버 접근 | 불가 | 가능(`private`까지) |
 | 생성 방법 | `Outer.Nested()` | `outer.Inner()` (바깥 인스턴스 필요) |
 | Java 대응 | `static` 중첩 클래스 | non-`static` 중첩 클래스 |
 | 메모리 안전성 | 안전(누수 위험 없음) | 바깥을 붙잡아 둠(누수 주의) |
 
-## 바이트코드로 보는 차이 {#bytecode}
+nested와 inner의 차이를 이해하는 것은 클래스 간 관계와 범위를 설계할 때 중요합니다. 바깥 상태에 접근할 필요가 없다면 기본값인 nested로 두고, 바깥 인스턴스와 결합이 꼭 필요할 때만 inner를 선택하는 것이 안전합니다.
 
-구문 차이는 `inner` 한 단어지만, 컴파일된 결과는 근본적으로 다릅니다.
+## Pro Tips {#pro-tips}
+
+### 바이트코드로 보는 차이 {#bytecode}
+
+구문 차이는 `inner` 한 단어지만, 컴파일된 Java 바이트코드의 구조는 근본적으로 다릅니다. 다음 코드를 디컴파일해 보면 컴파일러의 전략이 드러납니다.
 
 ```kotlin
 class Vehicle(val brand: String) {
-    class Wheel(val rimSize: Int)          // nested
-    inner class Engine(val cylinderCount: Int) {   // inner
-        fun start() = "$brand, $cylinderCount기통"  // 바깥 brand 접근
+    class Wheel(val rimSize: Int)                    // nested
+    inner class Engine(val cylinderCount: Int) {     // inner
+        fun start() = "$brand, $cylinderCount기통"    // 바깥 brand 접근
     }
 }
 ```
 
-이를 디컴파일하면 두 갈래로 갈립니다(핵심만 발췌).
+디컴파일하면 두 갈래로 갈립니다(핵심만 발췌).
 
 ```java
 public final class Vehicle {
@@ -100,17 +104,15 @@ public final class Vehicle {
 }
 ```
 
-핵심은 `this$0`입니다. 컴파일러는 inner class에 `this$0`라는 **숨은 final 필드**를 넣어 바깥 인스턴스를 강하게 붙잡아 둡니다. Kotlin의 `myCar.Engine(4)` 호출이 바이트코드에서는 `new Engine(myCar, 4)`가 되는 이유죠. inner class가 바깥 멤버에 접근할 수 있는 것도, 그리고 **메모리 누수의 원인이 되는 것도** 전부 이 숨은 참조 때문입니다.
+핵심은 `this$0`입니다. 컴파일러는 inner class에 `this$0`라는 숨은 `final` 필드를 넣어 바깥 인스턴스를 강하게 붙잡아 둡니다. Kotlin의 `myCar.Engine(4)` 호출이 바이트코드에서 `new Engine(myCar, 4)`가 되는 이유죠. inner class가 바깥 멤버에 접근할 수 있는 것도, 그리고 메모리 누수의 원인이 되는 것도 전부 이 숨은 참조 때문입니다. 반면 nested는 `static`이라 바깥에 대한 참조 자체가 없어 누수로부터 안전합니다.
 
-## Android에서의 메모리 누수 주의 {#memory-leak}
+정리하면, Kotlin이 안전한 `static` nested를 기본값으로 두고 `inner`를 명시적 옵트인으로 만든 것은 우연이 아니라 설계 의도입니다. 편의를 얻는 대신 생명주기 관리 책임이 따라옵니다.
 
-inner class의 편리함에는 대가가 따릅니다. inner 인스턴스가 바깥 인스턴스보다 **더 오래 살아남으면**, 그 숨은 참조가 바깥 객체의 가비지 컬렉션을 막아 누수가 됩니다. Android에서 대표적인 패턴이 있습니다.
+### Android에서의 메모리 누수 주의 {#memory-leak}
 
-- `Activity` 안의 `inner class`로 만든 리스너·콜백을 오래 사는 곳(싱글톤, 백그라운드 스레드, `Handler` 큐 등)에 넘기면, 그 리스너가 `Activity`를 붙잡아 화면이 닫혀도 `Activity`가 메모리에서 해제되지 않는다.
+inner class의 숨은 참조는 Android에서 흔한 누수의 원인이 됩니다. inner 인스턴스가 바깥 인스턴스보다 오래 살아남으면, 그 참조가 바깥 객체의 가비지 컬렉션을 막기 때문입니다.
 
-해결책은 보통 **inner를 떼고(= static nested로) + 필요한 참조는 `WeakReference`로** 넘기는 것입니다. "기본 nested(분리)가 안전, inner는 명시적 옵트인"이라는 Kotlin의 설계 의도가 그대로 이 조언으로 이어집니다.
-
-> **정리 감각** — 바깥 상태에 접근할 필요가 없다면 그냥 nested(기본)로 두세요. inner는 "바깥 인스턴스와 생명주기를 같이 가도 안전할 때"만 의도적으로 선택하는 기능입니다. 편의를 얻는 대신 생명주기 관리 책임이 따라옵니다.
+대표적인 패턴은 `Activity` 안에서 `inner class`로 만든 리스너·콜백을 오래 사는 곳(싱글톤, 백그라운드 스레드, `Handler` 큐 등)에 넘기는 경우입니다. 그 리스너가 `Activity`를 붙잡고 있어, 화면이 닫혀도 `Activity`가 메모리에서 해제되지 않습니다. 해결책은 보통 **inner를 떼어 static nested로 만들고, 필요한 참조는 `WeakReference`로 넘기는** 것입니다. "기본 nested가 안전, inner는 명시적 옵트인"이라는 설계 의도가 그대로 이 조언으로 이어집니다.
 
 ## 요약 {#summary}
 
@@ -130,12 +132,12 @@ inner class의 편리함에는 대가가 따릅니다. inner 인스턴스가 바
 </def>
 <def title="Q) Kotlin의 기본 중첩 클래스가 Java와 다른 점은?">
 
-Java는 중첩 클래스가 기본적으로 바깥 인스턴스를 참조하는 non-static이고, `static`을 붙여야 분리됩니다. Kotlin은 정반대로 기본이 분리(nested, static 상당)이고 `inner`를 붙여야 바깥을 참조합니다. 즉 Kotlin은 "누수 위험이 없는 안전한 쪽"을 기본값으로 두고, 바깥 참조가 필요한 경우에만 `inner`로 명시적으로 옵트인하도록 설계했습니다.
+Java는 중첩 클래스가 기본적으로 바깥 인스턴스를 참조하는 non-static이고, `static`을 붙여야 분리됩니다. Kotlin은 정반대로 기본이 분리(nested, static 상당)이고 `inner`를 붙여야 바깥을 참조합니다. 즉 Kotlin은 누수 위험이 없는 안전한 쪽을 기본값으로 두고, 바깥 참조가 필요한 경우에만 `inner`로 명시적으로 옵트인하도록 설계했습니다.
 
 </def>
 <def title="Q) inner class가 메모리 누수를 일으킬 수 있는 이유는?">
 
-컴파일러가 inner class에 `this$0`라는 숨은 필드를 주입해 바깥 인스턴스를 **강하게 참조**하기 때문입니다. inner 인스턴스가 바깥 인스턴스보다 오래 살아남으면 이 참조가 바깥 객체의 가비지 컬렉션을 막습니다. Android에서 `Activity`의 inner class 리스너·콜백을 오래 사는 객체(싱글톤, `Handler`, 백그라운드 스레드)에 넘기면 `Activity`가 해제되지 않는 누수가 대표적입니다. static nested class로 바꾸고 필요한 참조를 `WeakReference`로 넘겨 회피합니다.
+컴파일러가 inner class에 `this$0`라는 숨은 필드를 주입해 바깥 인스턴스를 강하게 참조하기 때문입니다. inner 인스턴스가 바깥 인스턴스보다 오래 살아남으면 이 참조가 바깥 객체의 가비지 컬렉션을 막습니다. Android에서 `Activity`의 inner class 리스너·콜백을 오래 사는 객체(싱글톤, `Handler`, 백그라운드 스레드)에 넘기면 `Activity`가 해제되지 않는 누수가 대표적입니다. static nested class로 바꾸고 필요한 참조를 `WeakReference`로 넘겨 회피합니다.
 
 </def>
 <def title="Q) 바깥 클래스 인스턴스를 명시적으로 가리키려면?">

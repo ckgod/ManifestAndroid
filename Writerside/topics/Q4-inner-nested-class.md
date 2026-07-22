@@ -106,6 +106,8 @@ public final class Vehicle {
 
 핵심은 `this$0`입니다. 컴파일러는 inner class에 `this$0`라는 숨은 `final` 필드를 넣어 바깥 인스턴스를 강하게 붙잡아 둡니다. Kotlin의 `myCar.Engine(4)` 호출이 바이트코드에서 `new Engine(myCar, 4)`가 되는 이유죠. inner class가 바깥 멤버에 접근할 수 있는 것도, 그리고 메모리 누수의 원인이 되는 것도 전부 이 숨은 참조 때문입니다. 반면 nested는 `static`이라 바깥에 대한 참조 자체가 없어 누수로부터 안전합니다.
 
+> **`this$0`를 외부에서 직접 쓸 수 있나** — 디컴파일 결과에 `this$0`가 보여도, 이 필드는 컴파일러가 만든 **synthetic** 필드라 일반 소스 코드로는 접근할 수 없습니다. `engine.this$0`처럼 쓰면 컴파일 에러(`cannot find symbol`)가 납니다. (Kotlin은 이 필드를 `public`으로, Java는 package-private으로 내보내지만, synthetic이라는 점 때문에 소스 접근은 어느 쪽이든 막힙니다.) 다만 **리플렉션으로는 읽을 수 있어서**, LeakCanary 같은 누수 탐지 도구가 바로 이 `this$0`를 타고 들어가 무엇이 바깥 인스턴스를 붙잡고 있는지 추적합니다. 결국 누수에서 중요한 것은 "외부에서 접근되느냐"가 아니라 "그 강한 참조가 살아 있어 바깥을 살려 두느냐"입니다.
+
 정리하면, Kotlin이 안전한 `static` nested를 기본값으로 두고 `inner`를 명시적 옵트인으로 만든 것은 우연이 아니라 설계 의도입니다. 편의를 얻는 대신 생명주기 관리 책임이 따라옵니다.
 
 ### Android에서의 메모리 누수 주의 {#memory-leak}

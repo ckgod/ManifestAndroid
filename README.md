@@ -198,6 +198,8 @@
         * [Details Null과 참조](https://ckgod.github.io/ManifestAndroid/details-null과-참조.html)
       * [Q1 Any Unit Nothing](https://ckgod.github.io/ManifestAndroid/q1-any-unit-nothing.html)
       * [Q2 Data Class](https://ckgod.github.io/ManifestAndroid/q2-data-class.html)
+      * [Q3 Sealed Class](https://ckgod.github.io/ManifestAndroid/q3-sealed-class.html)
+      * [Q4 Inner Nested Class](https://ckgod.github.io/ManifestAndroid/q4-inner-nested-class.html)
     * [1 2 Standard Library](https://ckgod.github.io/ManifestAndroid/1-2-standard-library.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)

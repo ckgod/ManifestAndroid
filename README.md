@@ -200,6 +200,8 @@
       * [Q2 Data Class](https://ckgod.github.io/ManifestAndroid/q2-data-class.html)
       * [Q3 Sealed Class](https://ckgod.github.io/ManifestAndroid/q3-sealed-class.html)
       * [Q4 Inner Nested Class](https://ckgod.github.io/ManifestAndroid/q4-inner-nested-class.html)
+      * [Q5 Enum Class](https://ckgod.github.io/ManifestAndroid/q5-enum-class.html)
+      * [Q6 Value Class](https://ckgod.github.io/ManifestAndroid/q6-value-class.html)
     * [1 2 Standard Library](https://ckgod.github.io/ManifestAndroid/1-2-standard-library.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)

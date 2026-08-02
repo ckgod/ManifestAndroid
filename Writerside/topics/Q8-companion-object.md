@@ -149,6 +149,29 @@ MyClass.Companion.INSTANCE.myCompanionFunction()
 
 "인터페이스를 구현할 수 있다"가 실무에서 의미를 갖는 지점은 **클래스 자체가 팩토리나 프로바이더 역할을 타입 안전하게 맡을 수 있다**는 것입니다. 위 예제의 `Factory : Creator`가 그 형태이고, `Creator`를 받는 함수에 `User.Factory`를 그대로 넘길 수 있습니다.
 
+### 참고: Java static은 메모리 어디에 있나 {#static-memory}
+
+비교 대상인 Java `static`이 실제로 어디에 저장되는지는 JDK 버전에 따라 다릅니다. 면접에서 자주 나오는 지점이라 정리해 둡니다.
+
+| | JDK 7 이하 | JDK 8 이후 |
+|---|---|---|
+| 클래스 메타데이터 | PermGen | **Metaspace**(네이티브 메모리, 힙 밖) |
+| `static` 변수 값 | PermGen | **힙**(`java.lang.Class` 객체에 붙음) |
+| 크기 제한 | 고정 | OS 메모리 한도까지 자동 확장 |
+
+JDK 7까지는 클래스 메타데이터·`static` 변수·문자열 상수 풀이 모두 힙 안의 PermGen에 있었고, 크기가 고정이라 클래스를 많이 로드하면 `OutOfMemoryError: PermGen space`가 났습니다. JDK 8에서 PermGen이 제거되면서 **클래스 메타데이터는 Metaspace로, `static` 변수 값은 힙으로** 나뉘었습니다. "static은 Metaspace에 있다"는 흔한 오해이며, Metaspace에 있는 것은 클래스 정보이고 값 자체는 힙입니다.
+
+교과서에 나오는 **메서드 영역(Method Area)** 은 JVM 명세가 정의한 *논리적* 영역 이름입니다. 명세는 그 영역이 물리적으로 어디여야 하는지 규정하지 않고, HotSpot이 이를 PermGen으로 구현했다가 Metaspace로 바꾼 것입니다. 명세가 아니라 구현이 바뀐 것이죠.
+
+이 관점에서 보면 companion object와의 차이가 더 선명해집니다.
+
+- Java `static` 멤버 → 값이 힙의 `Class` 객체에 직접 붙음
+- Kotlin companion object → `INSTANCE`라는 `static` 필드가 힙의 `Companion` 인스턴스를 **가리킴**
+
+즉 companion object 쪽은 참조 하나와 객체 하나가 더 있는 구조입니다.
+
+> **누수 관점에서 둘은 같다** — `static` 필드는 클래스가 언로드되기 전까지 살아 있는 **GC 루트**입니다. 그래서 companion object든 Java `static`이든 여기에 `Context`·`Activity`·`View`를 담아 두면 화면이 닫혀도 해제되지 않습니다. Q4에서 본 `inner class`의 `this$0` 누수와 같은 계열이며, 붙잡는 주체가 바깥 인스턴스냐 클래스냐의 차이일 뿐입니다.
+
 ### 언제 쓰나 {#when}
 
 - **팩토리 메서드** — 주 생성자를 `private`으로 막고 생성 경로를 통제할 때. 가장 대표적인 용도입니다.
@@ -187,6 +210,11 @@ companion object는 둘러싸는 클래스의 `private` 멤버에 접근할 수 
 <def title="Q) Java에서 companion object 멤버를 호출하려면?">
 
 기본적으로는 `Logger.Companion.logMessage("...")`처럼 `Companion` 인스턴스를 거쳐야 합니다. companion object가 실제 객체로 컴파일되기 때문입니다. Java 관점에서는 관용적이지 않으므로, 멤버에 `@JvmStatic`을 붙이면 컴파일러가 둘러싸는 클래스의 바이트코드에 진짜 `static` 멤버를 추가로 생성해 `Logger.logMessage("...")`로 호출할 수 있게 됩니다. 기존 `Companion` 경로도 그대로 남으므로 Kotlin 측 호출에는 영향이 없습니다.
+
+</def>
+<def title="Q) Java의 static 멤버는 메모리 어디에 할당되나요?">
+
+JDK 버전에 따라 다릅니다. JDK 7 이하에서는 클래스 메타데이터·`static` 변수·문자열 상수 풀이 모두 힙 안의 PermGen 영역에 있었고, 크기가 고정이라 클래스를 많이 로드하면 `OutOfMemoryError: PermGen space`가 발생했습니다. JDK 8에서 PermGen이 제거되면서 클래스 메타데이터는 힙 밖의 **Metaspace**(네이티브 메모리)로, `static` 변수 값은 **힙**의 `java.lang.Class` 객체로 나뉘었습니다. "static은 Metaspace에 있다"는 흔한 오해입니다. 참고로 교과서의 메서드 영역(Method Area)은 JVM 명세상의 논리적 영역이고, PermGen과 Metaspace는 HotSpot이 그것을 구현한 방식입니다. 또한 `static` 필드는 클래스가 언로드되기 전까지 GC 루트로 남으므로, Android에서 여기에 `Context`나 `Activity`를 담으면 메모리 누수의 원인이 됩니다.
 
 </def>
 <def title="Q) companion object는 바이트코드에서 어떻게 표현되나요?">

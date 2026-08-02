@@ -14,7 +14,48 @@ class Logger {
 Logger.logMessage("Hello")   // 인스턴스 생성 없이 클래스 이름으로 호출
 ```
 
-Kotlin에는 `static` 키워드가 없습니다. 그 빈자리를 `companion object`가 채웁니다.
+Kotlin에는 `static` 키워드가 없습니다. 그 빈자리를 `companion object`가 채웁니다. 그러니 대체 대상인 `static`이 무엇이었는지부터 짚고 시작하겠습니다.
+
+## Java의 static 되짚기 {#java-static}
+
+`static`을 붙인 멤버는 **개별 인스턴스가 아니라 클래스 자체에 속합니다.** 인스턴스마다 복사본이 생기지 않고 하나만 존재하며, 모든 인스턴스가 그 하나를 공유합니다.
+
+```java
+public class Counter {
+    private static int count = 0;   // 클래스에 하나. 모든 인스턴스가 공유
+    private final String name;      // 인스턴스마다 하나씩
+
+    public Counter(String name) {
+        this.name = name;
+        count++;                    // 누가 만들든 같은 count를 증가시킨다
+    }
+
+    public static int getCount() {  // 인스턴스 없이 호출 가능
+        return count;
+    }
+}
+
+new Counter("a");
+new Counter("b");
+Counter.getCount();   // 2 — 인스턴스가 아니라 클래스 이름으로 호출
+```
+
+여기서 `static`의 성질 네 가지가 드러납니다.
+
+1. **소속이 클래스** — `counter.getCount()`가 아니라 `Counter.getCount()`로 부릅니다.
+2. **인스턴스 없이 접근** — 객체를 하나도 만들지 않아도 씁니다.
+3. **모든 인스턴스가 공유** — `count`는 몇 개를 만들든 하나뿐입니다.
+4. **클래스 로드 시 한 번 초기화** — 인스턴스 생성 시점과 무관합니다.
+
+역할은 크게 셋입니다.
+
+- **상수** — `static final`로 선언하는 클래스 수준 고정값(`Integer.MAX_VALUE`)
+- **유틸리티 메서드** — 인스턴스 상태가 필요 없는 순수 기능(`Math.max()`)
+- **팩토리 메서드·공유 상태** — 생성 진입점(`Integer.valueOf()`)이나 위 예제의 인스턴스 카운터
+
+한 가지 제약이 따라옵니다. `static` 메서드는 **인스턴스 멤버에 접근할 수 없습니다.** 호출 시점에 인스턴스가 존재한다는 보장이 없으므로 `this`가 없기 때문입니다. 위 예제에서 `getCount()`는 `name`을 읽을 수 없습니다.
+
+Kotlin은 이 역할을 `companion object`에 넘겼습니다. 다만 그대로 옮긴 것이 아니라, 접근 방식 자체를 바꿨습니다.
 
 > **왜 키워드가 아니라 객체인가** — `static` 멤버는 언어가 특별 취급하는 예외적인 존재라, 인터페이스를 구현할 수도 인자로 넘길 수도 없습니다. Kotlin은 "클래스 수준의 멤버"를 별도 문법으로 만드는 대신 **진짜 객체 하나를 클래스 안에 넣는** 방식을 택했습니다. 덕분에 클래스 수준 기능이 객체 지향의 규칙을 그대로 따릅니다.
 
@@ -135,49 +176,6 @@ MyClass.Companion.INSTANCE.myCompanionFunction()
 `static` 키워드 없이도 JVM에서 static과 비슷한 접근성을 얻어내는 방식이 바로 이것입니다. 그리고 Java에서 `Logger.Companion.logMessage(...)`를 써야 했던 이유도 여기서 설명됩니다 — 감춰져 있을 뿐 실제로 객체를 거치고 있었던 것입니다.
 
 한 가지 함의가 있습니다. companion object 멤버는 **진짜 static이 아니라 객체 메서드 호출**입니다. `@JvmStatic`은 그 호출 경로를 하나 더 만들어 주는 것이지, 없던 것을 바꾸는 게 아닙니다.
-
-### 그래서 Java의 static이란 {#what-is-static}
-
-비교에 앞서 `static`이 무엇인지부터 짚고 갑니다. Kotlin에는 없는 키워드라 감이 흐릴 수 있습니다.
-
-`static`을 붙인 멤버는 **개별 인스턴스가 아니라 클래스 자체에 속합니다.** 인스턴스마다 복사본이 생기지 않고 하나만 존재하며, 모든 인스턴스가 그 하나를 공유합니다.
-
-```java
-public class Counter {
-    private static int count = 0;   // 클래스에 하나. 모든 인스턴스가 공유
-    private final String name;      // 인스턴스마다 하나씩
-
-    public Counter(String name) {
-        this.name = name;
-        count++;                    // 누가 만들든 같은 count를 증가시킨다
-    }
-
-    public static int getCount() {  // 인스턴스 없이 호출 가능
-        return count;
-    }
-}
-
-new Counter("a");
-new Counter("b");
-Counter.getCount();   // 2 — 인스턴스가 아니라 클래스 이름으로 호출
-```
-
-여기서 `static`의 성질 네 가지가 드러납니다.
-
-1. **소속이 클래스** — `counter.getCount()`가 아니라 `Counter.getCount()`로 부릅니다.
-2. **인스턴스 없이 접근** — 객체를 하나도 만들지 않아도 씁니다.
-3. **모든 인스턴스가 공유** — `count`는 몇 개를 만들든 하나뿐입니다.
-4. **클래스 로드 시 한 번 초기화** — 인스턴스 생성 시점과 무관합니다.
-
-역할은 크게 셋입니다.
-
-- **상수** — `static final`로 선언하는 클래스 수준 고정값(`Integer.MAX_VALUE`)
-- **유틸리티 메서드** — 인스턴스 상태가 필요 없는 순수 기능(`Math.max()`)
-- **팩토리 메서드·공유 상태** — 생성 진입점(`Integer.valueOf()`)이나 위 예제의 인스턴스 카운터
-
-한 가지 제약이 따라옵니다. `static` 메서드는 **인스턴스 멤버에 접근할 수 없습니다.** 호출 시점에 인스턴스가 존재한다는 보장이 없으므로 `this`가 없기 때문입니다. 위 예제에서 `getCount()`는 `name`을 읽을 수 없습니다.
-
-Kotlin에는 이 키워드가 없고, 그 역할을 `companion object`가 대신 맡습니다. 이제 둘이 어떻게 다른지 보겠습니다.
 
 ### static과 무엇이 다른가 {#vs-static}
 

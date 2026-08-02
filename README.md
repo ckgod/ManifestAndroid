@@ -202,6 +202,8 @@
       * [Q4 Inner Nested Class](https://ckgod.github.io/ManifestAndroid/q4-inner-nested-class.html)
       * [Q5 Enum Class](https://ckgod.github.io/ManifestAndroid/q5-enum-class.html)
       * [Q6 Value Class](https://ckgod.github.io/ManifestAndroid/q6-value-class.html)
+      * [Q7 Object](https://ckgod.github.io/ManifestAndroid/q7-object.html)
+      * [Q8 Companion Object](https://ckgod.github.io/ManifestAndroid/q8-companion-object.html)
     * [1 2 Standard Library](https://ckgod.github.io/ManifestAndroid/1-2-standard-library.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)

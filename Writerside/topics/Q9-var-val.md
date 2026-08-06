@@ -10,6 +10,8 @@ val name = "Kotlin"
 // name = "Java"      // 컴파일 오류 — 재할당 불가
 ```
 
+> **이름의 유래** — `var`는 variable, `val`은 value의 약자입니다. ML·Haskell·Scala 같은 함수형 언어가 쓰던 표기를 그대로 가져왔습니다. 그런데 이 이름 자체가 오해의 출발점이기도 합니다. "value"라고 하면 값이 고정된다는 뜻으로 읽히지만, `val`이 고정하는 것은 값이 아니라 참조입니다. Kotlin 공식 문서가 `val`을 immutable이나 value가 아니라 일관되게 **read-only**로 표현하는 이유입니다.
+
 가장 흔한 오해가 여기서 시작됩니다. `val`은 불변(immutable)이 아닙니다.
 
 ## 기본 차이 {#basics}

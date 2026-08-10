@@ -1,6 +1,6 @@
 # Q9) var와 val의 차이점은 무엇인가
 
-`var`는 **가변**, `val`은 **읽기 전용**입니다. 둘의 차이는 "값을 바꿀 수 있느냐"가 아니라 **"참조를 다시 할당할 수 있느냐"** 입니다. 이 한 글자 차이로 변수의 의도가 코드에 드러납니다.
+`var`는 **가변**, `val`은 **읽기 전용**입니다. 둘의 차이는 **변수에 담긴 값을 새 값으로 덮어쓸 수 있느냐**입니다. 담긴 값이 객체 참조라면 그 참조를, `Int` 같은 값이라면 그 숫자 자체를 덮어쓰는 것입니다. 이 한 글자 차이로 변수의 의도가 코드에 드러납니다.
 
 ```kotlin
 var counter = 0
@@ -27,6 +27,8 @@ val name = "Kotlin"
 기본 지침은 단순합니다. **일단 `val`로 쓰고, 재할당이 필요할 때만 `var`로 바꿉니다.** 재할당되지 않는다는 사실이 보장되면 코드를 읽을 때 추적해야 할 상태가 그만큼 줄어듭니다.
 
 ## val은 참조를 고정할 뿐이다 {#reference-not-object}
+
+여기서부터는 `String`·`List`처럼 **참조 타입**을 기준으로 설명합니다. `Int` 같은 값에서 재할당이 실제로 어떻게 일어나는지는 Pro Tips의 "primitive에는 참조가 없는데 재할당이란 무엇인가"에서 따로 다룹니다.
 
 `val`이 보장하는 것은 **참조가 다른 객체를 가리키지 않는다**는 것뿐입니다. 그 객체 내부가 바뀌는 것은 막지 못합니다.
 
@@ -105,6 +107,85 @@ object Config {
 여기서 실무적인 함의가 하나 나옵니다. 라이브러리가 공개한 `const val`을 사용하는 앱은 **그 값을 자기 바이트코드에 복사해 갑니다.** 라이브러리에서 상수 값을 바꾸고 라이브러리만 교체하면, 앱은 옛날 값을 그대로 씁니다. 재컴파일해야 반영됩니다. 모듈 경계를 넘는 상수라면 이 점을 염두에 둬야 합니다.
 
 ## Pro Tips {#pro-tips}
+
+### primitive에는 참조가 없는데 재할당이란 무엇인가 {#primitive-reassign}
+
+`val`을 "참조를 바꿀 수 없다"로 설명하면 곧바로 의문이 생깁니다. **`Int`에는 참조가 없는데 `var count = 1; count += 1`은 무엇을 바꾸는 것인가?**
+
+답부터 말하면 **담긴 값을 덮어쓰는 것**입니다. 참조를 교체하는 것이 아니라 그 자리의 숫자가 바뀝니다. 세 가지 경우로 나눠 바이트코드를 확인해 보겠습니다.
+
+**1. 지역 변수**
+
+```kotlin
+var count = 1
+count += 1
+```
+
+```java
+iconst_1      // 상수 1을 스택에
+istore_0      // 지역변수 슬롯 0에 저장
+iinc 0, 1     // 슬롯 0의 값을 그 자리에서 1 증가
+```
+
+`iinc`는 로컬 슬롯의 `int`를 직접 증가시키는 전용 명령입니다. 참조도 없고 새 객체도 만들지 않습니다. 그 칸의 숫자가 1에서 2로 바뀔 뿐입니다.
+
+**2. 클래스 프로퍼티**
+
+```kotlin
+class H {
+    var count: Int = 1
+    fun inc() { count += 1 }
+}
+```
+
+```java
+getfield count:I    // 필드에서 int 읽기
+iconst_1
+iadd                // 더하기
+putfield count:I    // 필드에 새 값 덮어쓰기
+```
+
+필드는 `private int count`로 생성됩니다. 역시 참조가 개입하지 않고, 필드 안의 숫자를 덮어씁니다.
+
+**3. 박싱되는 경우**
+
+`Int?`처럼 nullable이면 `java.lang.Integer`로 박싱되어 **진짜 참조가 생깁니다.**
+
+```kotlin
+var boxed: Int? = 1
+boxed = boxed!! + 1
+```
+
+```java
+getfield boxed:Ljava/lang/Integer;   // Integer 참조 읽기
+Integer.intValue()                   // 언박싱 → int
+iconst_1 / iadd                      // int로 계산
+Integer.valueOf(int)                 // 다시 박싱 → 새 Integer
+putfield boxed:Ljava/lang/Integer;   // 새 참조로 덮어쓰기
+```
+
+여기서도 **기존 `Integer` 객체의 내부를 고치지 않습니다.** `Integer`는 불변 객체라 고칠 수 없고, 새 인스턴스를 만들어 참조를 갈아끼웁니다.
+
+정리하면 세 경우 모두 동작이 같습니다.
+
+| | 저장되는 것 | `+= 1`이 하는 일 |
+|---|---|---|
+| 지역 `Int` | 슬롯의 `int` 값 | 슬롯 값을 덮어씀(`iinc`) |
+| 프로퍼티 `Int` | 필드의 `int` 값 | 필드 값을 덮어씀 |
+| 프로퍼티 `Int?` | `Integer` 참조 | 새 `Integer`를 만들어 참조를 덮어씀 |
+
+**제자리 수정(in-place)은 어느 쪽도 아닙니다.** 그래서 `var`/`val`의 차이를 "참조 재할당"이 아니라 **"담긴 값을 덮어쓸 수 있는가"** 로 잡는 편이 모든 타입에 들어맞습니다.
+
+> **층이 다른 두 문장** — "Kotlin에는 primitive가 없고 `Int`도 클래스다"와 "JVM의 `int`에는 참조가 없다"는 둘 다 맞습니다. Kotlin 언어 레벨에서 `Int`는 클래스이고, 컴파일러가 가능하면 JVM `int`로 매핑하되 nullable·제네릭·컬렉션처럼 참조가 필요한 자리에서는 `Integer`로 박싱합니다.
+
+한 가지 덧붙이면, **지역 변수의 `val`과 `var`는 바이트코드가 완전히 같습니다.**
+
+```java
+val x = 1  →  iconst_1 / istore_0
+var x = 1  →  iconst_1 / istore_0
+```
+
+JVM은 지역 변수에 `val`/`var` 구분을 두지 않습니다. 재할당 금지는 순전히 컴파일러가 검사하는 규칙입니다. 반면 클래스 프로퍼티는 다릅니다. `val`이면 `private final` 필드가 되고 setter 자체가 생성되지 않습니다.
 
 ### 바이트코드로 보는 val과 var {#bytecode}
 
@@ -191,7 +272,8 @@ error: 'var' property 'var x: Int' defined in 'A2' cannot be overridden by 'val'
 4. **읽기 전용 타입도 완전하지 않음**: `List`는 불변 타입이 아니라 읽기 전용 인터페이스. 캐스팅으로 우회 가능.
 5. **const val**: 컴파일 타임 상수로 호출부에 인라인됨. 라이브러리 상수 변경 시 사용처 재컴파일 필요.
 6. **오버라이드**: `val` → `var`는 가능, `var` → `val`은 불가. `val`은 `final`이 아님.
-7. **기본 전략**: 일단 `val`, 재할당이 꼭 필요할 때만 `var`.
+7. **재할당의 실체**: `Int`처럼 참조가 없는 타입은 담긴 값을 덮어씀(`iinc`, `putfield`). 박싱된 `Integer`도 불변이라 새 인스턴스로 참조를 교체. 제자리 수정은 어느 쪽도 아님.
+8. **기본 전략**: 일단 `val`, 재할당이 꼭 필요할 때만 `var`.
 
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) var와 val의 차이점은 무엇인가요?">
@@ -202,6 +284,16 @@ error: 'var' property 'var x: Int' defined in 'A2' cannot be overridden by 'val'
 <def title="Q) val로 선언하면 값이 바뀌지 않는다고 볼 수 있나요?">
 
 아닙니다. `val`은 참조 재할당만 막을 뿐 객체 내부 상태 변경은 막지 못합니다. `val numbers = mutableListOf(1, 2, 3)`에서 `numbers.add(4)`는 정상 동작하며, 막히는 것은 `numbers = 다른리스트` 같은 재할당뿐입니다. 또한 커스텀 getter를 정의하면 접근할 때마다 다른 값이 반환될 수도 있습니다. 정확히는 참조 불변성은 보장하되 객체 가변성은 그대로 남는다고 설명하는 것이 맞습니다. 진짜 불변성이 필요하면 불변 타입을 쓰거나 `kotlinx.collections.immutable` 같은 라이브러리를 사용해야 합니다.
+
+</def>
+<def title="Q) Int처럼 참조가 없는 타입은 재할당이 어떻게 이루어지나요?">
+
+담긴 값을 덮어쓰는 방식입니다. 지역 변수 `var count = 1`에 `count += 1`을 하면 바이트코드에서 `iinc` 명령이 나오는데, 이는 로컬 변수 슬롯의 `int` 값을 그 자리에서 증가시키는 전용 명령입니다. 참조도 없고 새 객체도 만들지 않습니다. 클래스 프로퍼티라면 `private int` 필드에 대해 `getfield` → `iadd` → `putfield` 순서로 필드 값을 덮어씁니다. `Int?`처럼 nullable이라 `Integer`로 박싱되는 경우에만 실제 참조가 생기는데, 이때도 `Integer`가 불변 객체라 내부를 고치지 못하고 `Integer.valueOf()`로 새 인스턴스를 만들어 참조를 교체합니다. 세 경우 모두 제자리 수정이 아니라 덮어쓰기이므로, `var`와 `val`의 차이는 "참조 재할당"보다 "담긴 값을 덮어쓸 수 있는가"로 설명하는 편이 모든 타입에 들어맞습니다.
+
+</def>
+<def title="Q) 지역 변수의 val과 var는 바이트코드가 다른가요?">
+
+같습니다. `val x = 1`과 `var x = 1` 모두 `iconst_1` / `istore_0`으로 컴파일되며, JVM은 지역 변수에 `val`/`var` 구분을 두지 않습니다. 재할당 금지는 컴파일러가 검사하는 규칙일 뿐 런타임에는 흔적이 남지 않습니다. 반면 클래스 프로퍼티는 다릅니다. `val`이면 `private final` 필드가 생성되고 setter 자체가 만들어지지 않으므로, 바이트코드 수준에서 구분됩니다.
 
 </def>
 <def title="Q) val과 const val의 차이는 무엇인가요?">

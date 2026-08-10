@@ -7,6 +7,30 @@ Kotlin의 프로퍼티는 **필드가 아니라 접근자(getter/setter)** 입�
 
 이름이 비슷하지만 만들어지는 주체와 제어 범위가 다릅니다.
 
+## 프로퍼티란 {#what-is-property}
+
+Kotlin에는 **필드를 직접 선언하는 문법이 없습니다.** 클래스에 값을 두려면 프로퍼티를 선언합니다.
+
+프로퍼티는 Java에서 따로 쓰던 세 가지를 하나로 묶은 것입니다.
+
+```java
+// Java — 필드 하나에 메서드 둘
+public class User {
+    private String name;
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+}
+```
+
+```kotlin
+// Kotlin — 한 줄
+class User {
+    var name: String = ""
+}
+```
+
+`user.name`은 필드를 직접 읽는 것처럼 보이지만 실제로는 `getName()` 호출입니다. 즉 **프로퍼티의 본체는 값이 아니라 접근자**이고, 값을 담을 공간은 필요할 때 뒤에 따로 붙습니다. 그 공간이 이 문서의 주제인 backing field입니다.
+
 ## 기본 접근자가 생략하고 있는 것 {#default-accessors}
 
 "프로퍼티는 접근자다"라는 말이 곧바로 와닿지는 않습니다. `val num = 1`처럼 평범하게 선언하면 접근자를 쓴 기억이 없기 때문입니다.

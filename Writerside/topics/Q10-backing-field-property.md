@@ -2,10 +2,61 @@
 
 Kotlin의 프로퍼티는 **필드가 아니라 접근자(getter/setter)** 입니다. 값을 실제로 저장할 공간이 필요하면 그때 저장소가 따로 붙는데, 그 저장소를 만드는 방식이 두 가지입니다.
 
-- **backing field** — 컴파일러가 **암시적으로** 만들어 주는 저장소. `field` 키워드로만 접근합니다.
+- **backing field** — 컴파일러가 **암시적으로** 만들어 주는 저장소. `field` 키워드로만 **직접** 접근합니다.
 - **backing property** — 개발자가 **명시적으로** 선언하는 별도 프로퍼티. 보통 `_name`처럼 밑줄을 붙입니다.
 
 이름이 비슷하지만 만들어지는 주체와 제어 범위가 다릅니다.
+
+## 기본 접근자가 생략하고 있는 것 {#default-accessors}
+
+"프로퍼티는 접근자다"라는 말이 곧바로 와닿지는 않습니다. `val num = 1`처럼 평범하게 선언하면 접근자를 쓴 기억이 없기 때문입니다.
+
+사실은 생략되어 있을 뿐입니다. 아래 두 코드는 **완전히 같습니다.**
+
+```kotlin
+// 우리가 쓰는 것
+class T {
+    val num = 1
+    var cnt = 0
+}
+
+// 컴파일러가 보는 것
+class T {
+    val num = 1
+        get() = field
+    var cnt = 0
+        get() = field
+        set(value) { field = value }
+}
+```
+
+말뿐이 아니라 실제로 그렇습니다. 두 파일을 각각 컴파일해 `javap -c`로 뽑아 비교하면 **파일명 한 줄을 빼고 바이트코드가 완전히 일치합니다.**
+
+```
+1c1
+< Compiled from "a.kt"
+---
+> Compiled from "b.kt"
+```
+
+생성된 getter도 하는 일이 그것뿐입니다.
+
+```java
+public final int getNum();
+  getfield num:I
+  ireturn
+```
+
+여기서 backing field가 왜 생기는지가 자연스럽게 설명됩니다. 기본 접근자가 `field`를 읽고 쓰기 때문에, **그 `field`가 가리킬 저장소가 있어야 하는 것**입니다. 반대로 `field`를 한 번도 쓰지 않는 접근자만 있다면 저장할 값이 없으므로 필드도 만들어지지 않습니다.
+
+정리하면 순서가 이렇습니다.
+
+1. Kotlin 프로퍼티는 언제나 접근자다
+2. 기본 접근자는 `get() = field` / `set(value) { field = value }`를 생략한 것이다
+3. 그 접근자가 값을 둘 곳이 필요해서 backing field가 생긴다
+4. 접근자가 `field`를 안 건드리면 backing field는 아예 생기지 않는다
+
+> **지역 변수는 프로퍼티가 아니다** — 위 설명은 클래스 프로퍼티와 최상위 프로퍼티에만 해당합니다. 함수 안의 `val num = 1`은 프로퍼티가 아니라 지역 변수라서 접근자도 backing field도 없고, JVM 지역 변수 슬롯(`istore`)에 그대로 저장됩니다. 실제로 지역 변수에 `get()`을 붙이면 `error: variable expected`로 컴파일이 거부됩니다.
 
 ## backing field {#backing-field}
 
@@ -76,6 +127,48 @@ class MainViewModel : ViewModel() {
 정리하면 이렇습니다. **저장하는 값 자체는 그대로인데 읽고 쓸 때 로직만 끼우고 싶다면 backing field**, **밖에 보여 줄 타입을 좁히고 싶다면 backing property** 입니다.
 
 ## Pro Tips {#pro-tips}
+
+### 프로퍼티 이름으로 읽는 것과 field는 다르다 {#name-vs-field}
+
+기본 접근자가 `get() = field`라면, `num`으로 읽는 것과 `field`로 읽는 것이 결국 같은 것 아니냐는 의문이 생깁니다. **다릅니다.** 커스텀 접근자를 붙이면 곧바로 갈립니다.
+
+```kotlin
+class C {
+    var name: String = "Default"
+        get() = field.uppercase()
+}
+```
+
+- `name`으로 읽으면 → getter를 거쳐 `"DEFAULT"`
+- `field`가 들고 있는 값은 → `"Default"`
+
+같은 것이라면 이렇게 갈릴 수 없습니다. 바이트코드로 보면 경로가 셋으로 나뉩니다.
+
+```kotlin
+class C {
+    val plain: Int = 1                   // 기본 접근자
+    fun readPlain() = plain
+
+    var name: String = "Default"         // 커스텀 getter
+        get() = field.uppercase()
+    fun readName() = name
+}
+```
+
+| 접근 지점 | 생성되는 코드 |
+|---|---|
+| 기본 접근자, 클래스 **내부** | `getfield plain:I` — 필드 직접 |
+| 커스텀 getter, 클래스 **내부** | `invokevirtual getName()` — getter 호출 |
+| getter 본체의 `field` | `getfield name:...` — 필드 직접 |
+
+첫 번째 줄이 혼동의 원인입니다. 같은 클래스 안에서 기본 접근자 프로퍼티를 읽으면 컴파일러가 getter 호출을 생략하고 필드를 직접 읽습니다. 하지만 이것은 **"getter가 `field` 반환밖에 하지 않으니 건너뛰어도 결과가 같다"는 최적화**입니다. 커스텀 getter가 붙는 순간 건너뛸 수 없게 되어 두 번째 줄처럼 `invokevirtual`로 돌아갑니다.
+
+정리하면 이렇습니다.
+
+- 프로퍼티 이름으로 읽기 → **접근자를 통해** 값을 얻는다(결과적으로 필드에 닿을 수는 있음)
+- `field`로 읽기 → **접근자를 무시하고** 저장소를 직접 본다
+
+`field`가 backing field에 **직접** 접근하는 유일한 수단이라는 말은 이런 의미입니다. 접근자 밖에서 `field`를 쓰면 컴파일 오류이고, 접근자 안에서 `field` 대신 프로퍼티 이름을 쓰면 아래의 무한 재귀에 빠집니다.
 
 ### backing field는 항상 생기지 않는다 {#when-generated}
 
@@ -166,18 +259,31 @@ class MainViewModel : ViewModel() {
 
 > **TL;DR** — backing field는 컴파일러가 암시적으로 만들어 주는 저장소로 접근자 안에서 `field`로만 접근하며, 프로퍼티와 타입이 같습니다. backing property는 `_name`처럼 직접 선언하는 별도 프로퍼티로, 노출 타입과 내부 타입을 다르게 가져갈 수 있어 `MutableStateFlow`/`StateFlow` 패턴의 근거가 됩니다. backing field는 기본 접근자를 쓰거나 `field`를 참조할 때만 생성되므로, 커스텀 getter만 있는 `val`은 저장 공간을 차지하지 않습니다.
 
-1. **backing field**: 컴파일러가 암시적으로 생성. 접근자 안에서 `field`로만 접근. 프로퍼티와 타입 동일.
-2. **backing property**: 개발자가 명시적으로 선언(`private val _x`). 노출 타입과 내부 타입을 분리할 수 있음.
-3. **선택 기준**: 값 가공·검증만 필요하면 backing field, 타입을 좁혀 노출하려면 backing property.
-4. **생성 조건**: backing field는 기본 접근자 사용 또는 `field` 참조 시에만 생성. 커스텀 getter만 있는 `val`은 필드 없음.
-5. **함정**: 접근자에서 `field` 대신 프로퍼티 이름을 쓰면 무한 재귀. 컴파일 경고 없이 런타임 `StackOverflowError`.
-6. **Android 실무**: `private val _uiState = MutableStateFlow(...)` + `val uiState: StateFlow<...>`가 대표 사례.
-7. **Kotlin 2.4**: 명시적 백킹 필드(`field = ...`)로 이 패턴을 한 줄로 대체 가능. 단 `final val`에만 적용.
+1. **기본 접근자의 정체**: `val num = 1`은 `get() = field`를 생략한 것. 두 코드의 바이트코드가 일치함. 그래서 저장소(backing field)가 필요해짐.
+2. **backing field**: 컴파일러가 암시적으로 생성. 접근자 안에서 `field`로만 **직접** 접근. 프로퍼티와 타입 동일.
+3. **backing property**: 개발자가 명시적으로 선언(`private val _x`). 노출 타입과 내부 타입을 분리할 수 있음.
+4. **선택 기준**: 값 가공·검증만 필요하면 backing field, 타입을 좁혀 노출하려면 backing property.
+5. **생성 조건**: backing field는 기본 접근자 사용 또는 `field` 참조 시에만 생성. 커스텀 getter만 있는 `val`은 필드 없음.
+6. **이름 vs field**: 프로퍼티 이름은 접근자를 거치고, `field`는 저장소를 직접 봄. 커스텀 getter가 있으면 두 값이 갈림.
+7. **함정**: 접근자에서 `field` 대신 프로퍼티 이름을 쓰면 무한 재귀. 컴파일 경고 없이 런타임 `StackOverflowError`.
+8. **지역 변수는 프로퍼티가 아님**: 함수 안의 `val num = 1`은 접근자도 backing field도 없는 JVM 지역 변수.
+9. **Android 실무**: `private val _uiState = MutableStateFlow(...)` + `val uiState: StateFlow<...>`가 대표 사례.
+10. **Kotlin 2.4**: 명시적 백킹 필드(`field = ...`)로 이 패턴을 한 줄로 대체 가능. 단 `final val`에만 적용.
 
 <deflist collapsible="true" default-state="collapsed">
 <def title="Q) backing field와 backing property의 차이점은 무엇인가요?">
 
 backing field는 커스텀 접근자에서 `field` 키워드를 사용할 때 컴파일러가 암시적으로 생성하는 저장 공간으로, 해당 프로퍼티에 종속되어 있고 타입도 프로퍼티와 동일합니다. 값을 저장하면서 읽고 쓸 때 가공이나 검증 로직을 끼우고 싶을 때 사용합니다. 반면 backing property는 `private var _age`처럼 개발자가 직접 선언하는 별도 프로퍼티로, 저장소를 공개 프로퍼티와 분리하기 때문에 노출 타입과 내부 타입을 다르게 가져갈 수 있습니다. 내부에서는 `MutableStateFlow`로 다루고 외부에는 `StateFlow`로만 노출하는 패턴이 대표적입니다.
+
+</def>
+<def title="Q) val num = 1처럼 선언하면 접근자가 없는 것 아닌가요?">
+
+생략되어 있을 뿐 존재합니다. `val num = 1`은 `val num = 1` + `get() = field`와 완전히 같고, `var cnt = 0`은 여기에 `set(value) { field = value }`가 더해진 것과 같습니다. 두 코드를 각각 컴파일해 `javap`으로 비교하면 파일명 줄을 제외하고 바이트코드가 일치하며, 생성된 getter는 `getfield` 후 반환하는 것이 전부입니다. 이 사실이 backing field가 생기는 이유도 함께 설명해 줍니다. 기본 접근자가 `field`를 읽고 쓰기 때문에 그 `field`가 가리킬 저장소가 필요한 것이고, 반대로 접근자가 `field`를 전혀 사용하지 않으면 저장할 값이 없으므로 필드도 만들어지지 않습니다.
+
+</def>
+<def title="Q) 프로퍼티 이름으로 접근하는 것과 field 키워드는 같은 건가요?">
+
+다릅니다. 프로퍼티 이름은 접근자를 통한 접근이고, `field`는 접근자를 우회해 저장소를 직접 보는 것입니다. `var name: String = "Default"`에 `get() = field.uppercase()`를 붙이면 `name`으로 읽을 때는 `"DEFAULT"`가 나오지만 `field`가 들고 있는 값은 `"Default"`이므로, 둘이 같은 것이라면 이런 차이가 생길 수 없습니다. 다만 기본 접근자를 가진 프로퍼티를 같은 클래스 안에서 읽으면 컴파일러가 getter 호출을 생략하고 `getfield`로 직접 읽는데, 이는 getter가 `field` 반환밖에 하지 않아 결과가 같기 때문에 적용되는 최적화입니다. 커스텀 getter가 붙으면 이 최적화가 사라지고 클래스 내부에서도 `invokevirtual`로 getter를 호출합니다.
 
 </def>
 <def title="Q) backing field는 항상 생성되나요?">

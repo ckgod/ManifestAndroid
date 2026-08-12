@@ -242,6 +242,8 @@
                 <toc-element topic="Q9-var-val.md"/>
                 <toc-element topic="Q10-backing-field-property.md"/>
                 <toc-element topic="Q11-delegated-property.md"/>
+                <toc-element topic="Q12-lazy-lateinit.md"/>
+                <toc-element topic="Q13-visibility-modifiers.md"/>
             </toc-element>
             <toc-element topic="1-2-Standard-Library.md"/>
             <toc-element topic="1-3-Coroutines.md"/>

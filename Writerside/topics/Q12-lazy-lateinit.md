@@ -51,8 +51,28 @@ class A {
 이유는 하나로 이어집니다. `lateinit`은 **"아직 값이 없음"을 내부적으로 `null`로 표시**합니다.
 
 - `val`은 나중에 대입할 수 없으니 애초에 성립하지 않습니다.
-- `Int` 같은 primitive는 `null`을 담을 수 없어 "없음"을 표현할 방법이 없습니다.
+- `Int` 같은 primitive는 백킹 필드가 JVM 원시 타입(`int`)이라 표시로 쓸 `null` 자리가 없습니다.
 - 타입이 이미 nullable이면 `null`이 "미초기화"인지 "값이 null"인지 구분되지 않습니다.
+
+primitive 항목은 오해하기 쉬운 지점입니다. "`Int`는 `null`을 못 담아서"라고만 하면, non-null인 `String`도 마찬가지 아니냐는 반문이 바로 나옵니다. 실제로 코틀린 타입 레벨에서는 둘 다 `null`을 담을 수 없습니다.
+
+**차이는 코틀린 타입이 아니라 백킹 필드의 JVM 표현에 있습니다.**
+
+```kotlin
+class Holder {
+    lateinit var s: String
+    var plainInt: Int = 0
+}
+```
+
+```
+public java.lang.String s;      // 참조 필드
+private int plainInt;           // JVM 원시 필드
+```
+
+코틀린의 non-null은 **컴파일 타임 약속**일 뿐이고, `String` 백킹 필드는 평범한 참조라 물리적으로는 `null`에서 시작합니다. `lateinit`은 정확히 그 틈을 이용합니다 — 필드를 `null`인 채로 두고, 읽는 지점마다 검사를 끼워 넣어 약속을 유지합니다.
+
+반면 `Int`는 JVM `int`로 컴파일되어 `0`에서 시작하고, `0`은 멀쩡한 정상값입니다. 미초기화를 표시할 여분의 상태가 **값 공간에 존재하지 않습니다.** 그래서 금지됩니다.
 
 > **primitive를 지연 초기화하고 싶다면** — `by lazy`를 쓰거나, `var count: Int? = null`로 두고 직접 검사하거나, `0` 같은 기본값으로 시작하면 됩니다. `lateinit`만 안 되는 것이지 방법이 없는 것은 아닙니다.
 
@@ -155,19 +175,66 @@ Q11에서 본 대로 `var` 프로퍼티를 위임하려면 delegate에 `setValue
 
 ### 로컬·최상위 lateinit {#local-lateinit}
 
-현재 `lateinit`은 **클래스 프로퍼티**에만 쓸 수 있습니다. 함수 안의 지역 변수나 파일 최상위에는 붙일 수 없습니다.
-
-[KEEP 제안서](https://github.com/Kotlin/KEEP/blob/master/proposals/local-and-top-level-lateinit-vars.md)는 이 범위를 넓히자고 논의 중입니다. 지역 변수에서 nullable 타입 없이 지연 초기화를 쓸 수 있게 하자는 것입니다.
+`lateinit`은 클래스 프로퍼티뿐 아니라 **함수 안의 지역 변수와 파일 최상위 프로퍼티에도** 쓸 수 있습니다. [KEEP 제안서](https://github.com/Kotlin/KEEP/blob/master/proposals/local-and-top-level-lateinit-vars.md)로 논의되던 내용이 **Kotlin 1.2에 반영**되었습니다.
 
 ```kotlin
+lateinit var topLevel: String   // 최상위 프로퍼티
+
 fun foo() {
-    lateinit var x: Bar
+    lateinit var x: Bar         // 지역 변수
     synchronized(lock) { x = bar() }
     // ...
 }
 ```
 
-지금은 `var x: Bar? = null` 후 `!!`로 쓰거나, `by lazy`로 대체합니다.
+미초기화 상태로 읽으면 클래스 프로퍼티와 똑같이 `UninitializedPropertyAccessException`이 납니다.
+
+### 지역 변수의 null은 컴파일러가 직접 깐다 {#local-aconst-null}
+
+여기서 한 가지 의문이 생깁니다. 앞에서 `lateinit`은 미초기화를 `null`로 표시한다고 했는데, **JVM은 지역 변수에 기본값을 주지 않습니다.** 필드와 배열 원소만 자동으로 0/`null`로 채워지고, 지역 변수는 사용 전에 반드시 대입돼 있어야 하며 검증기가 이를 강제합니다.
+
+그럼 지역 `lateinit`은 무엇을 검사하는 걸까요. 바이트코드를 보면 답이 나옵니다.
+
+```
+0: aconst_null      // 컴파일러가 null을 직접 밀어 넣는다
+1: astore_0
+2: invokestatic  bar()
+5: astore_0         // 실제 대입
+6: aload_0
+7: dup
+8: ifnonnull     18
+11: pop
+12: ldc           "x"
+14: invokestatic  Intrinsics.throwUninitializedPropertyAccessException
+18: ...
+```
+
+첫 두 명령이 핵심입니다. JVM이 `null`을 주지 않으니 **컴파일러가 슬롯 맨 앞에 `aconst_null`을 손수 깔아 둡니다.** 그 뒤는 [앞에서 본 필드 케이스](#bytecode)와 동일하게 `ifnonnull` 검사입니다. `null`을 표시로 쓰고 읽는 지점에서 검사한다는 뼈대는 어디서든 같습니다.
+
+정리하면 세 경우의 메커니즘은 같고, `null`을 누가 준비하느냐만 다릅니다.
+
+| 대상 | 미초기화 표시용 `null` |
+|---|---|
+| 필드 | JVM이 자동으로 채움 (참조 필드 기본값) |
+| 지역 변수 | 컴파일러가 `aconst_null`로 직접 깔아 줌 |
+| primitive | 깔아 줄 `null` 자체가 없음 → 금지 |
+
+### 지역 변수에서는 isInitialized를 못 쓴다 {#local-isinitialized}
+
+남아 있는 제약이 하나 있습니다. `::prop.isInitialized`는 **클래스 프로퍼티에만** 쓸 수 있고 지역 변수에는 쓸 수 없습니다.
+
+```kotlin
+fun foo() {
+    lateinit var x: Bar
+    println(::x.isInitialized)   // error
+}
+```
+
+```
+error: references to variables aren't supported yet
+```
+
+지역 변수에 대한 참조(`::x`) 자체가 아직 지원되지 않기 때문입니다. 지역에서 초기화 여부를 확인해야 한다면 `lateinit` 대신 nullable로 선언하고 직접 검사해야 합니다.
 
 ### Android에서 무엇을 쓸까 {#android}
 
@@ -215,7 +282,7 @@ class DetailActivity : AppCompatActivity() {
 </def>
 <def title="Q) lateinit을 Int나 nullable 타입에 쓸 수 없는 이유는?">
 
-`lateinit`이 "아직 초기화되지 않음"을 내부적으로 `null`로 표시하기 때문입니다. `Int` 같은 primitive 타입은 `null`을 담을 수 없어 미초기화 상태를 표현할 방법이 없고, 타입이 이미 nullable이면 `null`이 "미초기화"인지 "값이 실제로 null"인지 구분할 수 없습니다. 같은 이유로 `val`에도 붙일 수 없는데, 나중에 대입한다는 전제 자체가 성립하지 않기 때문입니다. 컴파일러가 각각 `not allowed on properties of primitive types`, `not allowed on properties of a type with nullable upper bound`, `allowed only on mutable properties`로 명확히 알려 줍니다. primitive를 지연 초기화하려면 `by lazy`를 쓰거나 nullable로 선언해 직접 검사하면 됩니다.
+`lateinit`이 "아직 초기화되지 않음"을 내부적으로 `null`로 표시하기 때문입니다. `Int`는 백킹 필드가 JVM 원시 타입(`int`)이라 `0`에서 시작하고, `0`은 정상값이므로 미초기화를 표시할 여분의 상태가 없습니다. 코틀린 타입 레벨에서는 non-null `String`도 `null`을 담을 수 없지만, `String`의 백킹 필드는 참조라서 물리적으로 `null`에서 시작한다는 점이 다릅니다. 타입이 이미 nullable이면 `null`이 "미초기화"인지 "값이 실제로 null"인지 구분할 수 없습니다. 같은 이유로 `val`에도 붙일 수 없는데, 나중에 대입한다는 전제 자체가 성립하지 않기 때문입니다. 컴파일러가 각각 `not allowed on properties of primitive types`, `not allowed on properties of a type with nullable upper bound`, `allowed only on mutable properties`로 명확히 알려 줍니다. primitive를 지연 초기화하려면 `by lazy`를 쓰거나 nullable로 선언해 직접 검사하면 됩니다.
 
 </def>
 <def title="Q) lateinit은 바이트코드로 어떻게 컴파일되나요?">

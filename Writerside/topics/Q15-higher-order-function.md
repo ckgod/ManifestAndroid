@@ -1,4 +1,4 @@
-# Q15) 고차 함수란 무엇이며 어떤 장점이 있는가
+# Q15) 고차 함수와 그 장점
 
 고차 함수는 **함수를 인자로 받거나, 함수를 반환하거나, 둘 다 하는 함수**입니다. 함수를 값처럼 다룰 수 있다는 뜻이고, 이게 Kotlin에서 `map` · `filter` · 콜백 같은 것들이 성립하는 근거입니다.
 
@@ -34,7 +34,7 @@ val add = operation("add")
 add(3, 4)   // 7
 ```
 
-## 어디에 쓰이나 {#usage}
+## 사용 사례 {#usage}
 
 **컬렉션 연산**이 가장 많이 만나는 사례입니다. `map` · `filter` · `reduce`가 전부 고차 함수입니다.
 
@@ -59,7 +59,7 @@ performAction { println("완료") }
 
 ## Pro Tips {#pro-tips}
 
-### 함수 타입은 FunctionN 인터페이스가 된다 {#function-interface}
+### 함수 타입과 FunctionN 인터페이스 {#function-interface}
 
 JVM에는 "함수 타입"이라는 게 없습니다. 그래서 Kotlin은 표준 라이브러리의 인터페이스로 바꿔 표현합니다.
 
@@ -81,7 +81,7 @@ public static final int higherOrder(Function1<? super Integer, Integer> op)
 
 호출은 `op.invoke(10)`이 됩니다. `(Int) -> Int`가 인터페이스 하나로 치환되는 것뿐이라, 특별한 런타임 지원이 필요하지 않습니다.
 
-### 람다는 더 이상 익명 클래스가 아니다 {#indy}
+### 람다 컴파일 방식의 변화 {#indy}
 
 오래된 자료는 "람다가 익명 클래스로 컴파일된다"고 설명합니다. **현재 컴파일러는 그렇게 하지 않습니다.**
 
@@ -115,7 +115,7 @@ Java 8의 람다와 같은 방식이고, Kotlin은 JVM 타겟 1.8 이상에서 �
 
 > 값을 캡처하지 않는 람다는 `LambdaMetafactory`가 인스턴스를 한 번만 만들어 재사용합니다. 매 호출마다 객체가 생기지 않습니다.
 
-### inline이 없애는 비용 {#inline}
+### inline의 최적화 {#inline}
 
 고차 함수를 쓰면 `Function1` 인스턴스를 만들고 `invoke`를 호출하는 비용이 생깁니다. `inline`은 그것마저 없앱니다.
 

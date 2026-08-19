@@ -209,6 +209,8 @@
       * [Q11 Delegated Property](https://ckgod.github.io/ManifestAndroid/q11-delegated-property.html)
       * [Q12 Lazy Lateinit](https://ckgod.github.io/ManifestAndroid/q12-lazy-lateinit.html)
       * [Q13 Visibility Modifiers](https://ckgod.github.io/ManifestAndroid/q13-visibility-modifiers.html)
+      * [Q14 Init Block](https://ckgod.github.io/ManifestAndroid/q14-init-block.html)
+      * [Q15 Higher Order Function](https://ckgod.github.io/ManifestAndroid/q15-higher-order-function.html)
     * [1 2 Standard Library](https://ckgod.github.io/ManifestAndroid/1-2-standard-library.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)

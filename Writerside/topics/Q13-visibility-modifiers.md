@@ -1,4 +1,4 @@
-# Q13) 가시성 수정자에는 어떤 것들이 있는가
+# Q13) 가시성 수정자의 종류와 범위
 
 Kotlin의 가시성 수정자는 **`public` · `private` · `protected` · `internal`** 네 가지입니다. 아무것도 붙이지 않으면 **`public`** 입니다.
 
@@ -34,7 +34,7 @@ protected fun topProtected() = 2
 error: modifier 'protected' is not applicable to 'top level function'.
 ```
 
-## 모듈이란 무엇인가 {#module}
+## 모듈의 범위 {#module}
 
 `internal`을 이해하려면 "모듈"의 범위를 알아야 합니다. **함께 컴파일되는 Kotlin 파일의 묶음**입니다.
 
@@ -72,7 +72,7 @@ Kotlin은 패키지를 가시성 경계로 쓰지 않습니다. 대신 그 자�
 
 ## Pro Tips {#pro-tips}
 
-### internal은 바이트코드에 존재하지 않는다 {#internal-bytecode}
+### 바이트코드로 보는 internal {#internal-bytecode}
 
 JVM이 아는 접근 수준은 `public` · `protected` · `private` · package-private 넷뿐입니다. **"모듈"이라는 개념이 없습니다.**
 
@@ -145,7 +145,7 @@ public final class Vis3Kt {
 }
 ```
 
-### 실무에서 무엇을 기본으로 둘까 {#practice}
+### 실무 기본값 선택 {#practice}
 
 기본값이 `public`이라는 점이 함정입니다. **아무 생각 없이 쓰면 전부 공개 API가 됩니다.**
 

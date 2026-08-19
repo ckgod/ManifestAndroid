@@ -1,4 +1,4 @@
-# Q10) backing field와 backing property의 차이점은 무엇인가
+# Q10) backing field와 backing property의 차이
 
 Kotlin의 프로퍼티는 **필드가 아니라 접근자(getter/setter)** 입니다. 값을 실제로 저장할 공간이 필요하면 그때 저장소가 따로 붙는데, 그 저장소를 만드는 방식이 두 가지입니다.
 
@@ -152,7 +152,7 @@ class MainViewModel : ViewModel() {
 
 ## Pro Tips {#pro-tips}
 
-### 프로퍼티 이름으로 읽는 것과 field는 다르다 {#name-vs-field}
+### 프로퍼티 이름과 field의 차이 {#name-vs-field}
 
 기본 접근자가 `get() = field`라면, `num`으로 읽는 것과 `field`로 읽는 것이 결국 같은 것 아니냐는 의문이 생깁니다. **다릅니다.** 커스텀 접근자를 붙이면 곧바로 갈립니다.
 
@@ -194,7 +194,7 @@ class C {
 
 `field`가 backing field에 **직접** 접근하는 유일한 수단이라는 말은 이런 의미입니다. 접근자 밖에서 `field`를 쓰면 컴파일 오류이고, 접근자 안에서 `field` 대신 프로퍼티 이름을 쓰면 아래의 무한 재귀에 빠집니다.
 
-### backing field는 항상 생기지 않는다 {#when-generated}
+### backing field의 생성 조건 {#when-generated}
 
 흔한 오해입니다. backing field는 **필요할 때만** 생성됩니다. 조건은 둘 중 하나입니다.
 
@@ -227,7 +227,7 @@ public final class C {
 
 `computed`에는 필드가 없습니다. 매번 계산해서 돌려주는 함수일 뿐이므로 저장할 것이 없기 때문입니다. 그래서 **커스텀 getter만 있는 `val`은 메모리를 차지하지 않습니다.** 파생값을 프로퍼티로 노출해도 객체 크기가 늘지 않는다는 뜻입니다.
 
-### 자기 자신을 참조하면 무한 재귀에 빠진다 {#recursion-trap}
+### 자기 참조와 무한 재귀 함정 {#recursion-trap}
 
 `field` 대신 프로퍼티 이름을 쓰면 getter가 자기를 다시 호출합니다.
 
@@ -273,7 +273,7 @@ class MainViewModel : ViewModel() {
 
 이 제약을 벗어나거나, 공개 표현과 내부 표현이 실제로 서로 다른 객체여야 하는 경우(`asStateFlow()`처럼 래핑이 필요한 경우)에는 여전히 전통적인 backing property 패턴을 씁니다.
 
-### `_` 접두사는 규칙이 아니라 관례다 {#naming}
+### `_` 접두사 관례 {#naming}
 
 `_users`, `_uiState`의 밑줄은 컴파일러가 알아보는 문법이 아닙니다. [Kotlin 코딩 컨벤션](https://kotlinlang.org/docs/coding-conventions.html#names-for-backing-properties)이 권장하는 이름 규칙일 뿐입니다.
 

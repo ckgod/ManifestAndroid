@@ -1,4 +1,4 @@
-# Q9) var와 val의 차이점은 무엇인가
+# Q9) var와 val의 차이
 
 `var`는 **가변**, `val`은 **읽기 전용**입니다. 둘의 차이는 **변수에 담긴 값을 새 값으로 덮어쓸 수 있느냐**입니다. 담긴 값이 객체 참조라면 그 참조를, `Int` 같은 값이라면 그 숫자 자체를 덮어쓰는 것입니다. 이 한 글자 차이로 변수의 의도가 코드에 드러납니다.
 
@@ -26,7 +26,7 @@ val name = "Kotlin"
 
 기본 지침은 단순합니다. **일단 `val`로 쓰고, 재할당이 필요할 때만 `var`로 바꿉니다.** 재할당되지 않는다는 사실이 보장되면 코드를 읽을 때 추적해야 할 상태가 그만큼 줄어듭니다.
 
-## val은 참조를 고정할 뿐이다 {#reference-not-object}
+## val이 고정하는 것 {#reference-not-object}
 
 여기서부터는 `String`·`List`처럼 **참조 타입**을 기준으로 설명합니다. `Int` 같은 값에서 재할당이 실제로 어떻게 일어나는지는 Pro Tips의 "primitive에는 참조가 없는데 재할당이란 무엇인가"에서 따로 다룹니다.
 
@@ -52,7 +52,7 @@ val list: List<Int> = mutableListOf(1, 2, 3)
 
 `List`는 **불변 타입이 아니라 읽기 전용 인터페이스**입니다. 실제 객체가 `MutableList`라면 캐스팅으로 우회할 수 있습니다. 외부에 넘길 때 방어가 필요하면 `toList()`로 복사본을 주는 편이 안전합니다.
 
-## val이 매번 같은 값을 준다는 보장도 없다 {#custom-getter}
+## 커스텀 getter와 val {#custom-getter}
 
 한 걸음 더 나갑니다. `val`에 커스텀 getter를 달면 **접근할 때마다 다른 값이 나옵니다.**
 
@@ -108,7 +108,7 @@ object Config {
 
 ## Pro Tips {#pro-tips}
 
-### primitive에는 참조가 없는데 재할당이란 무엇인가 {#primitive-reassign}
+### primitive의 재할당 메커니즘 {#primitive-reassign}
 
 `val`을 "참조를 바꿀 수 없다"로 설명하면 곧바로 의문이 생깁니다. **`Int`에는 참조가 없는데 `var count = 1; count += 1`은 무엇을 바꾸는 것인가?**
 
@@ -217,7 +217,7 @@ public final class E {
 
 Kotlin에서 프로퍼티에 직접 접근하는 것처럼 보이는 `obj.readOnly`는 실제로는 `obj.getReadOnly()` 호출입니다. 같은 클래스 안에서는 컴파일러가 필드 직접 접근으로 최적화합니다.
 
-### val을 var로 오버라이드할 수 있다 {#override}
+### val과 var의 오버라이드 관계 {#override}
 
 `val`은 "getter만 있는 프로퍼티"이므로, 하위 클래스에서 setter를 추가하는 것은 계약 위반이 아닙니다.
 
@@ -239,7 +239,7 @@ error: 'var' property 'var x: Int' defined in 'A2' cannot be overridden by 'val'
 
 이 사실은 `val`이 곧 `final`이 아니라는 근거이기도 합니다. **인터페이스에 `val`을 선언했다고 해서 구현체가 그 값을 고정한다는 보장은 없습니다.**
 
-### Java의 final과 같은가 {#vs-final}
+### Java final과의 차이 {#vs-final}
 
 같지 않습니다. 위치에 따라 다릅니다.
 

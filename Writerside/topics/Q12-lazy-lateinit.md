@@ -1,4 +1,4 @@
-# Q12) lazy 위임과 lateinit의 차이점은 무엇인가
+# Q12) lazy 위임과 lateinit의 차이
 
 둘 다 "선언 시점에 값을 정하지 않는다"는 목적은 같지만, **누가 초기화를 책임지는가**가 다릅니다.
 
@@ -101,7 +101,7 @@ public final boolean ready();
 
 ## Pro Tips {#pro-tips}
 
-### lateinit의 바이트코드는 위치에 따라 다르다 {#bytecode}
+### 가시성에 따른 lateinit 바이트코드 {#bytecode}
 
 `lateinit var`는 바이트코드에서 **평범한 nullable 필드**가 됩니다. 필드 자체는 `null`을 막지 않습니다. 약속을 강제하는 것은 **읽는 쪽에 삽입되는 검사**입니다.
 
@@ -156,7 +156,7 @@ Q10에서 본 것과 같은 원리입니다. `private`은 외부에 노출할 �
 
 > **예외 이름이 중요한 이유** — 검사가 없었다면 `config.settings`에서 그냥 `NullPointerException`이 났을 것입니다. `UninitializedPropertyAccessException`은 **어떤 프로퍼티가 초기화되지 않았는지**를 이름으로 알려 줍니다. 실패를 빠르고 명확하게 만드는 장치입니다.
 
-### lazy를 var에 못 쓰는 것은 특별 규칙이 아니다 {#lazy-val-only}
+### lazy가 val 전용인 이유 {#lazy-val-only}
 
 "`lazy`는 `val` 전용"이라고 외우기 쉬운데, 실제로는 **위임 규약을 만족하지 못해서** 생기는 결과입니다.
 
@@ -189,7 +189,7 @@ fun foo() {
 
 미초기화 상태로 읽으면 클래스 프로퍼티와 똑같이 `UninitializedPropertyAccessException`이 납니다.
 
-### 지역 변수의 null은 컴파일러가 직접 깐다 {#local-aconst-null}
+### 지역 변수의 null 준비 주체 {#local-aconst-null}
 
 여기서 한 가지 의문이 생깁니다. 앞에서 `lateinit`은 미초기화를 `null`로 표시한다고 했는데, **JVM은 지역 변수에 기본값을 주지 않습니다.** 필드와 배열 원소만 자동으로 0/`null`로 채워지고, 지역 변수는 사용 전에 반드시 대입돼 있어야 하며 검증기가 이를 강제합니다.
 
@@ -219,7 +219,7 @@ fun foo() {
 | 지역 변수 | 컴파일러가 `aconst_null`로 직접 깔아 줌 |
 | primitive | 깔아 줄 `null` 자체가 없음 → 금지 |
 
-### 지역 변수에서는 isInitialized를 못 쓴다 {#local-isinitialized}
+### 지역 변수의 isInitialized 제약 {#local-isinitialized}
 
 남아 있는 제약이 하나 있습니다. `::prop.isInitialized`는 **클래스 프로퍼티에만** 쓸 수 있고 지역 변수에는 쓸 수 없습니다.
 
@@ -236,7 +236,7 @@ error: references to variables aren't supported yet
 
 지역 변수에 대한 참조(`::x`) 자체가 아직 지원되지 않기 때문입니다. 지역에서 초기화 여부를 확인해야 한다면 `lateinit` 대신 nullable로 선언하고 직접 검사해야 합니다.
 
-### Android에서 무엇을 쓸까 {#android}
+### Android에서의 선택 기준 {#android}
 
 판단 기준은 **값을 누가 언제 주느냐**입니다.
 

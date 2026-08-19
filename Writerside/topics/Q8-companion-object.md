@@ -1,4 +1,4 @@
-# Q8) companion object란 무엇인가
+# Q8) companion object의 정체와 쓰임
 
 `companion object`는 **클래스에 딸린 싱글톤 객체**입니다. 클래스의 인스턴스가 아니라 클래스 자체에 속하는 함수와 프로퍼티를 여기에 둡니다. 다른 언어의 `static` 멤버를 대신하는 자리지만, 실제로는 객체이기 때문에 `static`이 못 하는 일까지 할 수 있습니다.
 
@@ -177,7 +177,7 @@ MyClass.Companion.INSTANCE.myCompanionFunction()
 
 한 가지 함의가 있습니다. companion object 멤버는 **진짜 static이 아니라 객체 메서드 호출**입니다. `@JvmStatic`은 그 호출 경로를 하나 더 만들어 주는 것이지, 없던 것을 바꾸는 게 아닙니다.
 
-### static과 무엇이 다른가 {#vs-static}
+### static과의 차이 {#vs-static}
 
 | | Java `static` | Kotlin `companion object` |
 |---|---|---|
@@ -190,7 +190,7 @@ MyClass.Companion.INSTANCE.myCompanionFunction()
 
 "인터페이스를 구현할 수 있다"가 실무에서 의미를 갖는 지점은 **클래스 자체가 팩토리나 프로바이더 역할을 타입 안전하게 맡을 수 있다**는 것입니다. 위 예제의 `Factory : Creator`가 그 형태이고, `Creator`를 받는 함수에 `User.Factory`를 그대로 넘길 수 있습니다.
 
-### 참고: Java static은 메모리 어디에 있나 {#static-memory}
+### 참고: Java static의 메모리 위치 {#static-memory}
 
 비교 대상인 Java `static`이 실제로 어디에 저장되는지는 JDK 버전에 따라 다릅니다. 면접에서 자주 나오는 지점이라 정리해 둡니다.
 
@@ -213,7 +213,7 @@ JDK 7까지는 클래스 메타데이터·`static` 변수·문자열 상수 풀�
 
 > **누수 관점에서 둘은 같다** — `static` 필드는 클래스가 언로드되기 전까지 살아 있는 **GC 루트**입니다. 그래서 companion object든 Java `static`이든 여기에 `Context`·`Activity`·`View`를 담아 두면 화면이 닫혀도 해제되지 않습니다. Q4에서 본 `inner class`의 `this$0` 누수와 같은 계열이며, 붙잡는 주체가 바깥 인스턴스냐 클래스냐의 차이일 뿐입니다.
 
-### 언제 쓰나 {#when}
+### 사용 시점 {#when}
 
 - **팩토리 메서드** — 주 생성자를 `private`으로 막고 생성 경로를 통제할 때. 가장 대표적인 용도입니다.
 - **클래스 수준 상수** — 개념적으로 클래스 정의의 일부인 값을 모을 때.

@@ -134,7 +134,7 @@ val x: String = if (condition) "ok" else throw RuntimeException()
 public class Nothing private constructor()
 ```
 
-### Unit과 Nothing, 무엇이 다른가 {#unit-vs-nothing}
+### Unit과 Nothing의 차이 {#unit-vs-nothing}
 
 가장 자주 나오는 혼동이 "그냥 `Unit`을 쓰면 되지 않나?"입니다. 실제로 `throw`만 하는 함수의 반환 타입을 `Unit`으로 바꿔도 예외는 똑같이 던져지니, 언뜻 같아 보입니다. 하지만 두 타입이 컴파일러에게 전하는 **의미가 정반대**입니다.
 

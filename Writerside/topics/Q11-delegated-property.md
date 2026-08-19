@@ -1,4 +1,4 @@
-# Q11) 위임 프로퍼티(delegated property)란 무엇인가
+# Q11) 위임 프로퍼티(delegated property)
 
 위임 프로퍼티는 프로퍼티의 **getter와 setter 로직을 다른 객체에 맡기는** 기능입니다. `by` 키워드로 프로퍼티와 delegate 객체를 연결하면, 프로퍼티에 접근할 때마다 그 객체가 대신 처리합니다.
 
@@ -133,7 +133,7 @@ override val value: T
 
 > **선택 기준** — 단일 스레드에서만 접근한다고 확신할 수 있으면 `NONE`이 가장 빠릅니다. Android에서 메인 스레드에서만 쓰는 뷰 참조 같은 경우가 여기 해당합니다. 확신이 없으면 기본값을 그대로 둡니다.
 
-### 바이트코드는 delegate마다 다르다 {#bytecode}
+### delegate별 바이트코드 차이 {#bytecode}
 
 `by`가 붙은 프로퍼티는 값을 담는 필드 대신 **delegate 객체를 담는 `$delegate` 필드**로 컴파일됩니다. 그런데 그 뒤 모습이 delegate 종류에 따라 갈립니다.
 

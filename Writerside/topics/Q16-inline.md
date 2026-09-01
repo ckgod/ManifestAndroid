@@ -1,6 +1,8 @@
 # Q16) inline 키워드의 장점과 한계
 
-고차 함수는 편하지만 공짜가 아닙니다. 람다를 넘길 때마다 그 람다를 담을 객체가 만들어지고, 실행할 때는 `invoke()`를 한 번 거칩니다. `inline`은 **함수 본문과 넘긴 람다를 호출 지점에 그대로 펼쳐** 이 두 비용을 없앱니다.
+고차 함수는 편하지만 공짜가 아닙니다. 람다는 그 자체로 떠다니는 코드가 아니라, 함수에 넘기려면 **그 코드를 담은 객체 하나**가 되어야 합니다. 그래서 람다를 넘길 때마다 객체가 하나 만들어지고, 실행할 때는 그 객체의 `invoke()`를 한 번 거칩니다 — 코드를 곧장 실행하는 대신 한 단계 돌아가는 셈입니다.
+
+한 번이면 티도 안 나지만, 자주 부르는 자리에서는 이 작은 비용이 쌓입니다. 그래서 나온 것이 `inline`입니다. `inline`은 **함수 본문과 넘긴 람다를 호출 지점에 그대로 펼쳐** 객체 생성도 `invoke()`도 아예 없앱니다.
 
 ```kotlin
 inline fun performOperation(operation: () -> Unit) {
@@ -71,31 +73,45 @@ fun main() {
 
 ## 비지역 반환 {#non-local-return}
 
-성능만큼 중요한 것이 `inline`이 열어 주는 문법입니다.
+성능만큼 중요한 것이 `inline`이 열어 주는 문법입니다. 인라인을 썼을 때와 안 썼을 때가 어떻게 갈리는지 나란히 보겠습니다.
 
-일반 람다 안에서 쓰는 `return`은 **람다 자신만** 빠져나옵니다. 바깥 함수까지 끝내려면 `return@label`을 써야 하고, 그마저도 람다를 벗어나지는 못합니다.
-
-인라인된 람다는 다릅니다. 코드가 바깥 함수 안에 그대로 펼쳐지므로, 그 안의 `return`은 **바깥 함수 전체를 종료**합니다. 이것을 비지역 반환(non-local return)이라고 합니다.
+먼저 **인라인이 아닌** 고차 함수입니다. 여기에 넘긴 람다 안에서는 `return`으로 바깥 함수를 끝낼 수 없습니다. 시도하면 컴파일 오류입니다.
 
 ```kotlin
-inline fun findFirst(numbers: List<Int>, predicate: (Int) -> Boolean): Int? {
-    for (number in numbers) {
-        if (predicate(number)) {
-            return number
-        }
-    }
-    return null
+fun forEachPlain(list: List<Int>, action: (Int) -> Unit) {
+    for (e in list) action(e)
 }
 
 fun firstEven(numbers: List<Int>): Int? {
-    numbers.forEach {
-        if (it % 2 == 0) return it   // firstEven() 자체를 종료한다
+    forEachPlain(numbers) {
+        if (it % 2 == 0) return it   // 컴파일 오류: 'return' is not allowed here
     }
     return null
 }
 ```
 
-`forEach`가 `inline`이기 때문에 그 안의 `return`이 `firstEven`을 끝냅니다. 덕분에 인라인 함수는 `for`나 `while` 같은 언어 내장 구문처럼 자연스럽게 읽힙니다. 표준 라이브러리의 컬렉션 함수들이 대부분 `inline`인 이유이기도 합니다.
+람다가 별도의 객체(`invoke()`를 가진)로 컴파일되기 때문입니다. 그 객체는 나중에 어디서 불릴지 알 수 없어, 그 안의 `return`이 `firstEven`까지 닿을 방법이 없습니다. 할 수 있는 건 `return@forEachPlain`으로 **람다 자신만** 빠져나오는 것뿐입니다.
+
+이제 같은 코드에서 함수만 **인라인**으로 바꾸겠습니다.
+
+```kotlin
+inline fun forEachInline(list: List<Int>, action: (Int) -> Unit) {
+    for (e in list) action(e)
+}
+
+fun firstEven(numbers: List<Int>): Int? {
+    forEachInline(numbers) {
+        if (it % 2 == 0) return it   // OK: firstEven() 자체를 종료한다
+    }
+    return null
+}
+```
+
+이번엔 됩니다. 인라인되면 람다 코드가 `firstEven` 안에 그대로 펼쳐지므로, 그 `return`은 처음부터 `firstEven`에 쓰인 `return`과 다르지 않기 때문입니다. 이렇게 람다 안의 `return`이 바깥 함수를 끝내는 것을 비지역 반환(non-local return)이라고 합니다.
+
+한 가지 짚을 것 — 비지역 반환이 끝내는 대상은 **람다를 작성한 함수**, 곧 인라인 함수를 호출한 쪽입니다. 위에서는 람다를 `firstEven` 안에서 썼으니 `firstEven`이 끝납니다. `forEachInline`이 아닙니다.
+
+표준 라이브러리의 `forEach`가 바로 이 `inline` 형태라, `for` 루프처럼 중간에 `return`으로 빠져나올 수 있습니다. 컬렉션 함수 대부분이 `inline`인 이유이기도 합니다.
 
 ## noinline과 crossinline {#modifiers}
 
@@ -143,14 +159,28 @@ inline fun runOnThread(crossinline block: () -> Unit) {
 
 `inline`이 열어 주는 것이 하나 더 있습니다. 타입 매개변수를 `reified`로 선언하면 **런타임에 그 타입을 알 수 있습니다.**
 
+먼저 **안 되는** 쪽부터 보겠습니다. 일반 제네릭 함수에서는 `T`가 무엇인지 런타임에 알 수 없어 타입 검사를 할 수 없습니다.
+
 ```kotlin
-inline fun <reified T> isInstance(value: Any): Boolean = value is T
+fun <T> isInstance(value: Any): Boolean {
+    return value is T      // 컴파일 오류: Cannot check for instance of erased type: T
+}
+```
+
+제네릭 타입은 컴파일이 끝나면 지워지기 때문입니다(타입 소거). 런타임에는 `T`가 남아 있지 않아 `value is T`를 판단할 근거가 없습니다.
+
+`inline` 함수로 만들고 `T`에 `reified`를 붙이면 됩니다.
+
+```kotlin
+inline fun <reified T> isInstance(value: Any): Boolean {
+    return value is T      // OK
+}
 
 isInstance<String>("Hello")   // true
 isInstance<Int>("Hello")      // false
 ```
 
-원래 제네릭 타입은 런타임에 지워져 `value is T` 같은 코드를 쓸 수 없습니다. 인라인되면서 `T` 자리에 실제 타입이 박히기 때문에 가능해지는 일이고, 그래서 `reified`는 `inline` 함수에서만 쓸 수 있습니다. 자세한 동작은 Q17에서 다룹니다.
+인라인되면서 호출 지점마다 `T` 자리에 실제 타입이 박히기 때문입니다. `isInstance<String>(...)`은 `value is String`으로, `isInstance<Int>(...)`는 `value is Int`로 펼쳐집니다. 소거될 제네릭이 애초에 남지 않는 셈입니다. 그래서 `reified`는 `inline` 함수에서만 쓸 수 있습니다. 자세한 동작은 Q17에서 다룹니다.
 
 ## inline의 한계 {#limits}
 

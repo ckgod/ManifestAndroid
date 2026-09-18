@@ -255,7 +255,11 @@
                 <toc-element topic="Q22-null-plus-null.md"/>
                 <toc-element topic="Q23-DSL.md"/>
             </toc-element>
-            <toc-element topic="1-2-Standard-Library.md"/>
+            <toc-element topic="1-2-Standard-Library.md">
+                <toc-element topic="Q24-collection-types.md">
+                    <toc-element topic="Details-listOf와-emptyList.md"/>
+                </toc-element>
+            </toc-element>
             <toc-element topic="1-3-Coroutines.md"/>
             <toc-element topic="1-4-KotlinX.md"/>
             <toc-element topic="1-5-Compiler-Plugins.md"/>

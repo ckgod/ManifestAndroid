@@ -259,6 +259,7 @@
                 <toc-element topic="Q24-collection-types.md">
                     <toc-element topic="Details-listOf와-emptyList.md"/>
                 </toc-element>
+                <toc-element topic="Q25-transformation-operators.md"/>
             </toc-element>
             <toc-element topic="1-3-Coroutines.md"/>
             <toc-element topic="1-4-KotlinX.md"/>

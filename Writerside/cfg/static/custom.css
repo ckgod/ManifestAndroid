@@ -1,0 +1,36 @@
+/*
+ * 좁은 화면에서 문서 자체가 스크롤되도록 되돌린다.
+ *
+ * Writerside 기본 템플릿은 html/body 를 화면 높이에 고정하고, 실제 스크롤은
+ * .layout--scroll-container 가 overflow-y:auto 로 담당한다. 이러면 브라우저가
+ * "페이지는 멈춰 있다"고 보기 때문에 모바일 크롬의 주소창·북마크바 자동 숨김이
+ * 아예 발동하지 않는다. 폴드를 펼쳐 세로로 읽을 때 그 두 줄이 화면을 크게 잡아먹는다.
+ *
+ * 젯브레인 공식 문서(Writerside·IntelliJ)도 같은 구조라 동일하게 안 숨겨진다.
+ * 설정으로 바꾸는 항목은 없어서(buildprofiles 의 레이아웃 설정은 목차 너비와
+ * 본문 최대 너비뿐) CSS 로 푸는 것이 유일한 방법이다.
+ *
+ * 실측(헤드리스 크롬 CDP, q25 페이지):
+ *   420 / 704 / 933px 폭 모두 문서 스크롤 false → true,
+ *   문서 높이 뷰포트와 동일 → 8000px 대, 내부 스크롤러 2개 → 0개.
+ *   사이드바(272px)는 세 폭 모두 그대로 유지된다.
+ *
+ * 대가: 상단 빵부스러기 헤더가 고정을 잃고 본문과 함께 스크롤된다.
+ *       주소창이 숨는 것과 같은 원리라 분리할 수 없다.
+ *
+ * 1000px 이하에서만 적용한다. 데스크탑 레이아웃은 건드리지 않는다.
+ */
+@media (max-width: 1000px) {
+    html,
+    body {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow: visible !important;
+    }
+
+    .layout--scroll-container {
+        overflow-y: visible !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+}

@@ -261,6 +261,7 @@
                 </toc-element>
                 <toc-element topic="Q25-transformation-operators.md"/>
                 <toc-element topic="Q26-iterator.md"/>
+                <toc-element topic="Q27-sequence.md"/>
             </toc-element>
             <toc-element topic="1-3-Coroutines.md"/>
             <toc-element topic="1-4-KotlinX.md"/>

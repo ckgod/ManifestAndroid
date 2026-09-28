@@ -1,4 +1,4 @@
-# Q27) Sequence 와 그 메커니즘
+# Q27) Sequence
 
 `Sequence`는 `List`와 똑같이 `map`, `filter`, `take`를 이어 붙일 수 있는 타입입니다. 코드만 보면 구분이 안 될 정도로 비슷하지만, 실행 방식은 정반대입니다.
 

@@ -1,0 +1,218 @@
+# Q26) Iterator 의 메커니즘
+
+`Iterator`는 컬렉션의 내부 구조를 드러내지 않고 요소를 **하나씩 차례로** 꺼내 주는 객체입니다. 배열이든 연결 리스트든 해시 테이블이든, 바깥에서는 "다음 게 있나?", "다음 걸 줘" 두 가지만 물으면 됩니다.
+
+코틀린 컬렉션 API의 바닥에는 이 인터페이스가 깔려 있습니다. `for` 루프, Q25의 `mapTo`·`filterTo`, `zip`, 그리고 Q27의 `Sequence`까지 전부 결국 `Iterator`로 요소를 꺼냅니다.
+
+## Iterator 인터페이스 {#interface}
+
+인터페이스 자체는 함수 두 개가 전부입니다.
+
+```kotlin
+// Iterator.kt
+public interface Iterator<out T> {
+    // 다음 요소를 반환합니다. 없으면 NoSuchElementException 을 던집니다.
+    public operator fun next(): T
+
+    // 남은 요소가 있으면 true 를 반환합니다.
+    public operator fun hasNext(): Boolean
+}
+```
+
+두 함수의 역할은 분명히 나뉩니다.
+
+`hasNext()`는 **확인만** 합니다. 남은 요소가 있으면 `true`, 다 봤으면 `false`를 돌려주고, 커서는 움직이지 않습니다. 몇 번을 불러도 상태가 바뀌지 않아야 합니다.
+
+`next()`는 **꺼내고 전진**합니다. 현재 요소를 돌려주면서 내부 커서를 다음 위치로 옮깁니다. 이미 끝에 도달했는데 `next()`를 부르면 `NoSuchElementException`이 납니다.
+
+```kotlin
+// NextAfterEnd.kt
+val it = listOf(1).iterator()
+it.next()   // 1
+it.next()   // NoSuchElementException
+```
+
+그래서 두 함수는 거의 항상 짝으로 씁니다. `hasNext()`로 확인하고, `true`일 때만 `next()`를 부르는 형태입니다.
+
+```kotlin
+// IteratorExample.kt
+val names = listOf("skydoves", "kotlin", "developer")
+val iterator = names.iterator()
+
+while (iterator.hasNext()) {
+    println(iterator.next())
+}
+```
+
+`Iterator`는 **한 방향, 일회용**입니다. 되돌아갈 수 없고, 끝까지 쓰고 나면 다시 처음부터 돌 수 없습니다. 다시 돌고 싶으면 컬렉션에 `iterator()`를 한 번 더 요청해 새 이터레이터를 받습니다. 컬렉션은 이터레이터를 몇 개든 만들어 줄 수 있고, 각 이터레이터는 자기 커서를 따로 갖습니다.
+
+## for 루프의 변환 {#for-loop}
+
+`for (x in xs)`는 문법 설탕입니다. 컴파일러가 `iterator()`, `hasNext()`, `next()` 호출로 풀어 씁니다.
+
+```kotlin
+// ForLoop.kt
+for (name in names) {
+    println(name)
+}
+
+// 컴파일러가 만드는 형태
+val iterator = names.iterator()
+while (iterator.hasNext()) {
+    val name = iterator.next()
+    println(name)
+}
+```
+
+`List`를 받는 함수를 컴파일해 바이트코드를 보면 실제로 이 세 호출이 그대로 나옵니다.
+
+```text
+// javap -c 로 본 for (n in names)
+invokeinterface java/util/List.iterator
+invokeinterface java/util/Iterator.hasNext
+invokeinterface java/util/Iterator.next
+```
+
+예외도 있습니다. **배열과 정수 범위는 이터레이터를 쓰지 않습니다.** `for (n in intArray)`는 `arraylength`와 인덱스 비교(`if_icmpge`)로, `for (i in 1..3)`는 정수 카운터 루프로 컴파일됩니다. 이터레이터 객체를 만드는 비용조차 아끼려는 최적화입니다. 이터레이터를 거치는 것은 `Iterable` 계열(`List`, `Set` 등)입니다.
+
+## operator 규약 {#operator-convention}
+
+`next()`와 `hasNext()`에 붙은 `operator`가 중요합니다. `for` 루프는 `Iterable` 인터페이스를 요구하지 않습니다. **`operator fun iterator()`만 있으면** 어떤 타입이든 `for`로 돌 수 있습니다.
+
+```kotlin
+// Countdown.kt
+class Countdown(private val from: Int) {
+    operator fun iterator() = object : Iterator<Int> {
+        private var current = from
+        override fun hasNext() = current > 0
+        override fun next() = current--
+    }
+}
+
+for (n in Countdown(3)) print("$n ")   // 3 2 1
+```
+
+`Countdown`은 `Iterable`을 구현하지 않았지만 `for`가 동작합니다. 컴파일러가 이름과 `operator` 표시로 함수를 찾기 때문입니다. 확장 함수로 `operator fun iterator()`를 붙여도 마찬가지입니다. Q27의 `Sequence`도 `Iterable`이 아니지만 `iterator()` 하나로 순회됩니다.
+
+## MutableIterator {#mutable-iterator}
+
+`Iterator`는 읽기 전용입니다. 순회하면서 요소를 지워야 할 때는 `MutableIterator`를 씁니다. `MutableList`, `MutableSet` 등의 `iterator()`가 이 타입을 돌려줍니다.
+
+```kotlin
+// MutableIterator.kt
+public interface MutableIterator<out T> : Iterator<T> {
+    // next() 로 마지막에 반환한 요소를 컬렉션에서 제거합니다.
+    public fun remove(): Unit
+}
+```
+
+`remove()`는 인자를 받지 않습니다. **방금 `next()`가 돌려준 요소**를 지웁니다. 그래서 순서 제약이 있습니다.
+
+- `next()`를 한 번도 부르지 않고 `remove()`를 부르면 `IllegalStateException`입니다. 지울 대상이 없습니다.
+- `remove()`를 연달아 두 번 부르면 역시 `IllegalStateException`입니다. 한 번 지운 뒤에는 `next()`로 다음 요소를 받아야 다시 지울 수 있습니다.
+
+올바른 형태는 "꺼내고, 판단하고, 지운다"입니다.
+
+```kotlin
+// RemoveEven.kt
+val numbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8)
+val iterator = numbers.iterator()
+
+while (iterator.hasNext()) {
+    val number = iterator.next()
+    if (number % 2 == 0) {
+        iterator.remove()
+    }
+}
+
+println(numbers)   // [1, 3, 5, 7]
+```
+
+이터레이터를 통해 지우면 이터레이터가 커서 위치를 알맞게 조정하므로 루프가 끝까지 안전하게 돕니다.
+
+## ConcurrentModificationException {#cme}
+
+같은 일을 `for` 루프 안에서 컬렉션에 직접 `remove()`를 부르는 식으로 하면 문제가 생깁니다.
+
+```kotlin
+// ForEachRemove.kt
+val numbers = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8)
+for (n in numbers) {
+    if (n % 2 == 0) numbers.remove(n)   // ConcurrentModificationException
+}
+```
+
+실행하면 2를 지운 직후 다음 `next()`에서 `ConcurrentModificationException`이 납니다. 원인은 `for`가 숨겨 둔 이터레이터입니다. JVM의 `ArrayList`는 구조가 바뀔 때마다 `modCount`를 올리고, 이터레이터는 만들어질 때의 값을 기억해 두었다가 `next()` 때마다 비교합니다. 이터레이터를 거치지 않고 리스트를 바꾸면 두 값이 어긋나고, 이터레이터는 "내가 모르는 사이에 컬렉션이 바뀌었다"고 판단해 예외를 던집니다.
+
+이 검사는 **보장이 아니라 최선의 노력**입니다. 검사는 `next()`에서 일어나므로, 지운 뒤 `hasNext()`가 `false`가 되어 루프가 먼저 끝나면 예외 없이 지나갑니다.
+
+```kotlin
+// NoException.kt
+val list = mutableListOf(1, 2, 3)
+for (x in list) if (x == 2) list.remove(x)
+println(list)   // [1, 3] — 예외 없음, 3 은 검사도 안 됨
+```
+
+끝에서 두 번째 요소를 지우면 크기가 줄어 `hasNext()`가 바로 `false`가 되고, 마지막 요소는 아예 검사하지 않고 끝납니다. 예외가 안 났다고 올바르게 동작한 것이 아닙니다.
+
+실무에서 조건부 삭제는 대부분 `removeAll { }`(또는 `removeIf`) 한 줄로 충분합니다. 내부적으로 안전한 방식으로 처리합니다.
+
+```kotlin
+// RemoveAll.kt
+val numbers = mutableListOf(1, 2, 3, 4)
+numbers.removeAll { it % 2 == 0 }
+println(numbers)   // [1, 3]
+```
+
+`MutableIterator`를 직접 쓰는 것은 삭제 말고도 다른 처리를 같은 순회 안에서 해야 할 때입니다.
+
+## 읽기 전용 리스트와 MutableIterator {#read-only-list}
+
+Q24에서 본 것처럼 코틀린의 읽기 전용 인터페이스는 컴파일 타임 제약입니다. 이터레이터도 같습니다.
+
+```kotlin
+// ReadOnlyIterator.kt
+val list = listOf(1, 2, 3)
+println(list.iterator() is MutableIterator<*>)   // true
+```
+
+JVM에서는 `Iterator`와 `MutableIterator`가 모두 `java.util.Iterator` 하나로 매핑되므로 타입 검사로는 구별되지 않습니다. 그래서 캐스팅으로 `remove()`까지는 부를 수 있지만, `listOf(1, 2, 3)`의 실제 구현(`Arrays.asList` 기반)이 삭제를 지원하지 않아 `UnsupportedOperationException`이 납니다. 읽기 전용 컬렉션의 이터레이터에 `remove()`가 막혀 있는 것은 타입 시스템 덕분이고, 런타임 객체가 그것을 막아 주리라 기대하면 안 됩니다.
+
+## 요약 {#summary}
+
+`Iterator`는 `hasNext()`와 `next()` 두 함수로 순회를 추상화한 인터페이스입니다. `hasNext()`는 상태를 바꾸지 않고 확인만 하며, `next()`는 요소를 꺼내면서 커서를 옮깁니다. 끝에서 `next()`를 부르면 `NoSuchElementException`이 납니다.
+
+`for` 루프는 `iterator()`·`hasNext()`·`next()` 호출로 컴파일됩니다. 단, 배열과 정수 범위는 인덱스 루프로 최적화됩니다. `operator fun iterator()`만 있으면 `Iterable`이 아닌 타입도 `for`로 돌 수 있습니다.
+
+순회 중 삭제에는 `MutableIterator.remove()`를 씁니다. 방금 `next()`가 준 요소를 지우므로 `next()` 없이 부르거나 두 번 연달아 부르면 `IllegalStateException`입니다. `for` 안에서 컬렉션을 직접 수정하면 `ConcurrentModificationException`이 나는데, 이 검사는 보장이 아니므로 예외가 없다고 안전한 것은 아닙니다. 단순한 조건부 삭제는 `removeAll { }`이 가장 간단합니다.
+
+<deflist collapsible="true" default-state="collapsed">
+<def title="Q) hasNext() 와 next() 는 각각 어떤 역할을 하나요?">
+
+`hasNext()`는 남은 요소가 있는지 확인만 합니다. 커서를 움직이지 않으므로 여러 번 불러도 결과가 같습니다. `next()`는 현재 요소를 돌려주면서 커서를 다음 위치로 옮깁니다.
+
+이미 끝에 도달한 상태에서 `next()`를 부르면 `NoSuchElementException`이 납니다. 그래서 `while (it.hasNext()) { it.next() }`처럼 확인한 뒤 꺼내는 형태로 짝지어 씁니다.
+
+</def>
+<def title="Q) for 루프는 내부적으로 어떻게 동작하나요?">
+
+`List`나 `Set` 같은 `Iterable`에 대한 `for`는 컴파일러가 `iterator()`로 이터레이터를 받고, `hasNext()`가 `true`인 동안 `next()`로 요소를 꺼내는 `while` 루프로 풀어 씁니다. 바이트코드에도 세 호출이 그대로 나타납니다.
+
+배열과 `1..3` 같은 정수 범위는 예외입니다. 이터레이터 객체를 만들지 않고 인덱스나 카운터를 비교하는 루프로 컴파일됩니다. 또 `for`는 `Iterable`을 요구하지 않고 `operator fun iterator()`만 있으면 되므로, 직접 만든 타입도 이 함수를 정의하면 `for`로 순회할 수 있습니다.
+
+</def>
+<def title="Q) MutableIterator 의 remove() 에는 어떤 제약이 있나요?">
+
+`remove()`는 인자 없이 "방금 `next()`가 돌려준 요소"를 지웁니다. 그래서 `next()`를 한 번도 부르지 않았거나, `remove()` 직후 `next()` 없이 다시 `remove()`를 부르면 지울 대상이 없어 `IllegalStateException`이 납니다.
+
+올바른 패턴은 `next()`로 꺼내고, 조건을 판단하고, 필요하면 `remove()`를 부르는 순서입니다. 이터레이터를 통해 지우면 이터레이터가 커서를 알맞게 조정하므로 순회가 끝까지 안전하게 진행됩니다.
+
+</def>
+<def title="Q) for 루프 안에서 리스트의 요소를 지우면 왜 문제가 되나요?">
+
+`for`가 내부에 이터레이터를 쓰고 있기 때문입니다. `ArrayList`는 구조가 바뀔 때마다 `modCount`를 올리고, 이터레이터는 `next()` 때마다 자기가 기억한 값과 비교합니다. 이터레이터를 거치지 않고 리스트를 직접 바꾸면 값이 어긋나 `ConcurrentModificationException`이 납니다.
+
+이 검사는 보장이 아닙니다. 지운 뒤 `hasNext()`가 먼저 `false`가 되면 예외 없이 끝나고, 그 경우 뒤쪽 요소가 검사되지 않고 지나갈 수 있습니다. 순회 중 삭제는 `MutableIterator.remove()`를 쓰거나, 단순한 조건이면 `removeAll { }`을 쓰는 것이 맞습니다.
+
+</def>
+</deflist>

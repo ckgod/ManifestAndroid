@@ -223,6 +223,8 @@
       * [Q24 Collection Types](https://ckgod.github.io/ManifestAndroid/q24-collection-types.html)
         * [Details Listof와 Emptylist](https://ckgod.github.io/ManifestAndroid/details-listof와-emptylist.html)
       * [Q25 Transformation Operators](https://ckgod.github.io/ManifestAndroid/q25-transformation-operators.html)
+      * [Q26 Iterator](https://ckgod.github.io/ManifestAndroid/q26-iterator.html)
+      * [Q27 Sequence](https://ckgod.github.io/ManifestAndroid/q27-sequence.html)
     * [1 3 Coroutines](https://ckgod.github.io/ManifestAndroid/1-3-coroutines.html)
     * [1 4 Kotlinx](https://ckgod.github.io/ManifestAndroid/1-4-kotlinx.html)
     * [1 5 Compiler Plugins](https://ckgod.github.io/ManifestAndroid/1-5-compiler-plugins.html)

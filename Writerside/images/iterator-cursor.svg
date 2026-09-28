@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="470" viewBox="0 0 760 470">
+<rect width="760" height="470" rx="12" fill="#ffffff"/>
+<text x="28" y="38" fill="#1f2328" font-size="19" font-weight="700" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">Iterator 의 커서 위치</text>
+<text x="28" y="62" fill="#59636e" font-size="13.5" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">커서(▼)는 요소 사이에 있고, next() 는 커서 바로 뒤 요소를 돌려준 뒤 그 요소 뒤로 넘어갑니다.</text>
+<text x="28" y="138" fill="#1f2328" font-size="15" font-weight="600" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">처음</text>
+<rect x="170" y="110" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="202.0" y="139" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<rect x="256" y="110" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="288.0" y="139" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<rect x="342" y="110" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="374.0" y="139" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<line x1="159.0" y1="102" x2="159.0" y2="162" stroke="#d1242f" stroke-width="3" stroke-linecap="round"/>
+<path d="M152.0 92 L166.0 92 L159.0 101 Z" fill="#d1242f"/>
+<text x="560" y="129" fill="#0969da" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">hasNext() = true</text>
+<text x="560" y="148" fill="#59636e" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">커서는 첫 요소 앞</text>
+<text x="28" y="228" fill="#1f2328" font-size="15" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next() 1회</text>
+<rect x="170" y="200" width="64" height="44" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="2.5"/>
+<text x="202.0" y="229" fill="#1a7f37" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<rect x="256" y="200" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="288.0" y="229" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<rect x="342" y="200" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="374.0" y="229" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<line x1="245.0" y1="192" x2="245.0" y2="252" stroke="#d1242f" stroke-width="3" stroke-linecap="round"/>
+<path d="M238.0 182 L252.0 182 L245.0 191 Z" fill="#d1242f"/>
+<rect x="448" y="206" width="96" height="32" rx="16" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+<text x="496" y="227" fill="#1a7f37" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">→ A</text>
+<text x="560" y="219" fill="#0969da" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">hasNext() = true</text>
+<text x="560" y="238" fill="#59636e" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">A 를 반환</text>
+<text x="28" y="318" fill="#1f2328" font-size="15" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next() 2회</text>
+<rect x="170" y="290" width="64" height="44" rx="8" fill="#eaeef2" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="202.0" y="319" fill="#8c959f" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<rect x="256" y="290" width="64" height="44" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="2.5"/>
+<text x="288.0" y="319" fill="#1a7f37" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<rect x="342" y="290" width="64" height="44" rx="8" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="374.0" y="319" fill="#1f2328" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<line x1="331.0" y1="282" x2="331.0" y2="342" stroke="#d1242f" stroke-width="3" stroke-linecap="round"/>
+<path d="M324.0 272 L338.0 272 L331.0 281 Z" fill="#d1242f"/>
+<rect x="448" y="296" width="96" height="32" rx="16" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+<text x="496" y="317" fill="#1a7f37" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">→ B</text>
+<text x="560" y="309" fill="#0969da" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">hasNext() = true</text>
+<text x="560" y="328" fill="#59636e" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">B 를 반환</text>
+<text x="28" y="408" fill="#1f2328" font-size="15" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next() 3회</text>
+<rect x="170" y="380" width="64" height="44" rx="8" fill="#eaeef2" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="202.0" y="409" fill="#8c959f" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<rect x="256" y="380" width="64" height="44" rx="8" fill="#eaeef2" stroke="#d1d9e0" stroke-width="1.5"/>
+<text x="288.0" y="409" fill="#8c959f" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<rect x="342" y="380" width="64" height="44" rx="8" fill="#dafbe1" stroke="#1a7f37" stroke-width="2.5"/>
+<text x="374.0" y="409" fill="#1a7f37" font-size="18" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<line x1="417.0" y1="372" x2="417.0" y2="432" stroke="#d1242f" stroke-width="3" stroke-linecap="round"/>
+<path d="M410.0 362 L424.0 362 L417.0 371 Z" fill="#d1242f"/>
+<rect x="448" y="386" width="96" height="32" rx="16" fill="#dafbe1" stroke="#1a7f37" stroke-width="1.5"/>
+<text x="496" y="407" fill="#1a7f37" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">→ C</text>
+<text x="560" y="399" fill="#d1242f" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">hasNext() = false</text>
+<text x="560" y="418" fill="#59636e" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">C 를 반환, 끝</text>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="520" viewBox="0 0 760 520">
+<defs><marker id="ar4464066496" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4493f8"/></marker><marker id="cr4464066496" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#ff7b72"/></marker></defs>
+<rect width="760" height="520" rx="12" fill="#0d1117"/>
+<text x="28" y="38" fill="#e6edf3" font-size="19" font-weight="700" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">컬렉션별 커서 구현</text>
+<text x="28" y="62" fill="#9198a1" font-size="13.5" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">모두 A 를 돌려준 직후의 상태입니다. 다음 next() 는 빨간 화살표가 가리키는 요소를 돌려줍니다.</text>
+<text x="28" y="104" fill="#e6edf3" font-size="16" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">ArrayList</text>
+<text x="28" y="124" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">배열 인덱스 하나로 기억</text>
+<rect x="250" y="86" width="58" height="42" rx="7" fill="#1c2128" stroke="#3d444d" stroke-width="1.5"/>
+<text x="279.0" y="113.0" fill="#656c76" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<text x="279.0" y="78" fill="#9198a1" font-size="12" font-weight="400" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<rect x="308" y="86" width="58" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="337.0" y="113.0" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<text x="337.0" y="78" fill="#9198a1" font-size="12" font-weight="400" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+<rect x="366" y="86" width="58" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="395.0" y="113.0" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<text x="395.0" y="78" fill="#9198a1" font-size="12" font-weight="400" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">2</text>
+<rect x="424" y="86" width="58" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="453.0" y="113.0" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">D</text>
+<text x="453.0" y="78" fill="#9198a1" font-size="12" font-weight="400" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">3</text>
+<line x1="337.0" y1="188" x2="337.0" y2="134" stroke="#ff7b72" stroke-width="2.5" marker-end="url(#cr4464066496)"/>
+<text x="349.0" y="184" fill="#ff7b72" font-size="14" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">cursor = 1</text>
+<text x="510" y="102" fill="#e6edf3" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next():</text>
+<text x="510" y="122" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">elementData[cursor] 반환</text>
+<text x="510" y="142" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">cursor += 1</text>
+<text x="510" y="162" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">처음 cursor = 0</text>
+<line x1="28" y1="208" x2="732" y2="208" stroke="#3d444d"/>
+<text x="28" y="254" fill="#e6edf3" font-size="16" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">LinkedList</text>
+<text x="28" y="274" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">다음 노드 참조로 기억</text>
+<rect x="250" y="236" width="50" height="42" rx="7" fill="#1c2128" stroke="#3d444d" stroke-width="1.5"/>
+<text x="275.0" y="263.0" fill="#656c76" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<line x1="300" y1="257" x2="324" y2="257" stroke="#4493f8" stroke-width="2" marker-end="url(#ar4464066496)"/>
+<rect x="326" y="236" width="50" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="351.0" y="263.0" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<line x1="376" y1="257" x2="400" y2="257" stroke="#4493f8" stroke-width="2" marker-end="url(#ar4464066496)"/>
+<rect x="402" y="236" width="50" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="427.0" y="263.0" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<line x1="351.0" y1="328" x2="351.0" y2="284" stroke="#ff7b72" stroke-width="2.5" marker-end="url(#cr4464066496)"/>
+<text x="363.0" y="324" fill="#ff7b72" font-size="14" font-weight="700" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">next = 노드 B</text>
+<text x="510" y="252" fill="#e6edf3" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next():</text>
+<text x="510" y="272" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">next.item 반환</text>
+<text x="510" y="292" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next = next.next</text>
+<line x1="28" y1="353" x2="732" y2="353" stroke="#3d444d"/>
+<text x="28" y="399" fill="#e6edf3" font-size="16" font-weight="700" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">HashMap</text>
+<text x="28" y="419" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">비어 있지 않은 다음 칸을</text>
+<text x="28" y="437" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">미리 찾아 둠</text>
+<rect x="250" y="381" width="32" height="42" rx="7" fill="#1c2128" stroke="#3d444d" stroke-width="1.5"/>
+<text x="266.0" y="408.0" fill="#656c76" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">A</text>
+<rect x="286" y="381" width="32" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="322" y="381" width="32" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="358" y="381" width="32" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="374.0" y="408.0" fill="#e6edf3" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">B</text>
+<rect x="394" y="381" width="32" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="430" y="381" width="32" height="42" rx="7" fill="#161b22" stroke="#3d444d" stroke-width="1.5"/>
+<text x="446.0" y="408.0" fill="#e6edf3" font-size="15" font-weight="700" text-anchor="middle" font-family="'JetBrains Mono', Menlo, Consolas, monospace">C</text>
+<path d="M266.0 429 Q304.0 465 374.0 431" fill="none" stroke="#ff7b72" stroke-width="2.5" stroke-dasharray="5 4" marker-end="url(#cr4464066496)"/>
+<text x="250" y="487" fill="#ff7b72" font-size="13.5" font-weight="700" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">빈 칸 1, 2 는 건너뜀 → next = B</text>
+<text x="510" y="397" fill="#e6edf3" font-size="13.5" font-weight="600" text-anchor="start" font-family="'JetBrains Mono', Menlo, Consolas, monospace">next():</text>
+<text x="510" y="417" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">next 반환 후</text>
+<text x="510" y="437" fill="#9198a1" font-size="13" font-weight="400" text-anchor="start" font-family="Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">다음 빈칸 아닌 곳 탐색</text>
+</svg>

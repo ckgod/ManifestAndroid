@@ -2,9 +2,147 @@
 
 코루틴(coroutine)은 실행 도중 멈췄다가 나중에 멈춘 자리부터 다시 이어서 실행할 수 있는 작업 단위입니다. 코틀린에서는 멈추는 것을 **일시 중단(suspend)**, 다시 이어 가는 것을 **재개(resume)** 라고 부릅니다.
 
-네트워크 요청이나 파일 읽기처럼 기다리는 시간이 긴 작업을 생각해 보면 쓸모가 보입니다. 일반 함수로 기다리면 결과가 올 때까지 그 스레드가 아무것도 못 하고 묶여 있습니다(블로킹). 코루틴은 기다리는 동안 일시 중단되고, 그동안 스레드는 다른 일을 합니다. 결과가 오면 코루틴이 재개되어 다음 줄부터 이어서 실행됩니다. 그래서 비동기 코드를 콜백 없이 위에서 아래로 읽히는 순서대로 쓸 수 있습니다.
+쓸모는 네트워크 요청이나 파일 읽기처럼 기다리는 시간이 긴 작업에서 드러납니다. 같은 일을 블로킹, 콜백, 코루틴 세 가지 방식으로 써 보면 차이가 바로 보입니다.
 
 코루틴은 언어와 라이브러리가 나눠서 만듭니다. 컴파일러는 `suspend` 함수를 일시 중단·재개가 가능한 형태로 바꾸는 일만 하고, `launch`·`async` 같은 실제 도구는 `kotlinx.coroutines` 라이브러리가 제공합니다. 아래 예제는 Kotlin 2.4.21, kotlinx-coroutines 1.11.0에서 실행한 결과입니다.
+
+## 블로킹·콜백·코루틴 비교 {#blocking-callback-coroutine}
+
+사용자 정보를 받아 온 뒤, 그 사용자의 글 목록을 받아 오는 일을 예로 듭니다. 요청은 각각 100ms 걸린다고 치고, 두 번째 요청은 첫 번째 결과가 있어야 보낼 수 있습니다. 세 예제 모두 마지막에 `다른 작업`을 하나 찍는데, 이 줄이 언제 실행되는지를 보면 기다리는 동안 스레드가 묶여 있었는지 알 수 있습니다. 줄 끝의 `[...]`는 그 줄을 실행한 스레드 이름입니다.
+
+**블로킹.** 결과가 올 때까지 기다렸다가 돌려받는 평범한 함수입니다.
+
+```kotlin
+// Blocking.kt
+fun t() = Thread.currentThread().name   // 이후 예제에서도 씁니다
+
+fun fetchUser(): String {
+    Thread.sleep(100)   // 응답을 기다리는 동안 스레드가 멈춤
+    return "ckgod"
+}
+
+fun fetchPosts(user: String): List<String> {
+    Thread.sleep(100)
+    return listOf("글1", "글2")
+}
+
+fun main() {
+    println("요청 시작 [${t()}]")
+    val user = fetchUser()
+    println("user=$user [${t()}]")
+    val posts = fetchPosts(user)
+    println("posts=$posts [${t()}]")
+    println("다른 작업 [${t()}]")
+}
+```
+
+```text
+요청 시작 [main]
+user=ckgod [main]
+posts=[글1, 글2] [main]
+다른 작업 [main]
+```
+
+코드가 위에서 아래로 적힌 순서대로 실행되어 읽기 쉽습니다. 대신 응답을 기다리는 동안 `main` 스레드가 멈춰 있어서, `다른 작업`은 두 요청이 모두 끝난 200ms 뒤에야 실행됩니다. 안드로이드에서 `main` 스레드는 화면을 그리고 터치를 처리하는 스레드라, 여기서 이렇게 기다리면 그동안 화면이 멈춥니다. 입력에 5초 넘게 반응하지 못하면 ANR(앱 응답 없음) 창이 뜹니다.
+
+**콜백.** 스레드를 묶지 않으려면 기다리는 일을 다른 곳에 맡기고, 결과가 오면 불러 달라고 함수(콜백)를 넘깁니다.
+
+```kotlin
+// Callback.kt
+import kotlin.concurrent.thread
+
+fun fetchUser(onResult: (String) -> Unit) {
+    thread {            // 기다리는 일은 다른 스레드가 맡음
+        Thread.sleep(100)
+        onResult("ckgod")
+    }
+}
+
+fun fetchPosts(user: String, onResult: (List<String>) -> Unit) {
+    thread {
+        Thread.sleep(100)
+        onResult(listOf("글1", "글2"))
+    }
+}
+
+fun main() {
+    println("요청 시작 [${t()}]")
+    fetchUser { user ->
+        println("user=$user [${t()}]")
+        fetchPosts(user) { posts ->
+            println("posts=$posts [${t()}]")
+        }
+    }
+    println("다른 작업 [${t()}]")
+}
+```
+
+```text
+요청 시작 [main]
+다른 작업 [main]
+user=ckgod [Thread-0]
+posts=[글1, 글2] [Thread-1]
+```
+
+`main` 스레드는 요청만 보내고 바로 `다른 작업`으로 넘어갑니다. 스레드는 풀렸지만, 대신 코드를 읽기 어려워졌습니다.
+
+- 적힌 순서와 실행 순서가 다릅니다. 코드에서는 `다른 작업`이 맨 아래에 있는데 실제로는 두 번째로 찍힙니다.
+- 앞 결과가 필요한 요청을 하나 더할 때마다 람다가 한 단계씩 안으로 들어갑니다. 단계가 늘수록 들여쓰기가 계속 깊어집니다.
+- `fetchUser` 호출을 `try`/`catch`로 감싸도 콜백 안에서 난 예외는 잡히지 않습니다. 콜백은 `try` 블록을 벗어난 뒤에 다른 스레드에서 실행되기 때문입니다. 실패를 알리려면 콜백마다 실패용 파라미터를 따로 두어야 합니다.
+- 결과가 `Thread-0`, `Thread-1`처럼 다른 스레드에서 돌아옵니다. 안드로이드라면 화면을 고치기 전에 다시 `main` 스레드로 넘기는 코드가 더 필요합니다.
+
+**코루틴.** 함수에 `suspend`를 붙이고, `Thread.sleep` 대신 `delay`로 기다립니다.
+
+```kotlin
+// Coroutine.kt
+import kotlinx.coroutines.*
+
+suspend fun fetchUser(): String {
+    delay(100)          // 코루틴만 멈추고 스레드는 놓아줌
+    return "ckgod"
+}
+
+suspend fun fetchPosts(user: String): List<String> {
+    delay(100)
+    return listOf("글1", "글2")
+}
+
+fun main() = runBlocking<Unit> {
+    launch {
+        println("요청 시작 [${t()}]")
+        val user = fetchUser()
+        println("user=$user [${t()}]")
+        val posts = fetchPosts(user)
+        println("posts=$posts [${t()}]")
+    }
+    launch {
+        println("다른 작업 [${t()}]")
+    }
+}
+```
+
+```text
+요청 시작 [main]
+다른 작업 [main]
+user=ckgod [main]
+posts=[글1, 글2] [main]
+```
+
+첫 번째 `launch` 안의 코드는 블로킹 버전과 모양이 같습니다. 위에서 아래로 적힌 순서가 곧 실행 순서이고, 결과는 반환값으로 받아 다음 줄에서 씁니다. 콜백도, 중첩도 없습니다.
+
+그런데 출력은 콜백 버전처럼 `다른 작업`이 두 번째로 찍혔고, 그것도 `main` 스레드에서 실행되었습니다. 첫 번째 코루틴이 `fetchUser()` 안의 `delay`에서 일시 중단되는 순간 `main` 스레드가 풀려나 두 번째 코루틴을 실행한 것입니다. 100ms 뒤 첫 번째 코루틴은 멈췄던 자리인 `val user = fetchUser()`에서 재개되어 결과를 받고 다음 줄로 넘어갑니다. 모든 줄이 `main` 스레드에서 실행되었으므로 결과를 다른 스레드에서 옮겨 오는 코드도 필요 없습니다. 예외도 일반 함수처럼 `val user = fetchUser()`를 `try`/`catch`로 감싸면 잡힙니다.
+
+`launch`를 두 번 쓴 것은 기다리는 동안 다른 일이 실행된다는 것을 출력으로 보이기 위해서입니다. `runBlocking`과 `launch`는 아래 [코루틴 빌더](#builders)에서 다룹니다. `runBlocking<Unit>`의 `<Unit>`은 마지막 줄의 `launch`가 돌려주는 `Job`이 `main`의 반환 타입이 되지 않게 하려고 붙였습니다. 반환 타입이 `Unit`이 아니면 JVM이 실행할 `main`으로 인식하지 못합니다.
+
+세 방식을 정리하면 다음과 같습니다.
+
+| 방식 | 코드 모양 | 기다리는 동안 `main` 스레드 |
+|---|---|---|
+| 블로킹 | 적힌 순서대로 실행됩니다 | 멈춰 있습니다 |
+| 콜백 | 단계마다 람다가 중첩되고, 적힌 순서와 실행 순서가 다릅니다 | 다른 일을 합니다 |
+| 코루틴 | 적힌 순서대로 실행됩니다 | 다른 일을 합니다 |
+
+코루틴 코드가 블로킹처럼 생겼는데도 스레드를 붙잡지 않는 것은, 콜백 버전에서 손으로 쓰던 "나머지 할 일"을 컴파일러가 대신 만들어 주기 때문입니다. 컴파일러는 `suspend` 함수를 부를 때마다 "이 호출이 끝나면 어디서부터 이어 갈지"와 그때 필요한 지역 변수를 담은 객체를 함께 넘깁니다. 호출된 쪽은 기다림이 끝나면 이 객체를 통해 멈춘 자리부터 나머지를 실행시킵니다. 이 객체가 `Continuation`이며, 구조는 Q32에서 다룹니다.
 
 ## 일시 중단과 재개 {#suspend-resume}
 
@@ -16,7 +154,7 @@ import kotlinx.coroutines.*
 
 fun t() = Thread.currentThread().name
 
-fun main() = runBlocking {
+fun main() = runBlocking<Unit> {
     launch { repeat(3) { println("A$it [${t()}]"); delay(10) } }
     launch { repeat(3) { println("B$it [${t()}]"); delay(10) } }
 }
@@ -186,6 +324,13 @@ yield 4
 `suspend` 함수는 다른 `suspend` 함수나 코루틴 안에서만 부를 수 있습니다. 코루틴은 `launch`(`Job` 반환), `async`(`Deferred` 반환, `await`로 결과), `runBlocking`(스레드를 막고 기다림) 같은 빌더로 시작하며, 이 빌더들은 `kotlinx.coroutines` 라이브러리에 있습니다. 빌더가 백그라운드 스레드를 뜻하지는 않으며, 실행 스레드는 디스패처가 정합니다. 컴파일러는 `suspend` 함수·람다·함수 타입만 지원하고 나머지는 라이브러리로 만듭니다.
 
 <deflist collapsible="true" default-state="collapsed">
+<def title="Q) 같은 비동기 작업을 콜백 대신 코루틴으로 쓰면 무엇이 달라지나요?">
+
+콜백 방식은 기다리는 동안 스레드를 놓아주지만, 앞 결과가 필요한 단계마다 람다가 한 겹씩 중첩되고 적힌 순서와 실행 순서가 달라집니다. 콜백 안에서 난 예외는 바깥 `try`/`catch`로 잡히지 않고, 결과가 다른 스레드에서 돌아오는 경우도 많습니다.
+
+코루틴은 `suspend` 함수의 결과를 반환값으로 받아 다음 줄에서 쓰므로 블로킹 코드처럼 위에서 아래로 읽히고, 예외도 `try`/`catch`로 잡힙니다. 그러면서도 기다리는 동안에는 일시 중단되어 스레드를 놓아줍니다. 콜백으로 넘기던 "나머지 할 일"은 컴파일러가 `Continuation` 객체로 만들어 대신 넘깁니다.
+
+</def>
 <def title="Q) 코루틴이 일시 중단되면 스레드는 어떻게 되나요?">
 
 스레드는 풀려나 다른 일을 합니다. `delay`처럼 일시 중단하는 함수는 코루틴만 멈추고 스레드는 붙잡지 않습니다. 그래서 `main` 스레드 하나에서 돌린 두 코루틴이 `delay`를 만날 때마다 번갈아 실행됩니다.

@@ -305,6 +305,67 @@ stdlib 선언에는 책의 발췌에 없는 어노테이션이 두 개 더 붙�
 | 객체를 만들면서 속성을 설정할 때 | `apply` |
 | 객체는 그대로 두고 로그·검사를 끼워 넣을 때 | `also` |
 
+표의 각 줄을 예제로 보면 다음과 같습니다.
+
+**`?.let` — null이 아닐 때만 값을 바꿉니다.** 이름이 null이면 블록을 건너뛰고 `?:` 오른쪽의 0이 쓰입니다.
+
+```kotlin
+// ChooseLet.kt
+fun nameLength(name: String?): Int = name?.let { it.trim().length } ?: 0
+
+println(nameLength("  kotlin "))   // 6
+println(nameLength(null))          // 0
+```
+
+**`run` — 객체의 멤버로 값을 하나 계산합니다.** 블록 안에서 `this`가 `rect`라서 `width`, `height`를 이름만으로 씁니다.
+
+```kotlin
+// ChooseRun.kt
+data class Rect(val width: Int, val height: Int)
+
+val rect = Rect(3, 4)
+val summary = rect.run { "넓이 ${width * height}, 둘레 ${2 * (width + height)}" }
+println(summary)   // 넓이 12, 둘레 14
+```
+
+**`with` — 이미 있는 객체의 멤버를 여러 번 씁니다.** 결과를 받지 않고 블록 안의 일만 합니다.
+
+```kotlin
+// ChooseWith.kt
+data class Config(val host: String, val port: Int)
+
+val config = Config("localhost", 8080)
+with(config) {
+    println("host = $host")   // host = localhost
+    println("port = $port")   // port = 8080
+}
+```
+
+**`apply` — 객체를 만들면서 속성을 설정합니다.** 블록이 끝나면 설정이 끝난 객체 자신이 `user`에 들어갑니다.
+
+```kotlin
+// ChooseApply.kt
+class User {
+    var name = ""
+    var age = 0
+}
+
+val user = User().apply {
+    name = "kotlin"
+    age = 15
+}
+println("${user.name} ${user.age}")   // kotlin 15
+```
+
+**`also` — 체인 중간에 로그를 끼워 넣습니다.** `also`는 받은 리스트를 그대로 돌려주므로 `sorted`에는 정렬된 리스트가 그대로 들어갑니다.
+
+```kotlin
+// ChooseAlso.kt
+val sorted = listOf(3, 1, 2).sorted()
+    .also { println("정렬 결과: $it") }   // 정렬 결과: [1, 2, 3]
+println(sorted.first())                 // 1
+```
+
 판단이 어려우면 앞의 두 가지 질문으로 돌아가면 됩니다. 블록이 끝난 뒤 필요한 것이 객체 자신이면 `apply`·`also`, 계산 결과면 `let`·`run`·`with`입니다. 블록 안에서 멤버를 많이 부르면 `this` 쪽, 객체를 인자로 넘기거나 이름을 붙이고 싶으면 `it` 쪽입니다.
 
 ## 주의할 점 {#pitfalls}

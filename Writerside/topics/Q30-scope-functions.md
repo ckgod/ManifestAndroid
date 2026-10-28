@@ -301,7 +301,7 @@ stdlib 선언에는 책의 발췌에 없는 어노테이션이 두 개 더 붙�
 |---|---|
 | null이 아닐 때만 실행하거나, 값을 다른 값으로 바꿀 때 | `?.let` |
 | 객체의 멤버로 값을 하나 계산할 때 | `run` |
-| 이미 있는 객체의 메서드를 여러 번 부를 때 (결과는 필요 없음) | `with` |
+| 이미 있는 객체의 멤버를 묶어서 여러 번 부를 때 (반환값은 주로 쓰지 않음) | `with` |
 | 객체를 만들면서 속성을 설정할 때 | `apply` |
 | 객체는 그대로 두고 로그·검사를 끼워 넣을 때 | `also` |
 
@@ -328,7 +328,7 @@ val summary = rect.run { "넓이 ${width * height}, 둘레 ${2 * (width + height
 println(summary)   // 넓이 12, 둘레 14
 ```
 
-**`with` — 이미 있는 객체의 멤버를 여러 번 씁니다.** 결과를 받지 않고 블록 안의 일만 합니다.
+**`with` — 이미 있는 객체의 멤버를 묶어서 씁니다.** `with`도 `run`처럼 블록의 마지막 값을 돌려줍니다. 다만 공식 문서는 반환값을 쓰지 않고 멤버를 연달아 부를 때 `with`를 권합니다. "이 객체를 가지고 다음 일을 하라"는 뜻으로 읽히기 때문입니다. 선언에 `@IgnorableReturnValue`가 붙어 있는 것도 반환값을 버리는 쓰임이 자연스럽다는 표시입니다.
 
 ```kotlin
 // ChooseWith.kt
@@ -339,7 +339,12 @@ with(config) {
     println("host = $host")   // host = localhost
     println("port = $port")   // port = 8080
 }
+
+val address = with(config) { "$host:$port" }   // 반환값을 받을 수도 있습니다
+println(address)                              // localhost:8080
 ```
+
+반환값이 필요한 계산이면 `config.run { "$host:$port" }`로 써도 결과가 같습니다. 대상이 null일 수 있으면 `?.run`만 쓸 수 있습니다.
 
 **`apply` — 객체를 만들면서 속성을 설정합니다.** 블록이 끝나면 설정이 끝난 객체 자신이 `user`에 들어갑니다.
 

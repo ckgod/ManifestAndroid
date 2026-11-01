@@ -271,6 +271,10 @@
                     <toc-element topic="Details-코루틴-용어-정리.md"/>
                 </toc-element>
                 <toc-element topic="Q32-continuation.md"/>
+                <toc-element topic="Q33-coroutine-vs-thread.md">
+                    <toc-element topic="Details-멀티스레딩과-멀티프로세싱.md"/>
+                    <toc-element topic="Details-코루틴과-가변-상태.md"/>
+                </toc-element>
             </toc-element>
             <toc-element topic="1-4-KotlinX.md"/>
             <toc-element topic="1-5-Compiler-Plugins.md"/>

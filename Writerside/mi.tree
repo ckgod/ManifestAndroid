@@ -270,6 +270,7 @@
                 <toc-element topic="Q31-coroutine.md">
                     <toc-element topic="Details-코루틴-용어-정리.md"/>
                 </toc-element>
+                <toc-element topic="Q32-continuation.md"/>
             </toc-element>
             <toc-element topic="1-4-KotlinX.md"/>
             <toc-element topic="1-5-Compiler-Plugins.md"/>

@@ -2,7 +2,7 @@
 
 Q31에서 코루틴을 콜백 방식과 비교했습니다. 콜백 방식은 "결과가 오면 할 나머지 일"을 람다로 떼어 넘기고, 코루틴은 그 나머지를 적힌 순서대로 씁니다. 그 차이를 메우는 것이 컴파일러입니다. 컴파일러는 `suspend` 함수를 컴파일할 때 "나머지 할 일"을 담는 객체를 대신 만들어 넘기는데, 이 객체가 `Continuation`입니다.
 
-이 토픽에서는 `Continuation`이 무엇인지, 컴파일러가 `suspend` 함수를 어떤 모양으로 바꾸는지, 그리고 일시 중단과 재개가 실제로 어떤 호출로 이루어지는지를 봅니다. 예제는 Kotlin 2.4.21, kotlinx-coroutines 1.11.0, JDK 25에서 실행했고, 바이트코드는 `javap`로 확인했습니다.
+이 토픽에서는 `Continuation`이 무엇인지, 컴파일러가 `suspend` 함수를 어떤 모양으로 바꾸는지, 그리고 일시 중단과 재개가 실제로 어떤 호출로 이루어지는지를 봅니다. 예제는 Kotlin 2.4.21, kotlinx-coroutines 1.11.0, JDK 25에서 실행했고, 바이트코드는 `javap`로 확인했습니다. 컴파일러가 만든 코드는 읽기 쉽도록 코틀린 의사 코드로 옮겨 적었습니다. 의사 코드는 실행되지 않고, 실제 이름은 주석에 함께 적었습니다.
 
 ## Continuation 인터페이스 {#continuation-interface}
 
@@ -89,19 +89,19 @@ resume 반환
 
 컴파일러가 `suspend` 함수에 하는 일을 CPS 변환이라고 부릅니다. CPS(Continuation-Passing Style)는 함수가 결과를 반환하는 대신, "결과를 받아서 나머지 일을 할 함수"를 인자로 받아 거기에 결과를 넘기는 코드 작성 방식입니다. 콜백 방식이 바로 CPS입니다.
 
-컴파일러는 먼저 함수 시그니처를 바꿉니다. `suspend` 수정자가 사라지고, 마지막 파라미터로 `Continuation`이 붙고, 반환 타입은 `Object`가 됩니다. `javap`로 본 실제 시그니처는 이렇습니다.
+컴파일러는 먼저 함수 시그니처를 바꿉니다. `suspend` 수정자가 사라지고, 마지막 파라미터로 `Continuation`이 붙고, 반환 타입은 `Any?`(바이트코드에서는 `Object`)가 됩니다.
 
-```text
+```kotlin
 // 소스
 suspend fun fetchUser(id: String): User
 
-// 바이트코드 (javap)
-public static final java.lang.Object fetchUser(java.lang.String, kotlin.coroutines.Continuation<? super User>);
+// 컴파일 후 (의사 코드)
+fun fetchUser(id: String, continuation: Continuation<User>): Any?
 ```
 
 Q31에서 `suspend` 함수를 일반 함수에서 부를 수 없는 이유가 여기 있습니다. 일반 함수에는 마지막 인자로 넘겨줄 `Continuation`이 없습니다.
 
-반환 타입이 `User`가 아니라 `Object`인 이유는 이 함수가 두 종류의 값을 돌려줄 수 있기 때문입니다.
+반환 타입이 `User`가 아니라 `Any?`인 이유는 이 함수가 두 종류의 값을 돌려줄 수 있기 때문입니다.
 
 - 기다릴 일 없이 끝까지 실행되었으면 결과 값(`User`)을 그대로 돌려줍니다.
 - 실제로 일시 중단되었으면 `COROUTINE_SUSPENDED`라는 특별한 표시 객체를 돌려줍니다. "아직 결과가 없고, 나중에 `Continuation`으로 알려 주겠다"는 뜻입니다.
@@ -142,97 +142,83 @@ fun main() {
 
 시그니처만 바꿔서는 부족합니다. `fetchUser`는 일시 중단될 때마다 반환했다가, 재개될 때 처음이 아니라 멈춘 자리부터 다시 실행되어야 합니다. 그래서 컴파일러는 함수 본문을 상태 머신(state machine)으로 바꿉니다. 상태 머신은 "지금 몇 번째 단계인지"를 값으로 들고 있다가, 그 값에 따라 해당 단계의 코드로 바로 들어가는 구조입니다.
 
-`fetchUser`를 컴파일하면 이 상태를 담는 클래스가 따로 생깁니다.
+`fetchUser`를 컴파일하면 이 상태를 담는 클래스가 따로 생깁니다. 이 클래스가 `fetchUser` 한 번의 호출을 위한 `Continuation`입니다.
 
-```text
-// javap -p 'FetchUserKt$fetchUser$1'
-final class FetchUserKt$fetchUser$1 extends kotlin.coroutines.jvm.internal.ContinuationImpl {
-  java.lang.Object L$0;      // id
-  java.lang.Object L$1;      // profile
-  java.lang.Object result;   // 재개될 때 받은 결과
-  int label;                 // 다음에 이어 갈 위치
-  FetchUserKt$fetchUser$1(kotlin.coroutines.Continuation<? super FetchUserKt$fetchUser$1>);
-  public final java.lang.Object invokeSuspend(java.lang.Object);
+```kotlin
+// fetchUser 전용 상태 클래스 (의사 코드, 실제 클래스 이름: FetchUserKt$fetchUser$1)
+class FetchUserStateMachine(
+    completion: Continuation<Any?>,       // 나를 부른 쪽의 Continuation
+) : ContinuationImpl(completion) {
+
+    var label = 0                         // 다음에 이어 갈 단계
+    var id: String? = null                // 멈춘 동안 보관할 지역 변수 (실제 이름: L$0)
+    var profile: Profile? = null          // 멈춘 동안 보관할 지역 변수 (실제 이름: L$1)
+    var result: Result<Any?>? = null      // 재개될 때 받은 결과
+    var isResuming = false                // "재개 중" 표시 (실제로는 label 의 최상위 비트)
+
+    // resumeWith 가 결국 이 메서드를 부릅니다
+    override fun invokeSuspend(result: Result<Any?>): Any? {
+        this.result = result
+        this.isResuming = true
+        return fetchUser("", this)        // id 는 상태 객체에 있으므로 아무 값이나 넘깁니다 (실제로는 null)
+    }
 }
 ```
-
-이 클래스가 `fetchUser` 한 번의 호출을 위한 `Continuation`입니다.
 
 - `label`은 다음에 어느 일시 중단 지점 뒤에서 이어 갈지를 나타냅니다. 0이면 처음부터, 1이면 `fetchProfile` 다음부터, 2면 `fetchFriends` 다음부터입니다.
-- `L$0`, `L$1`은 일시 중단 지점을 넘어서도 써야 하는 지역 변수를 담아 두는 칸입니다. `id`는 `fetchFriends(id)`에서, `profile`은 `User(profile, friends)`에서 다시 쓰이므로 저장됩니다. 일반 함수라면 이 값들은 스레드의 스택에 있다가 함수가 반환하면 사라지지만, 여기서는 힙에 있는 객체에 옮겨 두므로 반환한 뒤에도 남습니다.
+- `id`, `profile`은 일시 중단 지점을 넘어서도 써야 하는 지역 변수를 담아 두는 칸입니다. 실제 바이트코드에서는 이름 없이 `L$0`, `L$1`로 붙습니다. `id`는 `fetchFriends(id)`에서, `profile`은 `User(profile, friends)`에서 다시 쓰이므로 저장됩니다. 일반 함수라면 이 값들은 스레드의 스택에 있다가 함수가 반환하면 사라지지만, 여기서는 힙에 있는 객체에 옮겨 두므로 반환한 뒤에도 남습니다.
 - `result`는 재개될 때 `resumeWith`로 받은 결과를 잠시 보관합니다.
+- `invokeSuspend`는 받은 결과를 `result`에 넣고 `fetchUser`를 다시 부르는 일만 합니다.
 
-`fetchUser` 본문은 이 객체를 쓰도록 바뀝니다. 바이트코드를 자바 코드로 옮기면 다음과 같습니다. 읽기 쉽게 간추렸지만 분기 구조와 필드 이름은 실제 바이트코드 그대로입니다.
+`fetchUser` 본문은 이 객체를 쓰도록 바뀝니다. 단계마다 한 덩어리씩 나눠 적으면 다음과 같습니다.
 
-```java
-// FetchUser 바이트코드를 자바로 옮긴 것 (간추림)
-static Object fetchUser(String id, Continuation completion) {
-    // 1. 재개 중이면 받은 상태 객체를 쓰고, 처음 호출이면 새로 만든다
-    FetchUserKt$fetchUser$1 sm;
-    if (completion instanceof FetchUserKt$fetchUser$1
-            && (((FetchUserKt$fetchUser$1) completion).label & Integer.MIN_VALUE) != 0) {
-        sm = (FetchUserKt$fetchUser$1) completion;
-        sm.label -= Integer.MIN_VALUE;
+```kotlin
+// 컴파일러가 바꾼 fetchUser (의사 코드)
+fun fetchUser(id: String, completion: Continuation<Any?>): Any? {
+    // 재개 중이면 받은 상태 객체를 그대로 쓰고, 처음 호출이면 새로 만듭니다
+    val sm = if (completion is FetchUserStateMachine && completion.isResuming) {
+        completion.isResuming = false
+        completion
     } else {
-        sm = new FetchUserKt$fetchUser$1(completion);   // completion = 나를 부른 쪽
-    }
-    Object result = sm.result;
-    Object SUSPENDED = IntrinsicsKt.getCOROUTINE_SUSPENDED();
-    Object profile, friends;
-
-    switch (sm.label) {
-        case 0:
-            ResultKt.throwOnFailure(result);
-            sm.L$0 = id;                       // 일시 중단 전에 지역 변수 저장
-            sm.label = 1;                      // 재개되면 case 1로
-            profile = fetchProfile(id, sm);    // 자기 자신을 Continuation으로 넘김
-            if (profile == SUSPENDED) return SUSPENDED;
-            break;                             // 바로 결과가 왔으면 아래로 계속
-        case 1:
-            id = (String) sm.L$0;              // 저장해 둔 지역 변수 복원
-            ResultKt.throwOnFailure(result);   // 실패로 재개됐으면 여기서 예외
-            profile = result;
-            break;
-        case 2:
-            profile = sm.L$1;
-            id = (String) sm.L$0;
-            ResultKt.throwOnFailure(result);
-            friends = result;
-            return new User((Profile) profile, (List) friends);
-        default:
-            throw new IllegalStateException("call to 'resume' before 'invoke' with coroutine");
+        FetchUserStateMachine(completion)
     }
 
-    // fetchProfile 이후 (case 0에서 바로 오거나 case 1에서 옴)
-    sm.L$1 = profile;
-    sm.label = 2;
-    friends = fetchFriends(id, sm);
-    if (friends == SUSPENDED) return SUSPENDED;
-    return new User((Profile) profile, (List) friends);
+    // 단계 0: 처음 시작
+    if (sm.label == 0) {
+        sm.id = id                                // 멈추기 전에 나중에 쓸 값을 저장
+        sm.label = 1                              // 재개되면 단계 1부터
+        val value = fetchProfile(id, sm)          // 자기 자신을 Continuation 으로 넘김
+        if (value == COROUTINE_SUSPENDED) return COROUTINE_SUSPENDED
+        sm.result = Result.success(value)         // 바로 값이 왔으면 멈추지 않고 다음 단계로
+    }
+
+    // 단계 1: fetchProfile 의 결과를 받은 뒤
+    if (sm.label == 1) {
+        sm.profile = sm.result!!.getOrThrow() as Profile   // 실패로 재개됐으면 여기서 예외
+        sm.label = 2                                        // 재개되면 단계 2부터
+        val value = fetchFriends(sm.id!!, sm)
+        if (value == COROUTINE_SUSPENDED) return COROUTINE_SUSPENDED
+        sm.result = Result.success(value)
+    }
+
+    // 단계 2: fetchFriends 의 결과를 받은 뒤
+    val friends = sm.result!!.getOrThrow() as List<String>
+    return User(sm.profile!!, friends)
 }
 ```
 
-상태 클래스의 `invokeSuspend`는 받은 결과를 `result`에 넣고 `fetchUser`를 다시 부르는 일만 합니다.
-
-```java
-// FetchUserKt$fetchUser$1.invokeSuspend (바이트코드를 자바로 옮긴 것)
-public final Object invokeSuspend(Object result) {
-    this.result = result;
-    this.label |= Integer.MIN_VALUE;          // "재개 중" 표시
-    return FetchUserKt.fetchUser(null, this); // id 는 상태 객체에서 복원하므로 null
-}
-```
+원래 소스의 `fetchProfile` 호출 한 줄과 `fetchFriends` 호출 한 줄이 각각 한 단계가 되었습니다. 단계마다 하는 일은 같습니다. 나중에 쓸 값을 상태 객체에 저장하고, `label`을 다음 단계로 바꿔 두고, 다음 `suspend` 함수를 부르면서 자기 자신(`sm`)을 `Continuation`으로 넘깁니다.
 
 처음 호출과 재개를 차례로 따라가면 이렇습니다.
 
-1. **처음 호출.** 넘어온 `completion`은 `fetchUser`를 부른 쪽의 `Continuation`이므로 새 상태 객체를 만듭니다. `label`이 0이라 `case 0`에서 `id`를 저장하고 `label`을 1로 바꾼 뒤 `fetchProfile(id, sm)`을 부릅니다. `fetchProfile`이 `COROUTINE_SUSPENDED`를 돌려주면 `fetchUser`도 그대로 `COROUTINE_SUSPENDED`를 돌려주며 빠져나갑니다. 이 표시는 호출한 쪽으로 계속 전달되어, 앞 예제에서는 `startCoroutine`까지 돌아갔습니다.
-2. **재개.** 누군가 `sm.resumeWith(결과)`를 부르면 `invokeSuspend`를 거쳐 `fetchUser(null, sm)`이 다시 호출됩니다. 이번에는 넘어온 객체에 "재개 중" 표시가 있으므로 새로 만들지 않고 그대로 씁니다. `label`이 1이라 `case 1`로 들어가 `id`를 복원하고, 받은 결과를 `profile`로 쓰고, `fetchFriends`를 부릅니다.
+1. **처음 호출.** 넘어온 `completion`은 `fetchUser`를 부른 쪽의 `Continuation`이므로 새 상태 객체를 만듭니다. `label`이 0이라 단계 0에서 `id`를 저장하고 `label`을 1로 바꾼 뒤 `fetchProfile(id, sm)`을 부릅니다. `fetchProfile`이 `COROUTINE_SUSPENDED`를 돌려주면 `fetchUser`도 그대로 `COROUTINE_SUSPENDED`를 돌려주며 빠져나갑니다. 이 표시는 호출한 쪽으로 계속 전달되어, 앞 예제에서는 `startCoroutine`까지 돌아갔습니다.
+2. **재개.** 누군가 `sm.resumeWith(결과)`를 부르면 `invokeSuspend`를 거쳐 `fetchUser`가 다시 호출됩니다. 이번에는 넘어온 객체에 "재개 중" 표시가 있으므로 새로 만들지 않고 그대로 씁니다. `label`이 1이라 단계 0을 건너뛰고 단계 1로 들어가, 받은 결과를 `profile`로 저장하고 `fetchFriends`를 부릅니다.
 
-`fetchProfile`이 일시 중단하지 않고 값을 바로 돌려준 경우에는 `return` 없이 그다음 코드로 그대로 이어집니다. 앞의 `Marker.kt`처럼 기다릴 일이 없으면 상태 머신 안에서도 멈추지 않고 이어서 실행된다는 뜻입니다.
+`fetchProfile`이 일시 중단하지 않고 값을 바로 돌려준 경우에는 `return` 없이 단계 1로 그대로 이어집니다. 앞의 `Marker.kt`처럼 기다릴 일이 없으면 상태 머신 안에서도 멈추지 않고 이어서 실행된다는 뜻입니다.
 
-`label`의 가장 높은 비트(`Integer.MIN_VALUE`)는 "재개 중"을 표시합니다. 이 표시가 필요한 이유는 재귀 호출 때문입니다. `fetchUser`가 자기 자신을 부르면, 안쪽 호출에 넘어오는 `completion`은 바깥 `fetchUser`의 상태 객체이고 타입도 같습니다. 타입만 보고 재사용하면 바깥 호출의 상태를 덮어쓰게 되므로, 표시가 있을 때만 "나를 재개하는 중"으로 보고 재사용합니다. 책은 이 줄에 "시작됨으로 표시"라는 주석을 달았는데, 실제 의미는 재개 표시입니다.
+"재개 중" 표시가 따로 필요한 이유는 재귀 호출 때문입니다. `fetchUser`가 자기 자신을 부르면, 안쪽 호출에 넘어오는 `completion`은 바깥 `fetchUser`의 상태 객체이고 타입도 같습니다. 타입만 보고 재사용하면 바깥 호출의 상태를 덮어쓰게 되므로, 표시가 있을 때만 "나를 재개하는 중"으로 보고 재사용합니다. 실제 바이트코드는 필드를 따로 두지 않고 `label`의 가장 높은 비트(`Integer.MIN_VALUE`)에 이 표시를 넣습니다. 책은 이 줄에 "시작됨으로 표시"라는 주석을 달았는데, 실제 의미는 재개 표시입니다.
 
-책의 개념 코드는 `while (true)` 루프 안에 `switch`를 둔 모양이지만, 실제 바이트코드에는 루프가 없습니다. 값이 바로 오면 다음 단계 코드로 넘어가고, 일시 중단되면 반환하는 분기만 있습니다. 흐름을 이해하는 데에는 어느 쪽으로 봐도 차이가 없습니다.
+실제 바이트코드는 단계를 `if` 세 덩어리가 아니라 `switch (label)` 하나로 나누지만, 흐름은 같습니다. 책의 개념 코드처럼 `while (true)` 루프를 돌지도 않습니다. 값이 바로 오면 다음 단계로 넘어가고, 일시 중단되면 반환할 뿐입니다.
 
 ## 재개 과정과 Continuation 사슬 {#resume-chain}
 
@@ -273,41 +259,34 @@ fun main() {
 
 `inner` 자신의 상태 객체는 없습니다. 실제로 컴파일 결과에도 `ChainKt$middle$1`, `ChainKt$outer$1`만 있고 `inner`용 클래스는 생기지 않습니다. `inner`처럼 마지막에 `suspend` 함수 하나를 부르고 그 결과를 그대로 반환하는 함수는, 재개된 뒤에 할 일이 없으므로 받은 `Continuation`을 그대로 넘기기만 하면 되기 때문입니다.
 
-재개할 때 이 사슬을 거슬러 올라가는 일은 모든 상태 객체의 부모 클래스인 `BaseContinuationImpl`이 맡습니다.
+재개할 때 이 사슬을 거슬러 올라가는 일은 모든 상태 객체의 부모 클래스인 `BaseContinuationImpl`이 맡습니다. 앞의 `FetchUserStateMachine`도 이 클래스를 물려받습니다.
 
 ```kotlin
-// ContinuationImpl.kt (kotlin-stdlib 2.4.21, 디버깅용 호출과 주석 생략)
-internal abstract class BaseContinuationImpl(
-    public val completion: Continuation<Any?>?
-) : Continuation<Any?>, CoroutineStackFrame, Serializable {
+// BaseContinuationImpl.resumeWith (의사 코드, 실제 소스: kotlin-stdlib 2.4.21 ContinuationImpl.kt)
+override fun resumeWith(result: Result<Any?>) {
+    var current: BaseContinuationImpl = this   // 지금 재개할 상태 객체
+    var param = result                         // 그 객체에 넘길 결과
 
-    public final override fun resumeWith(result: Result<Any?>) {
-        var current = this
-        var param = result
-        while (true) {
-            with(current) {
-                val completion = completion!!
-                val outcome: Result<Any?> =
-                    try {
-                        val outcome = invokeSuspend(param)
-                        if (outcome === COROUTINE_SUSPENDED) return
-                        Result.success(outcome)
-                    } catch (exception: Throwable) {
-                        Result.failure(exception)
-                    }
-                releaseIntercepted()
-                if (completion is BaseContinuationImpl) {
-                    current = completion
-                    param = outcome
-                } else {
-                    completion.resumeWith(outcome)
-                    return
-                }
-            }
+    while (true) {
+        // 1. 멈춘 자리부터 실행합니다
+        val outcome = try {
+            val value = current.invokeSuspend(param)
+            if (value == COROUTINE_SUSPENDED) return   // 2. 또 멈췄으면 여기서 끝
+            Result.success(value)
+        } catch (e: Throwable) {
+            Result.failure(e)                          // 예외도 결과로 담습니다
+        }
+
+        // 3. 끝까지 실행됐으면 결과를 들고 나를 부른 쪽으로 올라갑니다
+        val caller = current.completion!!
+        if (caller is BaseContinuationImpl) {
+            current = caller
+            param = outcome
+        } else {
+            caller.resumeWith(outcome)                 // 4. 사슬 끝의 완료용 Continuation 에 전달
+            return
         }
     }
-
-    protected abstract fun invokeSuspend(result: Result<Any?>): Any?
 }
 ```
 
@@ -390,7 +369,7 @@ public suspend inline fun <T> suspendCoroutine(crossinline block: (Continuation<
 
 ## 예외 전달 {#exception}
 
-`resumeWith`가 `Result`를 받으므로 예외도 같은 길로 전달됩니다. 결과 대신 예외로 재개하면, 상태 머신의 `throwOnFailure(result)`가 일시 중단 지점에서 그 예외를 던집니다.
+`resumeWith`가 `Result`를 받으므로 예외도 같은 길로 전달됩니다. 결과 대신 예외로 재개하면, 상태 머신이 결과를 꺼내는 `getOrThrow()`가 일시 중단 지점에서 그 예외를 던집니다. 실제 바이트코드에서는 `throwOnFailure(result)`라는 함수가 같은 일을 합니다.
 
 ```kotlin
 // Fail.kt
@@ -415,9 +394,9 @@ fun main() {
 
 ## 요약 {#summary}
 
-`Continuation`은 `context`와 `resumeWith(Result<T>)` 하나를 가진 인터페이스로, 일시 중단된 코루틴의 "나머지 할 일"과 그때의 지역 변수를 담은 객체입니다. 컴파일러는 `suspend` 함수에 `Continuation` 파라미터를 붙이고 반환 타입을 `Object`로 바꿉니다. 함수는 끝까지 실행되면 결과 값을, 실제로 일시 중단되면 `COROUTINE_SUSPENDED`를 돌려줍니다.
+`Continuation`은 `context`와 `resumeWith(Result<T>)` 하나를 가진 인터페이스로, 일시 중단된 코루틴의 "나머지 할 일"과 그때의 지역 변수를 담은 객체입니다. 컴파일러는 `suspend` 함수에 `Continuation` 파라미터를 붙이고 반환 타입을 `Any?`(바이트코드의 `Object`)로 바꿉니다. 함수는 끝까지 실행되면 결과 값을, 실제로 일시 중단되면 `COROUTINE_SUSPENDED`를 돌려줍니다.
 
-함수 본문은 `label`과 지역 변수 칸(`L$0`, `L$1` …)을 가진 상태 객체를 쓰는 상태 머신으로 바뀝니다. 일시 중단은 이 객체에 상태를 저장하고 `COROUTINE_SUSPENDED`를 반환하는 것이고, 재개는 누군가 이 객체의 `resumeWith`를 불러 `label`이 가리키는 자리부터 다시 실행하는 것입니다. 상태 객체는 자기를 부른 쪽의 `Continuation`(`completion`)을 들고 있어 사슬을 이루고, 끝까지 실행되면 결과를 들고 이 사슬을 거슬러 올라갑니다.
+함수 본문은 `label`과 지역 변수 칸(바이트코드의 `L$0`, `L$1` …)을 가진 상태 객체를 쓰는 상태 머신으로 바뀝니다. 일시 중단은 이 객체에 상태를 저장하고 `COROUTINE_SUSPENDED`를 반환하는 것이고, 재개는 누군가 이 객체의 `resumeWith`를 불러 `label`이 가리키는 자리부터 다시 실행하는 것입니다. 상태 객체는 자기를 부른 쪽의 `Continuation`(`completion`)을 들고 있어 사슬을 이루고, 끝까지 실행되면 결과를 들고 이 사슬을 거슬러 올라갑니다.
 
 `resume`은 결과를 가진 쪽이 부르고, 컨텍스트에 디스패처가 있으면 나머지 실행은 디스패처가 정한 스레드로 넘어갑니다. 예외도 `Result.failure`로 같은 길을 따라 전달되어 일시 중단 지점에서 던져지므로 `try`/`catch`로 잡을 수 있습니다.
 
@@ -429,18 +408,18 @@ fun main() {
 결과 하나를 받는 콜백과 구조가 같습니다. 차이는 콜백 방식에서는 나머지 일을 사람이 람다로 떼어 넘기지만, 코루틴에서는 컴파일러가 `suspend` 함수 본문으로부터 이 객체를 만들어 넘긴다는 점입니다. 그래서 코드는 순서대로 쓰면서도 실행은 콜백처럼 나뉘어 이루어집니다.
 
 </def>
-<def title="Q) 컴파일러는 suspend 함수의 시그니처를 어떻게 바꾸나요? 반환 타입이 Object가 되는 이유는 무엇인가요?">
+<def title="Q) 컴파일러는 suspend 함수의 시그니처를 어떻게 바꾸나요? 반환 타입이 Any?(Object)가 되는 이유는 무엇인가요?">
 
-`suspend` 수정자를 없애고 마지막 파라미터로 `Continuation`을 붙이며, 반환 타입을 `Object`로 바꿉니다. `suspend fun fetchUser(id: String): User`는 `Object fetchUser(String, Continuation<? super User>)`가 됩니다.
+`suspend` 수정자를 없애고 마지막 파라미터로 `Continuation`을 붙이며, 반환 타입을 `Any?`(바이트코드의 `Object`)로 바꿉니다. `suspend fun fetchUser(id: String): User`는 `fun fetchUser(id: String, continuation: Continuation<User>): Any?`가 됩니다.
 
-반환 타입이 `Object`인 이유는 두 종류의 값을 돌려줄 수 있어야 하기 때문입니다. 기다릴 일 없이 끝나면 결과 값을 그대로 돌려주고, 실제로 일시 중단되면 `COROUTINE_SUSPENDED` 표시 객체를 돌려줍니다. 후자의 경우 실제 결과는 나중에 `Continuation`의 `resumeWith`로 전달됩니다.
+반환 타입이 `Any?`인 이유는 두 종류의 값을 돌려줄 수 있어야 하기 때문입니다. 기다릴 일 없이 끝나면 결과 값을 그대로 돌려주고, 실제로 일시 중단되면 `COROUTINE_SUSPENDED` 표시 객체를 돌려줍니다. 후자의 경우 실제 결과는 나중에 `Continuation`의 `resumeWith`로 전달됩니다.
 
 </def>
 <def title="Q) 상태 머신에서 label과 L$0 같은 필드는 무슨 역할을 하나요?">
 
-`label`은 재개될 때 어느 일시 중단 지점 뒤부터 이어 갈지를 나타냅니다. 함수는 `switch (label)`로 해당 위치에 바로 들어갑니다. 일시 중단 지점에 들어가기 전에 `label`을 다음 값으로 바꿔 둡니다.
+`label`은 재개될 때 어느 일시 중단 지점 뒤부터 이어 갈지를 나타냅니다. 함수는 `label` 값을 보고 해당 단계로 바로 들어갑니다. 일시 중단 지점에 들어가기 전에 `label`을 다음 값으로 바꿔 둡니다.
 
-`L$0`, `L$1` 같은 필드는 일시 중단 지점을 넘어서도 쓰이는 지역 변수를 저장합니다. 일반 함수의 지역 변수는 스택에 있다가 반환하면 사라지지만, 일시 중단은 함수가 반환하는 것이므로 다시 쓸 값을 힙의 상태 객체에 옮겨 두고 재개할 때 복원합니다.
+`L$0`, `L$1` 같은 필드는 일시 중단 지점을 넘어서도 쓰이는 지역 변수를 저장합니다. 바이트코드에서는 원래 변수 이름 대신 이런 번호 이름이 붙습니다. 일반 함수의 지역 변수는 스택에 있다가 반환하면 사라지지만, 일시 중단은 함수가 반환하는 것이므로 다시 쓸 값을 힙의 상태 객체에 옮겨 두고 재개할 때 복원합니다.
 
 </def>
 <def title="Q) suspend 함수를 호출하면 항상 일시 중단되나요?">

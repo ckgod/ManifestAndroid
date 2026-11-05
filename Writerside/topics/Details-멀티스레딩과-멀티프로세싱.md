@@ -33,27 +33,43 @@ JVM과 안드로이드 런타임에는 그런 제약이 없어서, 한 프로세
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
+fun isPrime(n: Int): Boolean {
+    if (n < 2) return false
+    var d = 2
+    while (d * d <= n) {          // √n 까지만 나눠 보면 충분합니다
+        if (n % d == 0) return false
+        d++
+    }
+    return true
+}
+
+// from 이상 to 미만의 소수 개수
 fun countPrimes(from: Int, to: Int): Int {
     var count = 0
     for (n in from until to) {
-        if (n < 2) continue
-        var prime = true
-        var d = 2
-        while (d * d <= n) { if (n % d == 0) { prime = false; break }; d++ }
-        if (prime) count++
+        if (isPrime(n)) count++
     }
     return count
 }
 
-suspend fun parallel(n: Int, chunks: Int) = coroutineScope {
-    (0 until chunks).map { i ->
-        async(Dispatchers.Default) { countPrimes(i * n / chunks, (i + 1) * n / chunks) }
-    }.awaitAll().sum()
+// 0 ~ n 을 chunks 개 구간으로 나눠 Dispatchers.Default 에서 동시에 센 뒤 합칩니다
+suspend fun parallel(n: Int, chunks: Int): Int = coroutineScope {
+    val parts = (0 until chunks).map { i ->
+        val from = i * n / chunks
+        val to = (i + 1) * n / chunks
+        async(Dispatchers.Default) { countPrimes(from, to) }
+    }
+    parts.awaitAll().sum()
 }
 
 fun main() = runBlocking {
     val n = 5_000_000
-    repeat(3) { countPrimes(0, n); parallel(n, 8) }   // JIT 워밍업
+
+    // JIT 워밍업: 처음 몇 번은 느리므로 미리 돌려 둡니다
+    repeat(3) {
+        countPrimes(0, n)
+        parallel(n, 8)
+    }
 
     val one = measureTimeMillis { countPrimes(0, n) }
     val many = measureTimeMillis { parallel(n, 8) }

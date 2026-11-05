@@ -309,13 +309,13 @@ import kotlin.concurrent.thread
 import kotlin.coroutines.*
 import kotlinx.coroutines.runBlocking
 
-fun t() = Thread.currentThread().name
+fun threadName() = Thread.currentThread().name
 
 // 콜백 API를 suspend 함수로 감쌉니다. 응답은 "network" 스레드에서 옵니다
 suspend fun fetch(): String = suspendCoroutine { cont ->
     thread(name = "network") {
         Thread.sleep(100)
-        println("  resume 호출 [${t()}]")
+        println("  resume 호출 [${threadName()}]")
         cont.resume("응답")
     }
 }
@@ -323,15 +323,15 @@ suspend fun fetch(): String = suspendCoroutine { cont ->
 fun main() {
     println("1) 디스패처 없음")
     suspend {
-        val r = fetch()
-        println("  $r 이후 코드 [${t()}]")
+        val response = fetch()
+        println("  $response 이후 코드 [${threadName()}]")
     }.startCoroutine(Continuation(EmptyCoroutineContext) {})
-    Thread.sleep(300)
+    Thread.sleep(300)   // network 스레드가 끝날 때까지 기다림
 
     println("2) runBlocking 안")
     runBlocking {
-        val r = fetch()
-        println("  $r 이후 코드 [${t()}]")
+        val response = fetch()
+        println("  $response 이후 코드 [${threadName()}]")
     }
 }
 ```

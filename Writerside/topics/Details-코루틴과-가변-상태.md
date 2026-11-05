@@ -12,17 +12,34 @@
 // Sequential.kt
 import kotlinx.coroutines.*
 
-fun t() = Thread.currentThread().name
+fun threadName() = Thread.currentThread().name
 
 fun main() = runBlocking<Unit> {
     launch(Dispatchers.Default) {
-        val m = mutableMapOf<String, String>()
-        val v1 = async(Dispatchers.IO) { delay(100); "값1" }
-        val v2 = async(Dispatchers.IO) { delay(50); "값2" }
-        m["k1"] = v1.await(); println("k1 저장 [${t()}]")
-        m["k2"] = v2.await(); println("k2 저장 [${t()}]")
-        withContext(Dispatchers.IO) { m["k3"] = "값3"; println("k3 저장 [${t()}]") }
-        println("$m [${t()}]")
+        val map = mutableMapOf<String, String>()   // 이 코루틴만 쓰는 일반 가변 맵
+
+        // 값은 다른 코루틴 둘이 동시에 만듭니다
+        val v1 = async(Dispatchers.IO) {
+            delay(100)
+            "값1"
+        }
+        val v2 = async(Dispatchers.IO) {
+            delay(50)
+            "값2"
+        }
+
+        map["k1"] = v1.await()                     // 일시 중단했다가 재개
+        println("k1 저장 [${threadName()}]")
+
+        map["k2"] = v2.await()
+        println("k2 저장 [${threadName()}]")
+
+        withContext(Dispatchers.IO) {              // IO 디스패처로 옮겨서 씀
+            map["k3"] = "값3"
+            println("k3 저장 [${threadName()}]")
+        }
+
+        println("$map [${threadName()}]")
     }
 }
 ```
@@ -34,9 +51,9 @@ k3 저장 [DefaultDispatcher-worker-3]
 {k1=값1, k2=값2, k3=값3} [DefaultDispatcher-worker-1]
 ```
 
-`v1`, `v2`는 다른 코루틴에서 동시에 계산되지만, 맵 `m`을 고치는 것은 바깥 코루틴 하나뿐입니다. 이 코루틴은 `await`에서 일시 중단되었다가 재개되고, 이번 실행에서는 마지막 줄이 처음과 다른 스레드(`worker-1`)에서 실행되었습니다. 어느 스레드에서 재개될지는 실행할 때마다 달라집니다. 그래도 `m`에 대한 쓰기는 한 번에 하나씩, 적힌 순서대로 일어났고 결과도 맞습니다.
+`v1`, `v2`는 다른 코루틴에서 동시에 계산되지만, `map`을 고치는 것은 바깥 코루틴 하나뿐입니다. 이 코루틴은 `await`에서 일시 중단되었다가 재개되고, 이번 실행에서는 마지막 줄이 처음과 다른 스레드(`worker-1`)에서 실행되었습니다. 어느 스레드에서 재개될지는 실행할 때마다 달라집니다. 그래도 `map`에 대한 쓰기는 한 번에 하나씩, 적힌 순서대로 일어났고 결과도 맞습니다.
 
-스레드가 바뀌었는데도 동기화 없이 안전한 이유는 재개 과정 자체가 동기화를 거치기 때문입니다. 디스패처는 재개할 코루틴을 스레드 간 공유 작업 큐에 넣고, 다른 스레드가 그 큐에서 꺼내 실행합니다. 이 큐는 넣기 전에 쓴 값이 꺼낸 뒤에 보이도록 보장하므로(<tooltip term="Happens_Before">happens-before</tooltip> 관계), 일시 중단 전에 쓴 값은 다른 스레드에서 재개된 뒤에도 그대로 보입니다. 그래서 코루틴 하나만 쓰는 가변 객체는 스레드가 바뀌어도 `ConcurrentHashMap`이나 락 없이 써도 됩니다. `m`이 이 코루틴 안의 지역 변수라서 다른 코루틴이 건드릴 방법이 없다는 점이 중요합니다.
+스레드가 바뀌었는데도 동기화 없이 안전한 이유는 재개 과정 자체가 동기화를 거치기 때문입니다. 디스패처는 재개할 코루틴을 스레드 간 공유 작업 큐에 넣고, 다른 스레드가 그 큐에서 꺼내 실행합니다. 이 큐는 넣기 전에 쓴 값이 꺼낸 뒤에 보이도록 보장하므로(<tooltip term="Happens_Before">happens-before</tooltip> 관계), 일시 중단 전에 쓴 값은 다른 스레드에서 재개된 뒤에도 그대로 보입니다. 그래서 코루틴 하나만 쓰는 가변 객체는 스레드가 바뀌어도 `ConcurrentHashMap`이나 락 없이 써도 됩니다. `map`이 이 코루틴 안의 지역 변수라서 다른 코루틴이 건드릴 방법이 없다는 점이 중요합니다.
 
 ## 여러 코루틴의 상태 공유 {#shared}
 
@@ -48,24 +65,33 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.*
 import java.util.concurrent.atomic.AtomicInteger
 
+// 코루틴 1,000개를 띄우고, 코루틴마다 action 을 1,000번 실행합니다
 suspend fun massiveRun(action: suspend () -> Unit) = coroutineScope {
-    repeat(1000) { launch { repeat(1000) { action() } } }
+    repeat(1000) {
+        launch {
+            repeat(1000) { action() }
+        }
+    }
 }
 
 fun main() = runBlocking {
+    // 1. 아무 보호 없이 올리기
     var plain = 0
     withContext(Dispatchers.Default) { massiveRun { plain++ } }
     println("보호 없음: $plain")
 
+    // 2. 원자적 변수로 올리기
     val atomic = AtomicInteger()
     withContext(Dispatchers.Default) { massiveRun { atomic.incrementAndGet() } }
     println("AtomicInteger: ${atomic.get()}")
 
+    // 3. Mutex 로 감싸서 올리기
     val mutex = Mutex()
     var locked = 0
     withContext(Dispatchers.Default) { massiveRun { mutex.withLock { locked++ } } }
     println("Mutex: $locked")
 
+    // 4. 한 번에 하나씩만 실행하는 디스패처 안에서만 올리기
     val single = Dispatchers.Default.limitedParallelism(1)
     var confined = 0
     withContext(Dispatchers.Default) { massiveRun { withContext(single) { confined++ } } }

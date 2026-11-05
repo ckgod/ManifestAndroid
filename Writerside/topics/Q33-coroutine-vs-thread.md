@@ -45,19 +45,23 @@ fun main() {
 // Coroutines.kt
 import kotlinx.coroutines.*
 
-fun usedMb(): Long {
-    repeat(3) { System.gc(); Thread.sleep(50) }
-    val r = Runtime.getRuntime()
-    return (r.totalMemory() - r.freeMemory()) / 1_000_000
+// 지금 쓰고 있는 힙 크기(MB). 정확히 재려고 GC를 몇 번 돌린 뒤 잽니다
+fun usedHeapMb(): Long {
+    repeat(3) {
+        System.gc()
+        Thread.sleep(50)
+    }
+    val runtime = Runtime.getRuntime()
+    return (runtime.totalMemory() - runtime.freeMemory()) / 1_000_000
 }
 
 fun main() = runBlocking {
-    val before = usedMb()
+    val before = usedHeapMb()
     val jobs = List(100_000) {
         launch { delay(1000L) }
     }
     delay(500)   // 10만 개가 모두 delay 에서 일시 중단된 상태
-    val during = usedMb()
+    val during = usedHeapMb()
     println("코루틴 10만 개 일시 중단 중: 힙 ${during - before}MB 증가, 스레드 ${Thread.activeCount()}개")
     jobs.joinAll()
     println("모두 완료")
@@ -118,13 +122,20 @@ fun main() = runBlocking<Unit> {
 // Blocking.kt
 import kotlinx.coroutines.*
 
-fun t() = Thread.currentThread().name
+fun threadName() = Thread.currentThread().name
 
 fun main() = runBlocking<Unit> {
     val start = System.currentTimeMillis()
-    fun el() = System.currentTimeMillis() - start
-    launch { Thread.sleep(500); println("A 끝 ${el()}ms [${t()}]") }
-    launch { Thread.sleep(500); println("B 끝 ${el()}ms [${t()}]") }
+    fun elapsed() = System.currentTimeMillis() - start   // 시작부터 지난 시간(ms)
+
+    launch {
+        Thread.sleep(500)   // 코루틴이 아니라 main 스레드 자체를 멈춥니다
+        println("A 끝 ${elapsed()}ms [${threadName()}]")
+    }
+    launch {
+        Thread.sleep(500)
+        println("B 끝 ${elapsed()}ms [${threadName()}]")
+    }
 }
 ```
 

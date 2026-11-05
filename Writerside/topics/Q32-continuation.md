@@ -79,7 +79,9 @@ resume 반환
 
 출력 순서에서 두 가지를 알 수 있습니다.
 
-**일시 중단은 함수가 반환하는 것입니다.** `startCoroutine`은 코루틴을 시작해서 `fetchProfile`의 일시 중단 지점까지 실행한 뒤 바로 돌아왔습니다. 코루틴이 어딘가에서 스레드를 붙잡고 기다린 것이 아닙니다. `fetchUser`가 끝나지 않은 채로 반환했고, 이어서 할 일은 `saved`에 들어 있는 객체에 남았습니다.
+**일시 중단은 함수가 "아직 안 끝났다"는 표시를 들고 호출한 쪽으로 빠져나오는 것입니다.** 여기서 반환은 결과를 돌려준다는 뜻이 아닙니다. `startCoroutine`은 코루틴을 시작해서 `fetchProfile`의 일시 중단 지점까지 실행한 뒤 바로 돌아왔습니다. `suspendCoroutine`이 `Continuation`을 `saved`에 넣고 `COROUTINE_SUSPENDED`라는 표시를 반환하자, 이 표시가 `fetchProfile` → `fetchUser` → 코루틴 람다 → `startCoroutine` 순으로 전달되면서 호출된 함수가 전부 빠져나왔기 때문입니다(이 표시는 아래 [컴파일러의 CPS 변환](#cps-transformation)에서 다시 봅니다).
+
+그래서 이 시점에 `main` 스레드의 호출 스택에는 `fetchUser`가 남아 있지 않고, 이어서 할 일은 `saved`가 가리키는 힙의 객체에만 남았습니다. 코루틴이 어딘가에서 스레드를 붙잡고 기다린 것이 아닙니다. `Thread.sleep`이 함수 안에서 스레드를 세워 둔 채 기다리는 것과 반대입니다.
 
 **재개는 그 객체의 메서드를 부르는 것입니다.** `saved!!.resume(...)`을 부르자 `fetchUser`가 `fetchProfile` 다음 줄부터 이어서 실행되었습니다. 앞에서 받은 `id`도 그대로 남아 있어서 `fetchFriends(id)`를 불렀습니다. 그리고 다음 일시 중단 지점에서 또 반환해서 `resume 반환`이 찍혔습니다. 두 번째 `resume`에서는 끝까지 실행되어 `User`를 만들었고, 그 결과가 `startCoroutine`에 넘긴 완료용 `Continuation`으로 전달되어 `완료:` 줄이 찍혔습니다.
 

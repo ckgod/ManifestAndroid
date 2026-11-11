@@ -4,6 +4,58 @@
 
 예제는 Kotlin 2.4.21, kotlinx-coroutines 1.11.0, JDK 25에서 실행했습니다. 라이브러리 내부 코드도 같은 버전의 소스에서 옮겼습니다.
 
+## 코루틴 컨텍스트 미리 보기 {#context-preview}
+
+모든 빌더의 첫 번째 인자는 `context: CoroutineContext`입니다. 코루틴 컨텍스트는 다음 토픽(Q35)에서 자세히 다루고, 여기서는 이 토픽을 읽는 데 필요한 만큼만 봅니다.
+
+코루틴 컨텍스트는 코루틴을 실행하는 데 필요한 설정을 모아 둔 묶음입니다. 안드로이드의 `Context`와는 이름만 같고 관계가 없습니다. 묶음에 들어가는 대표 요소는 네 가지입니다.
+
+| 요소 | 정하는 것 | 예 |
+|---|---|---|
+| `CoroutineDispatcher` | 어느 스레드에서 실행할지 | `Dispatchers.Main`, `Dispatchers.IO`, `Dispatchers.Default` |
+| `Job` | 코루틴의 상태, 부모·자식 관계, 취소 | `Job()`, `SupervisorJob()` |
+| `CoroutineName` | 디버깅할 때 보이는 이름 | `CoroutineName("다운로드")` |
+| `CoroutineExceptionHandler` | 잡히지 않은 예외를 받을 곳 | `CoroutineExceptionHandler { _, e -> ... }` |
+
+요소는 `+`로 합치고, 종류마다 하나씩만 들어갑니다. 꺼낼 때는 요소의 종류를 키로 씁니다.
+
+```kotlin
+// ContextBasics.kt
+import kotlinx.coroutines.*
+
+fun main() = runBlocking<Unit> {
+    // 1. 요소를 + 로 합쳐 컨텍스트를 만듭니다
+    val context = Dispatchers.IO + CoroutineName("다운로드")
+    println("1) $context")
+
+    // 2. 종류를 키로 요소를 꺼냅니다
+    println("2) 이름=${context[CoroutineName]?.name}, Job=${context[Job]}")
+
+    // 3. 같은 종류를 더하면 뒤의 것이 앞의 것을 대신합니다
+    val renamed = context + CoroutineName("업로드")
+    println("3) $renamed")
+
+    // 4. 코루틴 안에서는 coroutineContext 로 자기 컨텍스트를 읽습니다
+    launch(renamed) {
+        val job = coroutineContext[Job]
+        println("4) 이름=${coroutineContext[CoroutineName]?.name}, Job 있음=${job != null}, 스레드=${Thread.currentThread().name}")
+    }
+}
+```
+
+```text
+1) [CoroutineName(다운로드), Dispatchers.IO]
+2) 이름=다운로드, Job=null
+3) [CoroutineName(업로드), Dispatchers.IO]
+4) 이름=업로드, Job 있음=true, 스레드=DefaultDispatcher-worker-1
+```
+
+- 3)에서 이름은 "업로드"로 바뀌었고 디스패처는 그대로입니다. 같은 종류끼리만 대신합니다.
+- 2)에서 직접 만든 컨텍스트에는 `Job`이 없었는데, 4)의 코루틴 안에는 있습니다. 빌더가 코루틴을 만들면서 `Job`을 채워 넣기 때문입니다. 어떻게 채우는지가 아래 [컨텍스트 합치기](#new-context)의 내용입니다.
+- 4)의 스레드 이름이 `DefaultDispatcher-worker-1`인 것은 `Dispatchers.IO`가 `Dispatchers.Default`와 스레드 풀을 함께 쓰기 때문입니다.
+
+빌더에 넘기는 `context` 인자는 "부모 코루틴에게서 물려받은 설정 중 바꾸고 싶은 부분"입니다. `launch(Dispatchers.IO) { }`는 "다른 건 부모 것을 그대로 쓰고 디스패처만 IO로"라는 뜻입니다. 기본값 `EmptyCoroutineContext`는 아무것도 바꾸지 않는다는 뜻입니다.
+
 ## 빌더의 공통 구조 {#common-structure}
 
 `launch`의 실제 소스는 열 줄 남짓입니다.

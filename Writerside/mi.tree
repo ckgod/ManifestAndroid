@@ -286,6 +286,11 @@
                 <toc-element topic="Q36-job.md">
                     <toc-element topic="Details-SupervisorJob.md"/>
                 </toc-element>
+                <toc-element topic="Q37-coroutine-scope.md">
+                    <toc-element topic="Details-GlobalScope를-신중하게-써야-하는-이유.md"/>
+                    <toc-element topic="Details-coroutineScope-함수.md"/>
+                    <toc-element topic="Details-supervisorScope-함수.md"/>
+                </toc-element>
             </toc-element>
             <toc-element topic="1-4-KotlinX.md"/>
             <toc-element topic="1-5-Compiler-Plugins.md"/>

@@ -2,7 +2,7 @@
 
 `coroutineScope { }`는 `suspend` 함수 안에서 임시 스코프를 하나 열어 주는 함수입니다. 블록 안에서는 `launch`, `async`로 여러 코루틴을 동시에 시작할 수 있고, 함수는 그 코루틴들이 **모두 끝난 뒤에** 돌아옵니다. `suspend` 함수 하나가 일을 여러 갈래로 나눠 동시에 처리하고, 다 모아서 결과를 돌려줄 때 씁니다.
 
-[Q37](Q37-coroutine-scope.md#scope-object-vs-function)에서 스코프 객체와 이 함수의 차이를 봤습니다. 여기서는 이 함수가 지키는 규칙, 실패했을 때의 동작, 그리고 그것을 만드는 내부 구현(`ScopeCoroutine`)을 봅니다.
+[Q37](Q37-coroutine-scope.md#scope-object-vs-function)에서 스코프 인스턴스와 이 함수의 차이를 봤습니다. 여기서는 이 함수가 지키는 규칙, 실패했을 때의 동작, 그리고 그것을 만드는 내부 구현(`ScopeCoroutine`)을 봅니다.
 
 예제는 Kotlin 2.4.21, kotlinx-coroutines 1.11.0, JDK 25에서 실행했고, 소스도 같은 버전에서 옮겼습니다.
 

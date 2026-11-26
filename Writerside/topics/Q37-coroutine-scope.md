@@ -2,7 +2,7 @@
 
 코루틴 스코프(`CoroutineScope`)는 코루틴을 시작하는 자리입니다. 어떤 스코프에서 `launch`나 `async`를 부르느냐에 따라 새 코루틴이 어느 스레드에서 실행되는지, 누구의 자식이 되는지, 언제 함께 취소되는지가 정해집니다. 그래서 스코프를 고르는 것은 "이 작업을 무엇의 생명주기에 묶을 것인가"를 고르는 일입니다.
 
-Q34에서 빌더가 스코프의 컨텍스트를 이어받는 과정을, Q35에서 컨텍스트에 든 요소를, Q36에서 `Job`의 부모·자식 관계를 봤습니다. 이 토픽에서는 그 셋을 하나로 묶는 스코프 쪽에서 봅니다. 인터페이스가 얼마나 작은지, `CoroutineScope()` 함수가 무엇을 덧붙이는지, 스코프를 객체의 생명주기에 묶는 법, 미리 만들어진 스코프들의 구성, 그리고 스코프 객체와 `coroutineScope { }` 함수의 차이입니다.
+Q34에서 빌더가 스코프의 컨텍스트를 이어받는 과정을, Q35에서 컨텍스트에 든 요소를, Q36에서 `Job`의 부모·자식 관계를 봤습니다. 이 토픽에서는 그 셋을 하나로 묶는 스코프 쪽에서 봅니다. 인터페이스가 얼마나 작은지, `CoroutineScope()` 함수가 무엇을 덧붙이는지, 스코프를 객체의 생명주기에 묶는 법, 미리 만들어진 스코프들의 구성, 그리고 스코프 인스턴스와 `coroutineScope { }` 함수의 차이입니다.
 
 심화 주제는 따로 나눴습니다.
 
@@ -55,11 +55,21 @@ public operator fun CoroutineScope.plus(context: CoroutineContext): CoroutineSco
 | 주로 하는 일 | `launch`, `async`의 수신 객체, `cancel()`의 대상 | 빌더 인자, `withContext` 인자, 자식에게 물려줄 값 |
 | 어디에 두나 | 클래스 프로퍼티처럼 생명주기를 가진 곳 | 요소끼리 `+`로 합쳐 넘기는 값 |
 
-`CoroutineScope`라는 타입이 따로 있기 때문에 "이 함수는 코루틴을 시작한다"는 사실이 함수 선언에 드러납니다. 아래 [스코프 객체와 coroutineScope 함수](#scope-object-vs-function)에서 이 약속을 다시 봅니다.
+`CoroutineScope`라는 타입이 따로 있기 때문에 "이 함수는 코루틴을 시작한다"는 사실이 함수 선언에 드러납니다. 아래 [스코프 인스턴스와 coroutineScope 함수](#scope-object-vs-function)에서 이 약속을 다시 봅니다.
 
 ## CoroutineScope() 함수 {#factory}
 
-스코프를 직접 만들 때는 `CoroutineScope(context)` 함수를 씁니다. 이름이 대문자로 시작하지만 생성자가 아니라 함수입니다.
+스코프를 직접 만들 때는 `CoroutineScope(context)` 함수를 씁니다. 이름이 대문자로 시작하지만 생성자가 아니라 함수입니다. 인터페이스는 생성자를 가질 수 없으므로, 인터페이스와 같은 이름의 함수를 만들어 생성자처럼 보이게 한 것입니다. `Job()`, `SupervisorJob()`도 같은 방식의 함수입니다.
+
+그래서 `CoroutineScope`라는 이름은 문맥에 따라 세 가지를 가리킵니다.
+
+| 쓰인 모양 | 가리키는 것 | 예 |
+|---|---|---|
+| 타입 자리 | 인터페이스 | `private val scope: CoroutineScope`, `fun CoroutineScope.startUpload()` |
+| 괄호를 붙여 호출 | 스코프를 만드는 함수 | `CoroutineScope(Dispatchers.IO)` |
+| 실제로 만들어진 값 | 인터페이스를 구현한 인스턴스 | 함수가 돌려준 `ContextScope`, `GlobalScope`, `launch` 블록의 `this` |
+
+이 토픽에서 "스코프"라고만 쓰면 셋째, 즉 인터페이스를 구현해서 실제로 만들어진 인스턴스를 말합니다. `launch`를 부르고 `cancel()`하는 대상은 언제나 이 인스턴스입니다.
 
 ```kotlin
 // CoroutineScope.kt (kotlinx-coroutines 1.11.0)
@@ -303,11 +313,11 @@ internal class LifecycleCoroutineScopeImpl(
 - 취소 시점이 **DESTROYED 하나뿐**이라는 점을 기억해 둡니다. 화면이 백그라운드로 가서 STOPPED가 되어도 `lifecycleScope`의 코루틴은 계속 실행됩니다. 화면이 보일 때만 데이터를 받고 싶다면 `repeatOnLifecycle(Lifecycle.State.STARTED) { }` 처럼 상태에 맞춰 블록을 시작하고 취소해 주는 함수를 함께 씁니다.
 - `Dispatchers.Main.immediate`는 이미 메인 스레드에서 호출됐다면 다음 차례로 미루지 않고 그 자리에서 바로 실행하는 메인 디스패처입니다. 디스패처 종류는 Q38에서 다룹니다.
 
-## 스코프 객체와 coroutineScope 함수 {#scope-object-vs-function}
+## 스코프 인스턴스와 coroutineScope 함수 {#scope-object-vs-function}
 
 이름이 거의 같은 두 가지를 구분해야 합니다.
 
-- **`CoroutineScope`** (대문자): 지금까지 본 스코프 객체입니다. 이 객체에서 `launch`를 부르면 코루틴을 시작만 하고 **바로 돌아옵니다.** 코루틴은 스코프의 수명 동안 따로 실행됩니다.
+- **`CoroutineScope`** (대문자): 지금까지 본, 인터페이스를 구현한 스코프 인스턴스입니다. 인스턴스에서 `launch`를 부르면 코루틴을 시작만 하고 **바로 돌아옵니다.** 코루틴은 스코프의 수명 동안 따로 실행됩니다.
 - **`coroutineScope { }`** (소문자): `suspend` 함수입니다. 블록을 실행할 임시 스코프를 만들고, 그 안에서 시작한 코루틴이 **모두 끝날 때까지 기다렸다가** 돌아옵니다.
 
 kotlinx-coroutines는 이 차이를 함수 모양으로 드러내자는 관례를 둡니다. 코루틴을 시작해 놓고 바로 돌아오는 함수는 `CoroutineScope`의 확장 함수로, 일을 다 끝내고 돌아오는 함수는 `suspend` 함수로 만듭니다.
